@@ -23,5 +23,12 @@ Try questions 16,17 and 18 from [99 Problems - Haskell] [2]
 - Week 4 (21 Jan)
 Using fold, try questions 5, 6, 7 from [99 Problems - Haskell] [2]
 
+- Week 5 (28 Jan)
+Read 9 (I/O) of [LYAH] [1] by next class
+Write an [Eliza bot] [3] , or [Monkey Island insult sword fighter] [4]
+
+
   [1]: http://learnyouahaskell.com/                              "Learn You a Haskell - book"
   [2]: http://www.haskell.org/haskellwiki/99_questions/          "99 Problems - Haskell.org"
+  [3]: http://nlp-addiction.com/eliza/                           "Eliza Bot - example"
+  [4]: http://ansible.wikia.com/wiki/Insult_swordfighting        "Monkey Island - Insult Swordfighting"
