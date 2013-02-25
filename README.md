@@ -27,7 +27,7 @@ Using fold, try questions 5, 6, 7 from [99 Problems - Haskell] [2]
 Read 9 (I/O) of [LYAH] [1] by next class
 Write an [Eliza bot] [3] , or [Monkey Island insult sword fighter] [4]
 
-- Week 7 (25 Feb)
+- Week 7 (25 Feb, due 4th March)
 Implement a Functor (ideally not one covered in class), and write tests for it
     - [Real World Haskell has a chapter on QuickCheck](http://book.realworldhaskell.org/read/testing-and-quality-assurance.html), a specification-based test framework
 
