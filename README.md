@@ -29,7 +29,7 @@ Write an [Eliza bot] [3] , or [Monkey Island insult sword fighter] [4]
 
 - Week 7 (25 Feb)
 Implement a Functor (ideally not one covered in class), and write tests for it
--- [Real World Haskell has a chapter on QuickCheck](http://book.realworldhaskell.org/read/testing-and-quality-assurance.html), a specification-based test framework
+    - [Real World Haskell has a chapter on QuickCheck](http://book.realworldhaskell.org/read/testing-and-quality-assurance.html), a specification-based test framework
 
 
   [1]: http://learnyouahaskell.com/                              "Learn You a Haskell - book"
