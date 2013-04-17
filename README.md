@@ -31,6 +31,8 @@ Write an [Eliza bot] [3] , or [Monkey Island insult sword fighter] [4]
 Implement a Functor (ideally not one covered in class), and write tests for it
     - [Real World Haskell has a chapter on QuickCheck](http://book.realworldhaskell.org/read/testing-and-quality-assurance.html), a specification-based test framework
 
+- Week 9 (15 April, due 22nd April)
+Complete in class work, which is to create a data type on which you cannot call tail when it is empty (code from class is in code/Session9). Bonus points for finding a way to do this generically, without the Foo-<NumberOfArgs> stuff.
 
   [1]: http://learnyouahaskell.com/                              "Learn You a Haskell - book"
   [2]: http://www.haskell.org/haskellwiki/99_questions/          "99 Problems - Haskell.org"
