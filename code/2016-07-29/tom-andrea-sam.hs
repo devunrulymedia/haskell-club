@@ -21,6 +21,10 @@ lsort2 = sortBy (\a b -> compare (length a) (length b))
 lsort3:: [[a]] -> [[a]]
 lsort3 = sortWith length 
 
+unstableFreqSort:: [[a]] -> [[a]]
+unstableFreqSort xs = join (groupBy (equal length) (sortWith length xs))
+                       where equal f a b = (f a) == (f b)
+
 addToGroup:: (Eq p) => [([a], p)] -> (a, p) -> [([a], p)]
 addToGroup [] (x, v) = [([x], v)]
 addToGroup ((xs, p):rest) (x, v) 
