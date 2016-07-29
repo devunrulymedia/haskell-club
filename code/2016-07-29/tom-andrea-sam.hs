@@ -21,6 +21,20 @@ lsort2 = sortBy (\a b -> compare (length a) (length b))
 lsort3:: [[a]] -> [[a]]
 lsort3 = sortWith length 
 
+addToGroup:: (Eq p) => [([a], p)] -> (a, p) -> [([a], p)]
+addToGroup [] (x, v) = [([x], v)]
+addToGroup ((xs, p):rest) (x, v) 
+  | p == v = ((xs ++ [x]), p):rest
+  | p /= v = (xs, p):(addToGroup rest (x, v))
+
+accumulate:: (Eq p) => (a -> p) -> [a] -> [([a], p)]
+accumulate = accum' [] where 
+                accum' acc f [] = acc
+                accum' acc f (x:xs) = accum' (addToGroup acc (x, (f x))) f xs
+
 freqSort:: [[a]] -> [[a]]
-freqSort xs = join (groupBy (equal length) (sortWith length xs))
-                where equal f a b = (f a) == (f b)
+freqSort xs = let 
+                 grouped = accumulate length xs
+                 byFreq = sortWith (\(a, _) -> length a) grouped
+                 stripped = [x | (x, v) <- byFreq]
+              in join stripped
