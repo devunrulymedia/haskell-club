@@ -45,8 +45,10 @@ freqSort xs = join(map fst (sortWith (length . fst) (accumulate length xs)))
 -- builds a bag/multiset of key:item to value:count
 bagof:: (Ord a) => [a] -> Data.Map.Map a Int
 bagof [] = Data.Map.empty
-bagof (x:xs) = Data.Map.insert x ((Data.Map.findWithDefault 0 x m) + 1) m
-                 where m = bagof xs
+bagof (x:xs) = Data.Map.insertWith (+) x 1 (bagof xs)
+
+bagof2:: (Ord a) => [a] -> Data.Map.Map a Int
+bagof2 = foldl count Data.Map.empty where count m x = Data.Map.insertWith (+) x 1 m
 
 -- frequency function for a list which precalculates a bag, so we only need to walk the list once
 freqc:: (Ord a) => [a] -> a -> Int
