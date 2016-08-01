@@ -2,6 +2,7 @@ import Data.List
 import Data.Ord
 import GHC.Exts
 import Control.Monad
+import qualified Data.Map
 
 compareLengths a b
   | lenA < lenB  = LT
@@ -40,3 +41,22 @@ accumulate = accum' [] where
 
 freqSort:: [[a]] -> [[a]]
 freqSort xs = join(map fst (sortWith (length . fst) (accumulate length xs)))
+
+-- builds a bag/multiset of key:item to value:count
+bagof:: (Ord a) => [a] -> Data.Map.Map a Int
+bagof [] = Data.Map.empty
+bagof (x:xs) = Data.Map.insert x ((Data.Map.findWithDefault 0 x m) + 1) m
+                 where m = freqmap xs
+
+-- frequency function for a list which precalculates a bag, so we only need to walk the list once
+freqc:: (Ord a) => [a] -> a -> Int
+freqc xs = let m = bagof xs
+           in \x -> Data.Map.findWithDefault 0 x m
+
+-- requires an Ord a because of the precalculated bag, which uses map which requires Ord a
+freqsort2:: (Ord a) => [[a]] -> [[a]]
+freqsort2 xs = let xs' = [(x, length x) | x <- xs]
+                   lfreqc = freqc (map snd xs')
+                   xs'' = [(x, l, lfreqc l) | (x, l) <- xs']
+                   sorted = sortWith (\(_, _, f) -> f) xs''
+               in [x | (x, _, _) <- sorted]    
