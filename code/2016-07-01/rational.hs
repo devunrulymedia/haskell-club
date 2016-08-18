@@ -1,4 +1,4 @@
-data Rational' = Rational' Int Int deriving (Show)
+data Rational' = Rational' Int Int
 
 
 instance Num Rational' where 
@@ -13,3 +13,7 @@ instance Num Rational' where
 instance Fractional Rational' where
 --  (/) (Rational' a b) (Rational' c d) = (Rational' a b) * (Rational' d c)
     recip (Rational' a b) = (Rational' b a) 
+
+
+instance Show Rational' where
+    show (Rational' a b) = show a ++ "/" ++ show b
