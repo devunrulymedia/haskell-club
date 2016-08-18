@@ -1,3 +1,7 @@
+import Control.Monad (liftM2)
+import Test.QuickCheck
+
+
 data Rational' = Rational' Int Int
 
 
@@ -11,6 +15,7 @@ instance Num Rational' where
     
 
 lowestTerms :: Rational' -> Rational'
+lowestTerms (Rational' 0 0) = Rational' 0 0
 lowestTerms (Rational' a b) = Rational' numerator denominator
     where greatestCommonDivisor = gcd a b
           numerator = a `div` greatestCommonDivisor
@@ -24,3 +29,17 @@ instance Fractional Rational' where
 
 instance Show Rational' where
     show (Rational' a b) = show a ++ "/" ++ show b
+
+
+instance Eq Rational' where
+    Rational' a b == Rational' c d = (a==c) && (b==d)
+
+
+-- Tests
+
+instance Arbitrary Rational' where
+    arbitrary = liftM2 Rational' arbitrary arbitrary
+
+
+prop_add :: Rational' -> Rational' -> Property
+prop_add a b = a+b === b+a
