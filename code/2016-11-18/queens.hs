@@ -1,10 +1,11 @@
+module Queens (queens) where
+
 import Data.List
 import Data.Bool
 
-
 diagonally_safe' :: [Int] -> [Int] -> [Int] -> Bool
 diagonally_safe' [] _ _ = True
-diagonally_safe' (q:qs) ls rs = (all (/= q) ls) && (all (/=q) rs) && (diagonally_safe' qs new_ls new_rs) 
+diagonally_safe' (q:qs) ls rs = (not $ elem q ls) && (not $ elem q rs) && (diagonally_safe' qs new_ls new_rs) 
                             where
                               new_rs = map (+1) (q:rs) 
                               new_ls = map (\x -> x - 1) (q:ls) 
