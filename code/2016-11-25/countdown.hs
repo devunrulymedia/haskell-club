@@ -1,6 +1,6 @@
 import Data.List
 
-data Solution = Val Rational | Sum Solution Solution | Diff Solution Solution | Mult Solution Solution | Div Solution Solution deriving Show
+data Solution = Val Rational | Sum Solution Solution | Diff Solution Solution | Mult Solution Solution | Div Solution Solution deriving (Show)
 
 eval :: Solution -> Rational
 eval (Val a) = a
@@ -28,11 +28,10 @@ solve t v1 v2 = filter (solves t) (solutions (Val v1) (Val v2))
 allSolutions :: [Solution] -> [Solution]
 allSolutions [] = []
 allSolutions [x] = [x]
-allSolutions (x:y:rest) = allSolutions (solutions x y) ++ rest
-
+allSolutions (x:xs) = concat (map (solutions x) (allSolutions xs))
 
 solve'' :: Rational -> [Solution] -> [Solution]
-solve'' t xs = concat $ map allSolutions (permutations xs)
+solve'' t xs = filter (solves t) (concat $ map allSolutions (permutations xs))
 
 solve' :: Rational -> [Rational] -> [Solution]
 solve' t vs = solve'' t (map Val vs)
