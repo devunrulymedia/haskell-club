@@ -1,6 +1,6 @@
 import Data.List
 
-data Solution = Val Int | Sum Solution Solution | Diff Solution Solution | Mult Solution Solution | Div Solution Solution
+data Solution = Val Integer | Sum Solution Solution | Diff Solution Solution | Mult Solution Solution | Div Solution Solution
 
 instance Show Solution where
   show (Val x) = show x
@@ -9,7 +9,13 @@ instance Show Solution where
   show (Diff x y) = "(" ++ (show x) ++ "-" ++ (show y) ++ ")"
   show (Div x y) = "(" ++ (show x) ++ "/" ++ (show y) ++ ")"
 
-eval :: Solution -> Int
+instance Num Solution where
+  (+) = Sum 
+  (-) = Diff
+  (*) = Mult
+  fromInteger = Val
+
+eval :: Solution -> Integer
 eval (Val a) = a
 eval (Sum a b) = eval a + eval b
 eval (Diff a b) = eval a - eval b		
@@ -26,7 +32,7 @@ solutions x y
   | otherwise = usuals
   where usuals = [x, y, Sum x y, Mult x y, Diff x y, Diff y x]
 
-solves :: Int -> Solution -> Bool
+solves :: Integer -> Solution -> Bool
 solves t s = eval s == t
 
 allSolutions :: [Solution] -> [Solution]
@@ -34,8 +40,8 @@ allSolutions [] = []
 allSolutions [x] = [x]
 allSolutions (x:xs) = concat (map (solutions x) (allSolutions xs))
 
-solve'' :: Int -> [Solution] -> [Solution]
-solve'' t xs = filter (solves t) (concat $ map allSolutions (permutations xs))
+solve' :: Integer -> [Solution] -> [Solution]
+solve' t xs = filter (solves t) (concat $ map allSolutions (permutations xs))
 
-solve :: Int -> [Int] -> [Solution]
-solve t vs = solve'' t (map Val vs)
+solve :: Integer -> [Integer] -> [Solution]
+solve t vs = solve' t (map Val vs)
