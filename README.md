@@ -9,10 +9,17 @@ We've finished chapter 11, and are about to start chapter 12 "A Fistful of Monad
 
 But...
 
-we're taking a diversion through [99 questions in Haskell](https://wiki.haskell.org/99_questions) and today we looked at problem 16.  
+we're practising what we've learned by doing some problem solving excercies
 
-**Homework** is to refactor the slightly ugly code we wrote in today's session to something better.  Hint: consider using a [where binding](http://learnyouahaskell.com/syntax-in-functions#where)
+Sometimes we take a diversion through [99 questions in Haskell](https://wiki.haskell.org/99_questions) 
 
-**Stretch Homework** We used the standard library functions `length`, `take` and `reverse`.  Can you write them from scratch?  (Just using recursion and pattern matching.)
+Today we took a look at some simple list operations: `length` and `take`, and how to write them from scratch, just using recursion and pattern matching.
+
+**Homework** 
+- Make sure that `take` does something sensible with a negative numerical argument.  You'll probably need to learn about [guards](http://learnyouahaskell.com/syntax-in-functions#guards-guards)
+- Write `reverse` for lists.
+
+
+**Stretch Homework** Can you re-write `length`, `take` and `reverse` using a fold?
 
 
