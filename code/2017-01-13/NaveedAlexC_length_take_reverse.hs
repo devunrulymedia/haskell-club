@@ -5,7 +5,9 @@ length' (x:xs) = 1 + length' xs
 take' :: [a] -> Int -> [a]
 take' [] _ = []
 take' _ 0 = []
-take' (x:xs) y = x:(take' xs (y-1))
+take' (x:xs) y 
+      | y < 0     = x:xs
+      | otherwise = x:(take' xs (y-1))
 
 reverse' :: [a] -> [a]
 reverse' [] = []
