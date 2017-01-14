@@ -6,3 +6,7 @@ take' :: [a] -> Int -> [a]
 take' [] _ = []
 take' _ 0 = []
 take' (x:xs) y = x:(take' xs (y-1))
+
+reverse' :: [a] -> [a]
+reverse' [] = []
+reverse' (x:xs) = (reverse' xs) ++ [x]
