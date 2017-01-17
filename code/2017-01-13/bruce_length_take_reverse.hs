@@ -17,7 +17,10 @@ take' n (x:xs)
 	| otherwise = x:(take' (n-1) xs)
 
 take'' :: Int -> [a] -> [a]
-take'' n l = fst $ (foldl (\ (xs, count) x -> if (count >= n ) then (xs, count+1) else (xs ++ [x], count+1) ) ([], 0)) l
+take'' n l = fst $ (foldl appendIfLengthGreaterThanN ([], 0)) l
+		where appendIfLengthGreaterThanN (xs, length) x 
+		       | length >= n = (xs, length)
+		       | otherwise   = (xs ++ [x], length+1)
 
 reverse' :: [a] -> [a]
 reverse' [] = []
