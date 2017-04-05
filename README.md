@@ -6,14 +6,14 @@ The first Rule of Haskell Club is.....
 Read http://learnyouahaskell.com/
 
 Haskell club runs 2 strands, on alternate weeks, called Strand a and Strand α (alpha).  
- - In Strand a, we are on chapter 12 of [LYAH](http://learnyouahaskell.com/)
- - In Strand α, we are on chapter 2 of [LYAH](http://learnyouahaskell.com/)
+ - In Strand "Advanced", we are on chapter 12 of [LYAH](http://learnyouahaskell.com/)
+ - In Strand "Beginners", we are on chapter 2 of [LYAH](http://learnyouahaskell.com/)
 
-on 17rd Feb, **Strand a** carried on with chapter 12 "A Fistful of Monads".  We made Monad instances of various data types.  We looked at the monad laws, at do notation, and at Kleisli Arrows.  Homework is to be able to adequately explain these things during the next session.
+on 31st Mar, **Strand "Advanced"** carried on with chapter 12 "A Fistful of Monads".  We looked at the Monad laws, and we now understand them in terms of Kleisli arrows.
 
-Today, 24th Feb, **Strand α** carried on with chapter 2, looking at lists. Homework is:
+on 24th Mar, **Strand "Beginners"** carried on with chapter 2, looking at lists. Homework is:
   - read on through chapter 2
-  - write a function that takes a list of numbers (or just list of Int) and returns the sum of the members of the list
+  - write a fizzBuzz function, using a list comprehension, or by other means
 
 
 
