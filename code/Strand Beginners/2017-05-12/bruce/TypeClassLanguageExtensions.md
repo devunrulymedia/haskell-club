@@ -87,7 +87,7 @@ So we can compile the instance declaration, but the compiler (in the repl) gets 
 
 **"GHC requires that that it be unambiguous which instance declaration should be used to resolve a type-class constraint."** 
 
-Why does it think that ```Num a => Doubleable a``` and ```Doubleable [a]``` overlap?  In fact it ignores the assertion (the bit to the left of the arrow) when searching for a match.  (See 15-ignore_asserions.hs to verify this.)  Then, since `a` matches anything, ```Doubleable a``` matches anything ```Doubleable [a]``` does (and more).
+Why does it think that ```Num a => Doubleable a``` and ```Doubleable [a]``` overlap?  In fact it ignores the assertion (the bit to the left of the arrow) when searching for a match.  (See ```15-ignore_asserions.hs``` to verify this.)  Then, since `a` matches anything, ```Doubleable a``` matches anything ```Doubleable [a]``` does (and more).
 
 We fix this with ```OverlappingInstances```; this allows GHC to resolve ambiguous matches by choosing the most specific one.  (It will still fail if there is not a single most specific instance to choose.)
 
