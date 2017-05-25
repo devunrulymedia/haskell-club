@@ -42,6 +42,8 @@ instance Functor MyList where
   fmap f Empty = Empty
   fmap f (Cons x xs) = Cons (f x) (fmap f xs)
 
+-- This is a little awkward - note that <*> is much easier to implement for
+-- List, because it can be done in a very nice way with list comprehensions
 instance Applicative MyList where
   pure x = Cons x Empty
   Empty <*> _ = Empty
@@ -63,3 +65,15 @@ instance Monad MyList where
 my :: [a] -> MyList a
 my [] = Empty
 my (x:xs) = Cons x (my xs)
+
+newtype MyFunction a b = MyFunction (a -> b)
+
+instance Functor (MyFunction a) where
+  fmap f (MyFunction g) = MyFunction (f . g)
+
+instance Monad (MyFunction a) where
+  return x = \_ -> x
+  (MyFunction f) >>= x = b -> b
+
+app :: MyFunction a b -> a -> b
+app (MyFunction f) a = f a
