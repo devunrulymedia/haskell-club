@@ -2,22 +2,15 @@ type Row = [Int]
 type Square = [Row]
 type Line = [Int]
 
-data Result = Empty | Sum Int | Inconsistent deriving Show
-
 isMagic :: Square -> Bool
-isMagic xs = case foldl magicSoFar Empty (lines' xs) of
-  (Sum _) -> True
-  otherwise -> False
+isMagic square = allEqual $ map sum $ linesIn square
 
-magicSoFar :: Result -> Line -> Result
-magicSoFar Empty xs = Sum (sum xs)
-magicSoFar Inconsistent xs = Inconsistent
-magicSoFar (Sum count) xs
-  | (sum xs) == count = Sum count
-  | otherwise = Inconsistent
+allEqual :: (Eq a) => [a] -> Bool
+allEqual (x:y:xs) = x == y && allEqual (y:xs)
+allEqual _ = True
 
-lines' :: Square -> [Line]
-lines' square = concat $ map ($ square) [rows, columns, diagonals]
+linesIn :: Square -> [Line]
+linesIn square = [rows, columns, diagonals] >>= ($ square)
 
 rows :: Square -> [Line]
 rows = id
