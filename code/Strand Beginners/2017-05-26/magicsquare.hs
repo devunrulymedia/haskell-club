@@ -13,7 +13,7 @@ magicSoFar (Sum count) xs
   | otherwise = Inconsistent
 
 sets :: [[Int]] -> [[Int]]
-sets square = concat $ map ($ square) [rows, columns, diagonals]
+sets square = concat $ [rows, columns, diagonals] <*> [square]
 
 rows :: [[Int]] -> [[Int]]
 rows = id
