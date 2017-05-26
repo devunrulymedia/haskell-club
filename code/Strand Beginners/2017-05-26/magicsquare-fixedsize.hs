@@ -9,8 +9,21 @@ allEqual :: (Eq a) => [a] -> Bool
 allEqual (x:y:rest) = x == y && (allEqual (y:rest))
 allEqual _ = True
 
+-- the imperative way!
 getlines :: Square -> [Line]
 getlines square = (rows square) ++ (columns square) ++ (diagonals square) 
+
+-- the first attempt at mapping
+getlines1 :: Square -> [Line]
+getlines1 square = concat $ map ($ square) [rows, columns, diagonals]
+
+-- applicatives
+getlines2 :: Square -> [Line]
+getlines2 square = concat $ [rows, columns, diagonals] <*> [square]
+
+-- flatmap that shit
+getlines' :: Square -> [Line]
+getlines' square = [rows, columns, diagonals] >>= ($ square)
 
 sumline :: Line -> Int
 sumline (Line x y z) = x + y + z
