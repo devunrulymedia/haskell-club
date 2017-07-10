@@ -31,4 +31,6 @@ Property tests (probably) won't find the cheese:
 +++ OK, passed 100 tests.
 *Main>
 
+Try changing the Char to Float, and the (ys == "cheese") = [] to (sum ys > 10) = [], and then see what happens when you type the test as [Float] -> Bool
+
 -}
