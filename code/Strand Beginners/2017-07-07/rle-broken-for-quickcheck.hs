@@ -33,4 +33,6 @@ Run some property-based tests in the repl:
 
 You can use verboseCheck in place of quickCheck.
 
+See what happens if you type the property as [Int] -> Bool instead.
+
 -}
