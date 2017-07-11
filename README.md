@@ -5,7 +5,7 @@ The first Rule of Haskell Club is.....
 
 Read http://learnyouahaskell.com/
 
-Haskell club runs 2 strands, on alternate weeks, called Strand a and Strand α (alpha).  
+Haskell club runs 2 strands, on alternate weeks, called Strand "Advanced" and Strand "Beginners".  
  - In Strand "Advanced", we are on chapter 12 of [LYAH](http://learnyouahaskell.com/)
  - In Strand "Beginners", we are somewhere betweeen chapters 2 and 7 of [LYAH](http://learnyouahaskell.com/), so scope for people of any level to join us!
 
