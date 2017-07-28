@@ -10,6 +10,10 @@ data Value
 	= IValue Int
 	| BValue Bool deriving (Show, Eq)
 
+data Type
+	= BoolType
+	| IntType deriving (Show, Eq)
+
 castInt :: Value -> Either String Int
 castInt (IValue x) = Right x
 castInt _ = Left "Type error: not an int"
@@ -30,7 +34,21 @@ evalExpr (Equal e1 e2) = do x <- evalExpr e1
 			    y <- evalExpr e2
 			    safeEquals x y
 
-
+typeCheck :: Expr -> Either String Type
+typeCheck (Error x) = Left $ "Error: " ++ x
+typeCheck (Lit _) = Right IntType
+typeCheck (BLit _) = Right BoolType
+typeCheck (Add e1 e2) = do e1_type <- typeCheck e1
+			   e2_type <- typeCheck e2
+			   case (e1_type, e2_type) of
+			      (IntType, IntType) -> return IntType
+			      otherwise -> Left $ "Can only add IntType to IntType: got " ++ show e1_type ++ " + " ++ show e2_type
+typeCheck (Equal e1 e2) = do e1_type <- typeCheck e1
+			     e2_type <- typeCheck e2
+                             if (e1_type == e2_type) 
+				then return BoolType
+				else Left $ "Can only check equality of like types: got " ++ show e1_type ++ " and " ++ show e2_type
+					
 string :: Expr -> String
 string (Lit n) = show n
 string (Add e1 e2) = string e1 ++ " + " ++ string e2
