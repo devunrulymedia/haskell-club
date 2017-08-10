@@ -11,7 +11,7 @@ Haskell club runs 2 strands called Strand "Advanced" and Strand "Beginners".  Wh
 
 on 28th July, we added a type checking evaluation function to our arithmetic EDSL.
 
-on 4th Aug, we worked on understanding monadic composition, and hence ```do``` notation, via the [birdman example in chapter](http://learnyouahaskell.com/a-fistful-of-monads#walk-the-line).  **Homework** is to express a sequence of ```landLeft``` and ```landRight``` in ```do``` notation. 
+on 4th Aug, we worked on understanding monadic composition, and hence ```do``` notation, via the [birdman example in chapter 12](http://learnyouahaskell.com/a-fistful-of-monads#walk-the-line).  **Homework** is to express a sequence of ```landLeft``` and ```landRight``` in ```do``` notation. 
 
 
 
