@@ -14,6 +14,29 @@ data Type
 	= BoolType
 	| IntType deriving (Show, Eq)
 
+data ExprSem t = ExprSem {
+  onError :: String -> t,
+  onInt :: Int -> t,
+  onBool :: Bool -> t,
+  onEquals :: t -> t -> t,
+  onAdd :: t -> t -> t}
+
+foldExpression :: ExprSem t -> Expr -> t
+foldExpression on = sem where
+    sem (Error s) = onError on s
+    sem (Lit n) = onInt on n
+    sem (BLit b) = onBool on b
+    sem (Equal a b) = onEquals on (sem a) (sem b)
+    sem (Add x y) = onAdd on (sem x) (sem y)
+
+prettyPrint :: Expr -> String
+prettyPrint = foldExpression $ ExprSem {
+    onError = \s -> "Error: " ++ s,
+    onInt = show,
+    onBool = show,
+    onEquals = \x -> \y -> x ++ " = " ++ y,
+    onAdd = \x -> \y -> x ++ " + " ++ y }
+
 castInt :: Value -> Either String Int
 castInt (IValue x) = Right x
 castInt _ = Left "Type error: not an int"
