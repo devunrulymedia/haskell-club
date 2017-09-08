@@ -52,7 +52,7 @@ p `andMaybe` op = do { a <- p; rest a }
                  <|> return a 
 
 expression :: Parser Expression
-expression = (variable <|> stringLiteral) `andMaybe` access `andMaybe` call
+expression = (variable <|> stringLiteral) `andMaybe` (access <|> call)
 
 run :: String -> Expression
 run = runParser expression
