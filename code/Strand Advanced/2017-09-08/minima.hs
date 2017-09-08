@@ -7,6 +7,7 @@ data Expression
   = Variable String
   | StringLiteral String
   | Call Expression Expression
+  | Access Expression String
   deriving (Show)
 
 letter :: Parser Char
@@ -38,6 +39,12 @@ call = do
   reserved "]"
   return (flip Call argument) 
 
+access :: Parser (Expression -> Expression)
+access = do
+  reserved ":"
+  field <- identifier
+  return (flip Access field)
+
 andMaybe :: Parser a -> Parser (a -> a) -> Parser a
 p `andMaybe` op = do { a <- p; rest a }
   where rest a = (do f <- op
@@ -45,7 +52,7 @@ p `andMaybe` op = do { a <- p; rest a }
                  <|> return a 
 
 expression :: Parser Expression
-expression = (variable <|> stringLiteral) `andMaybe` call
+expression = (variable <|> stringLiteral) `andMaybe` access `andMaybe` call
 
 run :: String -> Expression
 run = runParser expression
