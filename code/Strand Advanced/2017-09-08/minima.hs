@@ -31,4 +31,22 @@ quoted = do
 stringLiteral :: Parser Expression
 stringLiteral = StringLiteral <$> quoted
 
+call :: Parser (Expression -> Expression)
+call = do
+  reserved "["
+  argument <- expression
+  reserved "]"
+  return (flip Call argument) 
+
+andMaybe :: Parser a -> Parser (a -> a) -> Parser a
+p `andMaybe` op = do { a <- p; rest a }
+  where rest a = (do f <- op
+                     rest (f a))
+                 <|> return a 
+
+expression :: Parser Expression
+expression = (variable <|> stringLiteral) `andMaybe` call
+
+run :: String -> Expression
+run = runParser expression
 
