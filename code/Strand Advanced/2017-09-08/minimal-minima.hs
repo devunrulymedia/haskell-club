@@ -12,8 +12,9 @@ runParser :: Parser a -> String -> a
 runParser m s =
   case parse m s of
     [(res, [])] -> res
-    [(_, rs)]   -> error "Parser did not consume entire stream."
-    _           -> error "Parser error."
+    [(_, rs)]   -> error $ "Parser did not consume entire stream: remaining " ++ rs 
+    []          -> error "Parser error: no possibilities found"
+    _		-> error "Parser error: ambiguous possibilities found"
 
 item :: Parser Char
 item = Parser $ \s ->
@@ -70,6 +71,16 @@ satisfy p = item `bind` \c ->
 oneOf :: [Char] -> Parser Char
 oneOf s = satisfy (flip elem s)
 
+chainl :: Parser a -> Parser (a -> a -> a) -> a -> Parser a
+chainl p op a = (p `chainl1` op) <|> return a
+
+chainl1 :: Parser a -> Parser (a -> a -> a) -> Parser a
+p `chainl1` op = do { a <- p; rest a }
+  where rest a = (do f <- op
+                     b <- p
+                     rest (f a b))
+                 <|> return a
+
 noneOf :: [Char] -> Parser Char
 noneOf s = satisfy (not . (flip elem s))
 
@@ -85,20 +96,12 @@ token p = do { a <- p; spaces ; return a}
 reserved :: String -> Parser String
 reserved s = token (string s)
 
-args :: Parser a -> Parser a
-args m = do
-  reserved "["
-  n <- m
-  reserved "]"
-  return n
-
 stringlit :: Parser Expr
 stringlit = do
    reserved "'"
    t <- without "'"
    reserved "'"
    return (StringLit t)
-
 
 char :: Char -> Parser Char
 char c = satisfy (c ==)
@@ -114,14 +117,14 @@ data Expr
   deriving Show
 
 expr :: Parser Expr
-expr = parsePrint <|> parseStringLit
--- <|> parseCall
+expr = (parsePrint <|> parseStringLit)
 
 parsePrint :: Parser Expr
 parsePrint = reserved "print" >> return Print
 
 parseStringLit :: Parser Expr
 parseStringLit = stringlit
+
 
 
 run :: String -> Expr
