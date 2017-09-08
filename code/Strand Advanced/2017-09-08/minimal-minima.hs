@@ -70,6 +70,12 @@ satisfy p = item `bind` \c ->
 oneOf :: [Char] -> Parser Char
 oneOf s = satisfy (flip elem s)
 
+noneOf :: [Char] -> Parser Char
+noneOf s = satisfy (not . (flip elem s))
+
+without :: [Char] -> Parser String
+without s = many $ noneOf s
+
 spaces :: Parser String
 spaces = many $ oneOf " \n\r"
 
@@ -86,12 +92,12 @@ args m = do
   reserved "]"
   return n
 
-stringlit :: Parser a -> Parser a
-stringlit s = do
+stringlit :: Parser Expr
+stringlit = do
    reserved "'"
-   t <- s
+   t <- without "'"
    reserved "'"
-   return t
+   return (StringLit t)
 
 
 char :: Char -> Parser Char
@@ -99,12 +105,11 @@ char c = satisfy (c ==)
 
 string :: String -> Parser String
 string [] = return []
-string ("'":cs) = return []
 string (c:cs) = do { char c; string cs; return (c:cs)}
    	
 data Expr
   = Print 
-  | StringLit
+  | StringLit String
   | Call Expr Expr
   deriving Show
 
@@ -116,7 +121,7 @@ parsePrint :: Parser Expr
 parsePrint = reserved "print" >> return Print
 
 parseStringLit :: Parser Expr
-parseStringLit = stringlit string
+parseStringLit = stringlit
 
 
 run :: String -> Expr
