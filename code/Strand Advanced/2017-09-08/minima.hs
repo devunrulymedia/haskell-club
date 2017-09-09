@@ -5,7 +5,9 @@ import Control.Monad
 
 data Expression 
   = Variable String
+  | Declaration String Expression
   | StringLiteral String
+  | NumberLiteral Double
   | Call Expression [Expression]
   | Function [String] Expression
   | Access Expression String
@@ -25,11 +27,23 @@ identifier = do
 variable :: Parser Expression
 variable = Variable <$> identifier
 
-quoted :: Parser String
-quoted = enclosed (many $ noneOf "'") "'" "'"
-
 stringLiteral :: Parser Expression
-stringLiteral = StringLiteral <$> quoted
+stringLiteral = StringLiteral <$> enclosed (many $ noneOf "'") "'" "'"
+
+intPart :: Parser String
+intPart = do
+  sign <- string "-" <|> return ""
+  integralPart <- some $ satisfy isDigit
+  return (sign ++ integralPart)
+
+decimalPart :: Parser (String -> String)
+decimalPart = do
+  point <- string "."
+  decimals <- some $ satisfy isDigit
+  return ( ++ (point ++ decimals))
+
+numberLiteral :: Parser Expression
+numberLiteral = NumberLiteral <$> read <$> intPart `andMaybe` decimalPart
 
 keyValuePair :: Parser (String, Expression)
 keyValuePair = do
@@ -37,6 +51,13 @@ keyValuePair = do
   reserved ":"
   value <- expression
   return (key, value)
+
+declaration :: Parser Expression
+declaration = do
+  name <- identifier
+  reserved "="
+  value <- expression
+  return $ Declaration name value
 
 object :: Parser Expression
 object = Object <$> (enclosed (separated keyValuePair "," <|> return []) "{" "}")
@@ -83,7 +104,7 @@ p `andMaybe` op = do { a <- p; rest a }
                  <|> return a 
 
 expression :: Parser Expression
-expression = (variable <|> stringLiteral <|> function <|> object <|> group) `andMaybe` (access <|> call)
+expression = (declaration <|> variable <|> stringLiteral <|> numberLiteral <|> function <|> object <|> group) `andMaybe` (access <|> call)
 
 run :: String -> Expression
 run = runParser expression
