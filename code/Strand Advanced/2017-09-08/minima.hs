@@ -3,6 +3,8 @@ import Data.Char
 import Control.Applicative
 import Control.Monad
 
+type Program = [Expression]
+
 data Expression 
   = Variable String
   | Declaration String Expression
@@ -106,6 +108,9 @@ p `andMaybe` op = do { a <- p; rest a }
 expression :: Parser Expression
 expression = (declaration <|> variable <|> stringLiteral <|> numberLiteral <|> function <|> object <|> group) `andMaybe` (access <|> call)
 
-run :: String -> Expression
-run = runParser expression
+program :: Parser Program
+program = separated expression ","
+
+run :: String -> Program
+run = runParser program
 
