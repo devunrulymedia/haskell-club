@@ -6,7 +6,7 @@ import Control.Monad
 data Expression 
   = Variable String
   | StringLiteral String
-  | Call Expression Expression
+  | Call Expression [Expression]
   | Access Expression String
   deriving (Show)
 
@@ -32,12 +32,24 @@ quoted = do
 stringLiteral :: Parser Expression
 stringLiteral = StringLiteral <$> quoted
 
+list :: Parser a -> String -> String -> String -> Parser [a]
+list p open sep close = do
+  reserved open
+  elements <- separated p sep
+  reserved close
+  return elements
+
+separated :: Parser a -> String -> Parser [a]
+separated p sep = do { a <- p; rest [a] } <|> return [] 
+  where rest a = (do reserved ","
+                     next <- p
+                     rest (a ++ [next]))
+                 <|> return a
+
 call :: Parser (Expression -> Expression)
 call = do
-  reserved "["
-  argument <- expression
-  reserved "]"
-  return (flip Call argument) 
+  arguments <- list expression "[" "," "]"
+  return (flip Call arguments) 
 
 access :: Parser (Expression -> Expression)
 access = do
