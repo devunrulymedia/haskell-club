@@ -7,7 +7,10 @@ data Expression
   = Variable String
   | StringLiteral String
   | Call Expression [Expression]
+  | Function [String] Expression
   | Access Expression String
+  | Object [(String, Expression)]
+  | Group [Expression]
   deriving (Show)
 
 letter :: Parser Char
@@ -23,24 +26,33 @@ variable :: Parser Expression
 variable = Variable <$> identifier
 
 quoted :: Parser String
-quoted = do 
-  reserved "'"
-  content <- many $ noneOf "'"
-  reserved "'"
-  return content
+quoted = enclosed (many $ noneOf "'") "'" "'"
 
 stringLiteral :: Parser Expression
 stringLiteral = StringLiteral <$> quoted
 
-list :: Parser a -> String -> String -> String -> Parser [a]
-list p open sep close = do
+keyValuePair :: Parser (String, Expression)
+keyValuePair = do
+  key <- identifier
+  reserved ":"
+  value <- expression
+  return (key, value)
+
+object :: Parser Expression
+object = Object <$> (enclosed (separated keyValuePair "," <|> return []) "{" "}")
+
+group :: Parser Expression
+group = Group <$> (enclosed (separated expression ",") "(" ")")
+
+enclosed :: Parser a -> String -> String -> Parser a
+enclosed p open close = do
   reserved open
-  elements <- separated p sep
+  content <- p
   reserved close
-  return elements
+  return content
 
 separated :: Parser a -> String -> Parser [a]
-separated p sep = do { a <- p; rest [a] } <|> return [] 
+separated p sep = do { a <- p; rest [a] } 
   where rest a = (do reserved ","
                      next <- p
                      rest (a ++ [next]))
@@ -48,8 +60,15 @@ separated p sep = do { a <- p; rest [a] } <|> return []
 
 call :: Parser (Expression -> Expression)
 call = do
-  arguments <- list expression "[" "," "]"
+  arguments <- enclosed (separated expression "," <|> return []) "[" "]"
   return (flip Call arguments) 
+
+function :: Parser Expression
+function = do
+  arguments <- enclosed (separated identifier "," <|> return []) "[" "]"
+  reserved "=>"
+  body <- expression
+  return (Function arguments body)
 
 access :: Parser (Expression -> Expression)
 access = do
@@ -64,7 +83,7 @@ p `andMaybe` op = do { a <- p; rest a }
                  <|> return a 
 
 expression :: Parser Expression
-expression = (variable <|> stringLiteral) `andMaybe` (access <|> call)
+expression = (variable <|> stringLiteral <|> function <|> object <|> group) `andMaybe` (access <|> call)
 
 run :: String -> Expression
 run = runParser expression
