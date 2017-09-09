@@ -25,10 +25,10 @@ identifier = do
   return $ initial:rest
 
 variable :: Parser Expression
-variable = Variable <$> identifier
+variable = Variable <$> token identifier
 
 stringLiteral :: Parser Expression
-stringLiteral = StringLiteral <$> enclosed (many $ noneOf "'") "'" "'"
+stringLiteral = StringLiteral <$> token (enclosed (many $ noneOf "'") "'" "'")
 
 intPart :: Parser String
 intPart = do
@@ -43,19 +43,19 @@ decimalPart = do
   return ( ++ (point ++ decimals))
 
 numberLiteral :: Parser Expression
-numberLiteral = NumberLiteral <$> read <$> intPart `andMaybe` decimalPart
+numberLiteral = NumberLiteral <$> read <$> token (intPart `andMaybe` decimalPart)
 
 keyValuePair :: Parser (String, Expression)
 keyValuePair = do
-  key <- identifier
+  key <- token identifier
   reserved ":"
-  value <- expression
+  value <- token expression
   return (key, value)
 
 declaration :: Parser Expression
 declaration = do
-  name <- identifier
-  reserved "="
+  name <- token identifier
+  reserved "is"
   value <- expression
   return $ Declaration name value
 
