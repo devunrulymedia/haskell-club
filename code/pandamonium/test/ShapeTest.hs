@@ -113,6 +113,16 @@ circle_circle_pushout = TestList [
     $ TestCase ( let circA = Circle {centre = Vector {x = 0, y = 0}, radius = 10}
                      circB = Circle { centre = Vector {x = 20, y = 0}, radius = 5}
                   in ( circA !!> circB) @?= Nothing)
+
+    , TestLabel "Horizontally overlapping circles"
+    $ TestCase ( let circA = Circle {centre = Vector {x = 0, y = 0}, radius = 10}
+                     circB = Circle { centre = Vector {x = 20, y = 0}, radius = 15}
+                  in ( circA !!> circB) @?= Just Vector { x = 5, y = 0 })
+
+    , TestLabel "Vertically overlapping circles"
+    $ TestCase ( let circA = Circle {centre = Vector {x = 0, y = 0}, radius = 10}
+                     circB = Circle { centre = Vector {x = 0, y = 20}, radius = 15}
+                  in ( circA !!> circB) @?= Just Vector { x = 0, y = 5 })
     ]
 
 tests = TestList [ TestLabel "Rectangle-Rectangle Collisions" rect_rect_collisions

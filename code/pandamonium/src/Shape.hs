@@ -25,7 +25,14 @@ a@Rectangle {} !!> b@Rectangle {} = foldl1 smallest [ push move_up (top a - bott
                                                       push move_right (right a - left b) ] where
                                            push f v = if v <= 0 then Nothing else Just $ f v
                                            smallest a b = pure min <*> a <*> b
-a@Circle {} !!> b@Circle {} = Nothing
+a@Circle {} !!> b@Circle {} = let separation = centre b - centre a
+                                  dist = magnitude separation
+                                  required_dist = radius a + radius b
+                               in if dist > required_dist
+                                  then Nothing
+                                  else let additional_dist = required_dist - dist
+                                           lengths = additional_dist / dist
+                                        in Just $ separation * Vector { x = lengths , y = lengths }
 
 instance Renderable Shape where
   render r@Rectangle {} = let width = right r - left r
