@@ -26,17 +26,13 @@ sq_mag vec = x vec * x vec + y vec * y vec
 neg :: Vector -> Vector
 neg a = Vector { x = -(x a), y = -(y a) }
 
--- addition: can't use Num for Vector, boo
-infixl 6 ~+
-(~+) :: Vector -> Vector -> Vector
-a ~+ b = Vector { x = x a + x b, y = y a + y b }
+instance Num Vector where
+  a + b = Vector { x = x a + x b, y = y a + y b }
+  a - b = Vector { x = x a - x b, y = y a - y b }
+  a * b = Vector { x = x a * x b, y = y a * y b }
+  abs a = a * signum a
+  signum a = Vector { x = signum $ x a, y = signum $ y a }
+  fromInteger x = Vector { x = fromInteger x, y = 0 }
 
--- subtraction: can't use Num for Vector, boo
-infixl 6 ~-
-(~-) :: Vector -> Vector -> Vector
-a ~- b = a ~+ neg b
-
--- checks if the magnitude of one vector is bigger than another
-infixl 2 |>|
-(|>|) :: Vector -> Vector -> Bool
-a |>| b = sq_mag a > sq_mag b -- no need to take square root to see which is bigger
+instance Ord Vector where
+  compare a b = compare (sq_mag a) (sq_mag b)

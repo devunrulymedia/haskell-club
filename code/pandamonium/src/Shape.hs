@@ -11,7 +11,7 @@ data Shape = Rectangle { left :: Float, right :: Float, top :: Float, bottom :: 
 infixl 2 !!!
 (!!!) :: Shape -> Shape -> Bool
 a@Rectangle {} !!! b@Rectangle {} = not (top a < bottom b || top b < bottom a || left a > right b || left b > right a)
-a@Circle {} !!! b@Circle {} = let separation = centre a ~- centre b
+a@Circle {} !!! b@Circle {} = let separation = centre a - centre b
                                   sq_dist = sq_mag separation
                                   sum_radii = radius a + radius b
                                in sq_dist < sum_radii * sum_radii
@@ -24,9 +24,8 @@ a@Rectangle {} !!> b@Rectangle {} = foldl1 smallest [ push move_up (top a - bott
                                                       push move_left (right b - left a),
                                                       push move_right (right a - left b) ] where
                                            push f v = if v <= 0 then Nothing else Just $ f v
-                                           smaller a b = if a |>| b then b else a
-                                           smallest a b = pure smaller <*> a <*> b
-a@Circle {} !!> b@Circle {} = Nothing 
+                                           smallest a b = pure min <*> a <*> b
+a@Circle {} !!> b@Circle {} = Nothing
 
 instance Renderable Shape where
   render r@Rectangle {} = let width = right r - left r
