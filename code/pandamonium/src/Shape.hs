@@ -26,11 +26,12 @@ a@Rectangle {} !!> b@Rectangle {} = foldl1 smallest [ push move_up (top a - bott
                                            push f v = if v <= 0 then Nothing else Just $ f v
                                            smallest a b = pure min <*> a <*> b
 a@Circle {} !!> b@Circle {} = let separation = centre b - centre a
-                                  dist = magnitude separation
+                                  sq_dist = sq_mag separation
                                   required_dist = radius a + radius b
-                               in if dist > required_dist
+                               in if sq_dist > (required_dist * required_dist)
                                   then Nothing
-                                  else let additional_dist = required_dist - dist
+                                  else let dist = sqrt sq_dist
+                                           additional_dist = required_dist - dist
                                            lengths = additional_dist / dist
                                         in Just $ separation * Vector { x = lengths , y = lengths }
 
