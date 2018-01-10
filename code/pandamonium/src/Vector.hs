@@ -22,10 +22,6 @@ magnitude = sqrt . sq_mag
 sq_mag :: Vector -> Float
 sq_mag vec = x vec * x vec + y vec * y vec
 
--- negation: can't use Num for Vector, boo
-neg :: Vector -> Vector
-neg a = Vector { x = -(x a), y = -(y a) }
-
 instance Num Vector where
   a + b = Vector { x = x a + x b, y = y a + y b }
   a - b = Vector { x = x a - x b, y = y a - y b }

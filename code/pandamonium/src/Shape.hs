@@ -7,10 +7,18 @@ import Graphics.Gloss (translate, circleSolid, rectangleSolid)
 data Shape = Rectangle { left :: Float, right :: Float, top :: Float, bottom :: Float }
            | Circle { centre :: Vector, radius :: Float } deriving (Show, Eq)
 
+move :: Shape -> Vector -> Shape
+move rect@Rectangle{} vect = Rectangle {
+    left = left rect + x vect,
+    right = right rect + x vect,
+    top = top rect + y vect,
+    bottom = bottom rect + y vect }
+move circle@Circle{} vect = Circle { centre = centre circle + vect, radius = radius circle }
+
 -- checks if two shapes collide, returning a boolean
 infixl 2 !!!
 (!!!) :: Shape -> Shape -> Bool
-a@Rectangle {} !!! b@Rectangle {} = not (top a < bottom b || top b < bottom a || left a > right b || left b > right a)
+a@Rectangle {} !!! b@Rectangle {} = not (top a <= bottom b || top b <= bottom a || left a >= right b || left b >= right a)
 a@Circle {} !!! b@Circle {} = let separation = centre a - centre b
                                   sq_dist = sq_mag separation
                                   sum_radii = radius a + radius b
