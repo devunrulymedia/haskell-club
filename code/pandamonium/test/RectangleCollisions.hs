@@ -68,29 +68,27 @@ test_overlapping_a_corner_pushes_right_if_that_is_shorter_than_down =
       rectB = Rectangle { left = 27, right = 50, top = 24, bottom = 0 }
    in assertEqual (rectA !!> rectB) (Just (move_right 3))
 
-prop_colliding_rectangles_have_pushout :: Shape -> Shape -> Bool
-prop_colliding_rectangles_have_pushout a@Rectangle{} b@Rectangle{}
-  | a !!! b = isJust (a !!> b)
-  | otherwise  = isNothing (a !!> b)
-prop_colliding_rectangles_have_pushout _ _ = True
+prop_colliding_shapes_have_pushout a b
+  | a !!! b   = isJust (a !!> b)
+  | otherwise = isNothing (a !!> b)
 
-prop_pushout_makes_rectangles_no_longer_collide :: Shape -> Shape -> Bool
-prop_pushout_makes_rectangles_no_longer_collide a@Rectangle{} b@Rectangle{} =
-  case a !!> b of
-    (Just v)  -> not (a !!! move b v)
-    (Nothing) -> not (a !!! b)
-prop_pushout_makes_rectangles_no_longer_collide _ _ = True
+prop_collision_is_commutative a b
+  | a !!! b   = b !!! a
+  | otherwise = not (b !!! a)
 
-prop_collisions_are_commutative :: Shape -> Shape -> Bool
-prop_collisions_are_commutative a@Rectangle{} b@Rectangle{}
-  | a !!! b = b !!! a
-  | otherwise  = not (b !!! a)
-prop_collisions_are_commutative _ _ = True
+prop_pushout_exists_when_collision a b = case a !!> b of
+  (Just _)  -> a !!! b
+  (Nothing) -> not (a !!! b)
 
-prop_pushouts_are_inversely_commutative :: Shape -> Shape -> Bool
-prop_pushouts_are_inversely_commutative a@Rectangle{} b@Rectangle{} = (a !!> b) == (negate <$> (b !!> a))
-prop_pushouts_are_inversely_commutative _ _ = True
+prop_pushout_is_inversely_commutative a b = (a !!> b) == (negate <$> (b !!> a))
 
+-- floating point means sometimes we have a tiny pushout
+prop_pushout_leaves_shapes_not_colliding a b = case a !!> b of
+  (Just v)  -> maybe 0 magnitude (a !!> move b v) < 0.0001
+  (Nothing) -> not (a !!! b)
+
+instance Arbitrary Shape where
+  arbitrary = generateRectangle
 
 collisionBetween a b = unless (a !!! b) (assertFailure msg)
  where msg = "\n* expected: " ++ show a ++ " to collide with " ++ show b ++ "\n* but got: no collision"
