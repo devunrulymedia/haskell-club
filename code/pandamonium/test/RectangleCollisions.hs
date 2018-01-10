@@ -5,6 +5,7 @@ import Test.Framework
 import Control.Monad
 import Data.Maybe
 import Generators
+import CollisionAssertions
 import Vector
 import Shape
 
@@ -89,9 +90,3 @@ prop_pushout_leaves_shapes_not_colliding a b = case a !!> b of
 
 instance Arbitrary Shape where
   arbitrary = generateRectangle
-
-collisionBetween a b = unless (a !!! b) (assertFailure msg)
- where msg = "\n* expected: " ++ show a ++ " to collide with " ++ show b ++ "\n* but got: no collision"
-
-noCollisionBetween a b = when (a !!! b) (assertFailure msg)
- where msg = "\n* expected: " ++ show a ++ " to not collide with " ++ show b ++ "\n* but got: a collision"

@@ -33,15 +33,17 @@ a@Rectangle {} !!> b@Rectangle {} = foldl1 smallest [ push move_up (top a - bott
                                                       push move_right (right a - left b) ] where
                                            push f v = if v <= 0 then Nothing else Just $ f v
                                            smallest a b = pure min <*> a <*> b
-a@Circle {} !!> b@Circle {} = let separation = centre b - centre a
-                                  sq_dist = sq_mag separation
-                                  required_dist = radius a + radius b
-                               in if sq_dist > (required_dist * required_dist)
-                                  then Nothing
-                                  else let dist = sqrt sq_dist
-                                           additional_dist = required_dist - dist
-                                           lengths = additional_dist / dist
-                                        in Just $ separation * Vector { x = lengths , y = lengths }
+a@Circle {} !!> b@Circle {} = pushout where
+   separation = centre b - centre a
+   sq_dist = sq_mag separation
+   required_dist = radius a + radius b
+   pushout
+     | sq_dist > (required_dist * required_dist) = Nothing
+     | sq_dist == 0                              = Just $ Vector { x = 0, y = required_dist}
+     | otherwise                                 = let dist = sqrt sq_dist
+                                                       additional_dist = required_dist - dist
+                                                       lengths = additional_dist / dist
+                                                    in Just $ separation * Vector { x = lengths , y = lengths }
 
 instance Renderable Shape where
   render r@Rectangle {} = let width = right r - left r
