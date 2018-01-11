@@ -85,7 +85,7 @@ prop_pushout_is_inversely_commutative a b = (a !!> b) == (negate <$> (b !!> a))
 
 -- floating point means sometimes we have a tiny pushout
 prop_pushout_leaves_shapes_not_colliding a b = case a !!> b of
-  (Just v)  -> maybe 0 magnitude (a !!> move b v) < 0.0001
+  (Just v)  -> maybe 0 magnitude (a !!> move b v) < (magnitude v) * 0.00001
   (Nothing) -> not (a !!! b)
 
 instance Arbitrary Shape where
