@@ -26,7 +26,7 @@ scene = [ Block { shape = Rectangle { left = -40, right = -10, top = 10, bottom 
         , Block { shape = Rectangle { left = 20, right = 50, top = 40, bottom = -100}, col = blue } ]
 
 initialWorld :: World
-initialWorld = World { scenery = scene, ball = Ball { pos = Vector.Vector { x = 0, y = 0 }, velocity = Vector.Vector { x = 0.1, y = 0.1 } } }
+initialWorld = World { scenery = scene, ball = Ball { pos = Vector.Vector { x = 0, y = 0 }, velocity = Vector.Vector { x = 10, y = 10 } } }
 
 onEvent :: Event -> World -> World
 onEvent event world = world
