@@ -22,7 +22,7 @@ library
   exposed-modules:     World
                      , Block
                      , Renderable
-                     , Entity
+                     , Ball
                      , Shape
                      , Vector
   build-depends:       base >= 4.7 && < 5
@@ -44,6 +44,8 @@ test-suite pandamonium-test
   hs-source-dirs:      test
   main-is:             Test.hs
   other-modules:       RectangleCollisions
+                     , CircleCollisions
+                     , CollisionAssertions
                      , Generators
   build-depends:       base
                      , HTF
