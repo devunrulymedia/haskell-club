@@ -39,7 +39,9 @@ a@Circle {} !!> b@Circle {} = pushout where
    required_dist = radius a + radius b
    pushout
      | sq_dist > (required_dist * required_dist) = Nothing
-     | sq_dist == 0                              = Just $ Vector { x = 0, y = required_dist}
+     | sq_dist == 0                              = Just $ Vector { x = 0, y = if radius a > radius b
+                                                                            then required_dist
+                                                                            else -required_dist }
      | otherwise                                 = let dist = sqrt sq_dist
                                                        additional_dist = required_dist - dist
                                                        lengths = additional_dist / dist
