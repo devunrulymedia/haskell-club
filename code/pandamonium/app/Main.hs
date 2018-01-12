@@ -22,8 +22,8 @@ fps :: Int
 fps = 60
 
 scene :: [Block]
-scene = [ Block { shape = Rectangle { left = -40, right = -10, top = 10, bottom = -70}, col = red  }
-        , Block { shape = Rectangle { left = 20, right = 50, top = 40, bottom = -100}, col = blue } ]
+scene = [ Block { shape = Rect (Rectangle (-40) (-10) 10 (-70)), col = red  }
+        , Block { shape = Rect (Rectangle 20 50 40 (-100)),      col = blue } ]
 
 initialWorld :: World
 initialWorld = World { scenery = scene, ball = Ball { pos = Vector.Vector { x = 0, y = 0 }, velocity = Vector.Vector { x = 10, y = 10 } } }

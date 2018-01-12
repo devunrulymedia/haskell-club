@@ -11,4 +11,4 @@ data Ball = Ball {
 } deriving (Show, Eq)
 
 instance Renderable Ball where
-  render ball = color yellow $ render Shape.Circle { centre = pos ball, radius = 10 }
+  render ball = color yellow $ render $ Shape.Circle (pos ball) 10
