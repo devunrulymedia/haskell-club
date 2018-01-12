@@ -12,16 +12,19 @@ instance Arbitrary Vector where
     y <- arbitrary
     return Vector { x = x, y = y}
 
-generateRectangle :: Gen Shape
-generateRectangle = do
-  top <- arbitrary
-  bottom <- arbitrary `suchThat` (< top)
-  left <- arbitrary
-  right <- arbitrary `suchThat` (> left)
-  return Rectangle { left = left, right = right, top = top, bottom = bottom }
+instance Arbitrary Rectangle where
+  arbitrary = do
+    top <- arbitrary
+    bottom <- arbitrary `suchThat` (< top)
+    left <- arbitrary
+    right <- arbitrary `suchThat` (> left)
+    return $ Rectangle left right top bottom
 
-generateCircle :: Gen Shape
-generateCircle = do
-  centre <- arbitrary
-  Positive radius <- arbitrary
-  return Circle { centre = centre, radius = radius }
+instance Arbitrary Circle where
+  arbitrary = do
+    centre <- arbitrary
+    Positive radius <- arbitrary
+    return $ Circle centre radius
+
+instance Arbitrary Shape where
+  arbitrary = oneof [Rect <$> arbitrary, Circ <$> arbitrary]
