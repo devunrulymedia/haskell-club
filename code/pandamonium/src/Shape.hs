@@ -31,8 +31,8 @@ class Collides a where
 
 instance Collides Rectangle where
   (Rectangle la ra ta ba) !!! (Rectangle lb rb tb bb) = not (ta <= bb || tb <= ba || la >= rb || lb >= ra)
-  (Rectangle la ra ta ba) !!> (Rectangle lb rb tb bb) = foldl1 smallest [ push move_up (ta - bb),
-                                                                          push move_down (tb - ba),
+  (Rectangle la ra ta ba) !!> (Rectangle lb rb tb bb) = foldl1 smallest [ push move_up (bb - ta),
+                                                                          push move_down (ba - tb),
                                                                           push move_left (rb - la),
                                                                           push move_right (ra - lb) ] where
                                                                push f v = if v <= 0 then Nothing else Just $ f v

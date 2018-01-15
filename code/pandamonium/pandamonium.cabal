@@ -23,6 +23,7 @@ library
                      , Block
                      , Renderable
                      , Ball
+                     , CollisionHandler
                      , Shape
                      , Vector
   build-depends:       base >= 4.7 && < 5
@@ -45,6 +46,7 @@ test-suite pandamonium-test
   main-is:             Test.hs
   other-modules:       RectangleCollisions
                      , CircleCollisions
+                     , ShapeCollisions
                      , CollisionAssertions
                      , Generators
   build-depends:       base
