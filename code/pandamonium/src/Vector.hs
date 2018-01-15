@@ -4,6 +4,16 @@ data Vector = Vector { x :: Float, y :: Float } deriving (Show, Eq)
 type Point = Vector
 zero_vector = Vector { x = 0, y = 0 }
 
+unit :: Vector -> Vector
+unit v = v * Vector { x = inv_mag, y = inv_mag }
+         where inv_mag = 1 / (magnitude v)
+
+dot :: Vector -> Vector -> Float
+dot a b = x a * x b + y a * y b
+
+normal :: Vector -> Vector
+normal v = Vector { x = y v, y = - x v }
+
 move_up :: Float -> Vector
 move_up y = zero_vector { y = y }
 
