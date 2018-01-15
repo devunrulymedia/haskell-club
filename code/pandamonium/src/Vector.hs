@@ -4,6 +4,9 @@ data Vector = Vector { x :: Float, y :: Float } deriving (Show, Eq)
 type Point = Vector
 zero_vector = Vector { x = 0, y = 0 }
 
+scale :: Float -> Vector
+scale a = Vector { x = a, y = a }
+
 unit :: Vector -> Vector
 unit v = v * Vector { x = inv_mag, y = inv_mag }
          where inv_mag = 1 / (magnitude v)

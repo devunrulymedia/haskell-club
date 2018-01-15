@@ -10,6 +10,8 @@ import Block
 import Vector
 import Ball
 import CollisionHandler
+import Integrator
+import Gravity
 import Renderable
 import Shape
 
@@ -20,7 +22,7 @@ background :: Color
 background = black
 
 fps :: Int
-fps = 60
+fps = 600
 
 scene :: [Block]
 scene = [ Block { shape = Rect (Rectangle (-200) 200 100 90), col = red  }
@@ -36,9 +38,7 @@ onEvent :: Event -> World -> World
 onEvent event world = world
 
 onTime :: Float -> World -> World
-onTime t world = let ballo = ball world
-                     newPos = pos ballo + (velocity ballo * Vector { x = t, y = t })
-                  in handleWorld World { scenery = scenery world, ball = ballo { pos = newPos } }
+onTime t world = foldl (\w f -> f t w) world [integrate, gravitate 400, handleCollisions]
 
 main :: IO ()
 main = do sprite <- loadBMP "resources/sprites/ugliness.bmp"

@@ -52,7 +52,7 @@ instance Collides Circle where
        | otherwise                                 = let dist = sqrt sq_dist
                                                          additional_dist = required_dist - dist
                                                          lengths = additional_dist / dist
-                                                      in Just $ separation * Vector { x = lengths , y = lengths }
+                                                      in Just $ separation * scale lengths
 
 instance Collides Shape where
   (Rect a) !!! (Rect b) = a !!! b
@@ -102,7 +102,7 @@ pointCirclePushout corner circle = (Circle corner 0) !!> circle
 
 projectionCirclePushout :: Vector -> Float -> Float -> Float -> Maybe Vector
 projectionCirclePushout unit lineProj circleProj radius = if radius > sep
-      then Just $ unit * Vector { x = req, y = req}
+      then Just $ unit * scale req
       else Nothing
       where sep = abs $ lineProj - circleProj
             req = radius - sep
