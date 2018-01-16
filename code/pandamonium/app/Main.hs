@@ -38,7 +38,7 @@ onEvent :: Event -> World -> World
 onEvent event world = world
 
 onTime :: Float -> World -> World
-onTime t world = foldl (\w f -> f t w) world [integrate, gravitate 400, handleCollisions]
+onTime t world = foldl (\w f -> f t w) world [gravitate 400, integrate, handleCollisions]
 
 main :: IO ()
 main = do sprite <- loadBMP "resources/sprites/ugliness.bmp"
