@@ -8,7 +8,7 @@ import World
 import Graphics.Gloss.Data.Vector
 
 handle :: Ball -> Block -> Ball
-handle ball@(Ball pos vel) (Block shape _) = maybe ball handleCollision (shape !!> Circ (Shape.Circle pos 10)) where
+handle ball@(Ball pos vel) block = maybe ball handleCollision (shape block !!> shape ball) where
   handleCollision pushout = Ball bounced_pos reflected_vel where
     unit_push     = normalizeV pushout
     bounced_pos   = pos + (mulSV 2 pushout)

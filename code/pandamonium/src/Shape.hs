@@ -22,6 +22,9 @@ instance Movable Shape where
   move (Rect r) v = Rect (move r v)
   move (Circ c) v = Circ (move c v)
 
+class Shaped t where
+  shape :: t -> Shape
+
 infixl 2 !!!
 infixl 2 !!>
 

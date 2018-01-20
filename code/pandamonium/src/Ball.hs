@@ -6,5 +6,8 @@ import Graphics.Gloss
 
 data Ball = Ball Vector Vector deriving (Show, Eq)
 
+instance Shaped Ball where
+  shape (Ball pos _) = Circ (Shape.Circle pos 10)
+
 instance Renderable Ball where
-  render (Ball pos vel) = color yellow $ render $ Shape.Circle pos 10
+  render ball = color yellow $ render $ shape ball
