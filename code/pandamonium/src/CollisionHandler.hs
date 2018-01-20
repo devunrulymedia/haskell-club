@@ -5,7 +5,6 @@ import Ball
 import Block
 import Shape
 import World
-import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 
 handle :: Ball -> Block -> Ball
