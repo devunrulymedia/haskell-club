@@ -31,7 +31,7 @@ scene = [ Block (Rect (Rectangle (-200) 200 100 90)) red
         , Block (Circ (Shape.Circle (-40, 0) 30)) white ]
 
 initialWorld :: World
-initialWorld = World { scenery = scene, ball = Ball { pos = (20, 0), velocity = (200, 150) } }
+initialWorld = World { scenery = scene, ball = Ball (20, 0) (200, 150) }
 
 onEvent :: Event -> World -> World
 onEvent event world = world
