@@ -24,11 +24,11 @@ fps :: Int
 fps = 600
 
 scene :: [Block]
-scene = [ Block { shape = Rect (Rectangle (-200) 200 100 90), col = red  }
-        , Block { shape = Rect (Rectangle (-200) 200 (-90) (-100)), col = blue }
-        , Block { shape = Rect (Rectangle (-200) (-190) 100 (-100)), col = green }
-        , Block { shape = Rect (Rectangle 190 200 100 (-100)), col = orange }
-        , Block { shape = Circ (Shape.Circle (-40, 0) 30), col = white }]
+scene = [ Block (Rect (Rectangle (-200) 200 100 90)) red
+        , Block (Rect (Rectangle (-200) 200 (-90) (-100))) blue
+        , Block (Rect (Rectangle (-200) (-190) 100 (-100))) green
+        , Block (Rect (Rectangle 190 200 100 (-100))) orange
+        , Block (Circ (Shape.Circle (-40, 0) 30)) white ]
 
 initialWorld :: World
 initialWorld = World { scenery = scene, ball = Ball { pos = (20, 0), velocity = (200, 150) } }
