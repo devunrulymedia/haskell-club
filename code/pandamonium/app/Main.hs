@@ -7,7 +7,6 @@ import Graphics.Gloss.Interface.IO.Game
 import Codec.BMP
 import World
 import Block
-import Vector
 import Ball
 import CollisionHandler
 import Integrator
@@ -29,10 +28,10 @@ scene = [ Block { shape = Rect (Rectangle (-200) 200 100 90), col = red  }
         , Block { shape = Rect (Rectangle (-200) 200 (-90) (-100)), col = blue }
         , Block { shape = Rect (Rectangle (-200) (-190) 100 (-100)), col = green }
         , Block { shape = Rect (Rectangle 190 200 100 (-100)), col = orange }
-        , Block { shape = Circ (Shape.Circle Vector { x = -40, y = 0} 30), col = white }]
+        , Block { shape = Circ (Shape.Circle (-40, 0) 30), col = white }]
 
 initialWorld :: World
-initialWorld = World { scenery = scene, ball = Ball { pos = Vector.Vector { x = 0, y = 0 }, velocity = Vector.Vector { x = 200, y = 150 } } }
+initialWorld = World { scenery = scene, ball = Ball { pos = (20, 0), velocity = (200, 150) } }
 
 onEvent :: Event -> World -> World
 onEvent event world = world

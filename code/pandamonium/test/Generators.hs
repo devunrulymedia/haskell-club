@@ -3,14 +3,7 @@ module Generators where
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Modifiers
 import Test.QuickCheck.Gen
-import Vector
 import Shape
-
-instance Arbitrary Vector where
-  arbitrary = do
-    x <- arbitrary
-    y <- arbitrary
-    return Vector { x = x, y = y}
 
 instance Arbitrary Rectangle where
   arbitrary = do

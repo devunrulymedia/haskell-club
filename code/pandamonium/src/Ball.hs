@@ -1,13 +1,12 @@
 module Ball where
 
 import Shape
-import Vector
 import Renderable
 import Graphics.Gloss
 
 data Ball = Ball {
-  pos :: Vector.Vector,
-  velocity :: Vector.Vector
+  pos :: Vector,
+  velocity :: Vector
 } deriving (Show, Eq)
 
 instance Renderable Ball where
