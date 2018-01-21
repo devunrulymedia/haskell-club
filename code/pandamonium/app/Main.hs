@@ -24,17 +24,18 @@ fps :: Int
 fps = 600
 
 scene :: [Block]
-scene = [ Block (Rect (Rectangle (-200) 200 100 90)) red
-        , Block (Rect (Rectangle (-200) 200 (-90) (-100))) blue
-        , Block (Rect (Rectangle (-200) (-190) 100 (-100))) green
-        , Block (Rect (Rectangle 190 200 100 (-100))) orange
-        , Block (Circ (Shape.Circle (-40, 0) 30)) white ]
+scene = [ Block (Rect (Rectangle (-200) 200 100 90)) white
+        , Block (Rect (Rectangle (-200) 200 (-90) (-100))) white
+        , Block (Rect (Rectangle (-200) (-190) 100 (-100))) white
+        , Block (Rect (Rectangle 190 200 100 (-100))) white
+        , Block (Rect (Rectangle (-5) 5 (-40) (-90))) white ]
 
 paddleList :: [Paddle]
-paddleList = [ Paddle (-150, 0) (Rect (Rectangle (-10) 10 40 (-40))) 200 (withKeys (Char 'a') (Char 'z')) yellow ]
+paddleList = [ Paddle (-150, 0) (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char 'a') (Char 'z')) orange
+             , Paddle (150, 0)  (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char '\'') (Char '/')) blue ]
 
 initialWorld :: World
-initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 150) }
+initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 300) }
 
 main :: IO ()
 main = do sprite <- loadBMP "resources/sprites/ugliness.bmp"

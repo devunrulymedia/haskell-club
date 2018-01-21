@@ -24,16 +24,21 @@ integrate t w@World { ball = (Ball pos vel) } = w { ball = Ball (pos + mulSV t v
 updatePaddles :: Float -> World -> World
 updatePaddles t world = world { paddles = update t <$> paddles world }
 
-handle :: Ball -> Block -> Ball
-handle ball@(Ball pos vel) block = maybe ball handleCollision (shape block !!> shape ball) where
+ballCollision :: Ball -> Shape -> Ball
+ballCollision ball@(Ball pos vel) shp = maybe ball handleCollision (shp !!> shape ball) where
   handleCollision pushout = Ball bounced_pos reflected_vel where
     unit_push     = normalizeV pushout
     bounced_pos   = pos + (mulSV 2 pushout)
     normal_proj   = 2 * (vel `dotV` unit_push)
     reflected_vel = vel - mulSV normal_proj unit_push
 
+paddleBlockCollision :: Paddle -> Block -> Paddle
+paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> shape paddle)
+
 handleCollisions :: Float -> World -> World
-handleCollisions t w = w { ball = foldl handle (ball w) (scenery w) }
+handleCollisions t w = w {
+  paddles = map (\p -> foldl paddleBlockCollision p (scenery w)) (paddles w),
+  ball = foldl ballCollision (ball w) ((shape <$> scenery w) ++ (shape <$> paddles w)) }
 
 instance Updatable World where
   listen event world = world { paddles = listen event <$> paddles world }
