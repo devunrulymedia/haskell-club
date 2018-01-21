@@ -23,10 +23,10 @@ library
                      , Block
                      , Renderable
                      , Ball
-                     , CollisionHandler
-                     , Integrator
-                     , Gravity
                      , Shape
+                     , Controller
+                     , Updatable
+                     , Paddle
   build-depends:       base >= 4.7 && < 5
                      , gloss
   default-language:    Haskell2010
