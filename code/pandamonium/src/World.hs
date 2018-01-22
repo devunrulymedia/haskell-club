@@ -16,17 +16,17 @@ instance Renderable World where
   render world = Pictures $ (render <$> scenery world) ++ (render <$> paddles world) ++ [(render $ ball world)]
 
 gravitate :: Float -> Float -> World -> World
-gravitate g t w@World { ball = (Ball pos vel) } = w { ball = Ball pos (vel + mulSV t (0, -g)) }
+gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel + mulSV t (0, -g)) pic }
 
 integrate :: Float -> World -> World
-integrate t w@World { ball = (Ball pos vel) } = w { ball = Ball (pos + mulSV t vel) vel }
+integrate t w@World { ball = (Ball pos vel pic) } = w { ball = Ball (pos + mulSV t vel) vel pic }
 
 updatePaddles :: Float -> World -> World
 updatePaddles t world = world { paddles = update t <$> paddles world }
 
 ballCollision :: Ball -> Shape -> Ball
-ballCollision ball@(Ball pos vel) shp = maybe ball handleCollision (shp !!> shape ball) where
-  handleCollision pushout = Ball bounced_pos reflected_vel where
+ballCollision ball@(Ball pos vel pic) shp = maybe ball handleCollision (shp !!> shape ball) where
+  handleCollision pushout = Ball bounced_pos reflected_vel pic where
     unit_push     = normalizeV pushout
     bounced_pos   = pos + (mulSV 2 pushout)
     normal_proj   = 2 * (vel `dotV` unit_push)
