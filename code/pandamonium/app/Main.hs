@@ -35,6 +35,6 @@ paddleList = [ Paddle (-150, 0) (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys
              , Paddle (150, 0)  (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char '\'') (Char '/')) blue ]
 
 main :: IO ()
-main = do sprite <- loadBMP "resources/sprites/ugliness.bmp"
-          let initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 300) (circleSolid 10) }
+main = do sprite <- loadBMP "resources/sprites/ball.bmp"
+          let initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 300) sprite }
           play window background fps initialWorld render listen update
