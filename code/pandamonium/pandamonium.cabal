@@ -24,6 +24,7 @@ library
                      , Renderable
                      , Ball
                      , Shape
+                     , Score
                      , Controller
                      , Updatable
                      , Paddle

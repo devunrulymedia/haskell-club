@@ -4,7 +4,10 @@ import Graphics.Gloss.Interface.IO.Game
 
 type ControlUpdater = Event -> ControlState -> ControlState
 
-data ControlState = ControlState Bool Bool
+type UpPressed = Bool
+type DownPressed = Bool
+
+data ControlState = ControlState UpPressed DownPressed
 
 data Controller = Controller ControlState ControlUpdater
 

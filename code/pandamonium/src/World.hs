@@ -8,12 +8,13 @@ import Updatable
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
+import Score
 import Shape
 
-data World = World { scenery :: [ Block ], paddles :: [ Paddle ], ball :: Ball }
+data World = World { scenery :: [ Block ], paddles :: [ Paddle ], ball :: Ball, scores:: [ Score ] }
 
 instance Renderable World where
-  render world = Pictures $ (render <$> scenery world) ++ (render <$> paddles world) ++ [(render $ ball world)]
+  render world = Pictures $ (render <$> scenery world) ++ (render <$> paddles world) ++ [(render $ ball world)] ++ (render <$> scores world)
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel + mulSV t (0, -g)) pic }
