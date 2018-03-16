@@ -1,3 +1,3 @@
 module GameEvent where
 
-data GameEvent = Placeholder
+data GameEvent = PointScored Int
