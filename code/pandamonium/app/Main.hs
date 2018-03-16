@@ -10,6 +10,7 @@ import Block
 import Ball
 import Renderable
 import Updatable
+import GameEvent
 import Shape
 import Paddle
 import Score
@@ -40,5 +41,5 @@ scoreList = [Score (-120, 125) 42, Score (10, 125) 69]
 
 main :: IO ()
 main = do sprite <- loadBMP "resources/sprites/ball.bmp"
-          let initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 300) sprite, scores = scoreList }
+          let initialWorld = World { scenery = scene, paddles = paddleList, ball = Ball (20, 0) (200, 300) sprite, scores = scoreList, events = [] }
           play window background fps initialWorld render listen update

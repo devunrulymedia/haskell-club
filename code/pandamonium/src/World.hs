@@ -5,13 +5,14 @@ import Block
 import Paddle
 import Renderable
 import Updatable
+import GameEvent
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
 import Score
 import Shape
 
-data World = World { scenery :: [ Block ], paddles :: [ Paddle ], ball :: Ball, scores:: [ Score ] }
+data World = World { scenery :: [ Block ], paddles :: [ Paddle ], ball :: Ball, scores :: [ Score ], events :: [ GameEvent ] }
 
 instance Renderable World where
   render world = Pictures $ (render <$> scenery world) ++ (render <$> paddles world) ++ [(render $ ball world)] ++ (render <$> scores world)

@@ -27,6 +27,7 @@ library
                      , Score
                      , Controller
                      , Updatable
+                     , GameEvent
                      , Paddle
   build-depends:       base >= 4.7 && < 5
                      , gloss
