@@ -25,8 +25,8 @@ data World = World
 instance Renderable World where
   render world = Pictures $
                   (render <$> scenery world) ++
-                  [(render $ ball world)] ++
-                  (render <$> players world)
+                  (render <$> players world) ++
+                  [(render $ ball world)]
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel + mulSV t (0, -g)) pic }
@@ -37,9 +37,6 @@ integrate t w@World { ball = (Ball pos vel pic) } = w { ball = Ball (pos + mulSV
 updatePlayers :: Float -> World -> World
 updatePlayers t world = world { players = update t <$> players world }
 
-increase :: Score -> Score
-increase (Score pos points) = Score pos (points + 1)
-
 checkForScore :: Float -> World -> World
 checkForScore t world = let newEvents = players world >>= checkScore'
                          in world { events = newEvents ++ events world } where
@@ -48,17 +45,14 @@ checkForScore t world = let newEvents = players world >>= checkScore'
     then [ PointScored $ index player ]
     else []
 
-resetBall :: Float -> World -> World
-resetBall t world = case events world of
-  []                     -> world
-  (PointScored i : rest) -> world
-                              { events = rest
-                              , ball = initialBall world
-                              , players = scorePoint <$> players world } where
-      scorePoint :: Player -> Player
-      scorePoint player = if index player == i
-        then player { score = increase $ score player }
-        else player
+resetBall :: GameEvent -> World -> World
+resetBall (PointScored _) world = world { ball = initialBall world }
+
+handleEvents :: Float -> World -> World
+handleEvents t w = (foldl (flip handleEvent) w (events w)) { events = [] }
+
+instance GameEvents World where
+  handleEvent e world = resetBall e world { players = handleEvent e <$> players world }
 
 ballCollision :: Ball -> Shape -> Ball
 ballCollision ball@(Ball pos vel pic) shp = maybe ball handleCollision (shp !!> shape ball) where
@@ -72,9 +66,11 @@ paddleBlockCollision :: Paddle -> Block -> Paddle
 paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> shape paddle)
 
 handleCollisions :: Float -> World -> World
-handleCollisions t w = w {
-  players = map (\p -> p { paddle = foldl paddleBlockCollision (paddle p) (scenery w) }) (players w),
-  ball = foldl ballCollision (ball w) ((shape <$> scenery w) ++ (shape <$> paddle <$> players w)) }
+handleCollisions t w = let walls = shape <$> scenery w
+                           bats = shape <$> paddle <$> players w
+                        in w { players = restrictBats <$> players w
+                             , ball = foldl ballCollision (ball w) (walls ++ bats) } where
+          restrictBats p = p { paddle = foldl paddleBlockCollision (paddle p) (scenery w) }
 
 instance Updatable World where
   listen event world = world { players = listen event <$> players world }
@@ -83,6 +79,6 @@ instance Updatable World where
          gravitate 400,
          integrate,
          checkForScore,
-         resetBall,
+         handleEvents,
          handleCollisions
          ]
