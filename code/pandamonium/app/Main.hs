@@ -14,6 +14,7 @@ import GameEvent
 import Shape
 import Paddle
 import Score
+import Player
 import Controller
 
 window :: Display
@@ -28,19 +29,39 @@ fps = 600
 scene :: [Block]
 scene = [ Block (Rect (Rectangle (-200) 200 100 90)) white
         , Block (Rect (Rectangle (-200) 200 (-90) (-100))) white
-        , Block (Rect (Rectangle (-200) (-190) 100 (-100))) white
-        , Block (Rect (Rectangle 190 200 100 (-100))) white
         , Block (Rect (Rectangle (-5) 5 (-40) (-90))) white ]
 
-paddleList :: [Paddle]
-paddleList = [ Paddle (-150, 0) (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char 'a') (Char 'z')) orange
-             , Paddle (150, 0)  (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char '\'') (Char '/')) blue ]
+p1paddle = Paddle (-150, 0) (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char 'a') (Char 'z')) orange
+p2paddle = Paddle (150, 0)  (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char '\'') (Char '/')) blue
 
-scoreList :: [Score]
-scoreList = [Score (-120, 125) 42, Score (10, 125) 69]
+paddleList = [p1paddle, p2paddle]
+
+playerList :: [Player]
+playerList =
+  [ Player
+    { paddle = p1paddle
+    , score = Score (-120, 125) 0
+    , hue = orange
+    , endzone = Block (Rect (Rectangle 190 200 100 (-100))) white
+    , index = 1
+    }
+  , Player
+    { paddle = p2paddle
+    , score = Score (80, 125) 0
+    , hue = blue
+    , endzone = Block (Rect (Rectangle (-200) (-190) 100 (-100))) white
+    , index = 2
+    }
+  ]
 
 main :: IO ()
 main = do sprite <- loadBMP "resources/sprites/ball.bmp"
           let initBall = Ball (20, 0) (200, 300) sprite
-          let initialWorld = World { scenery = scene, paddles = paddleList, ball = initBall, initialBall = initBall, scores = scoreList, events = [] }
+          let initialWorld = World
+                              { scenery = scene
+                              , ball = initBall
+                              , initialBall = initBall
+                              , events = []
+                              , players = playerList
+                              }
           play window background fps initialWorld render listen update

@@ -29,6 +29,7 @@ library
                      , Updatable
                      , GameEvent
                      , Paddle
+                     , Player
   build-depends:       base >= 4.7 && < 5
                      , gloss
   default-language:    Haskell2010

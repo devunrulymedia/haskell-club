@@ -9,6 +9,5 @@ instance Renderable Score where
   render (Score (x, y) points) =
     translate x y
     $ scale 0.25 0.25
-    $ color white
     $ Text
     $ show points

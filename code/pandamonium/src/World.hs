@@ -11,11 +11,22 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
 import Score
 import Shape
+import Player
+import Data.Maybe
 
-data World = World { scenery :: [ Block ], paddles :: [ Paddle ], ball :: Ball, initialBall :: Ball, scores :: [ Score ], events :: [ GameEvent ] }
+data World = World
+                { scenery :: [ Block ]
+                , players :: [Player]
+                , ball :: Ball
+                , initialBall :: Ball
+                , events :: [ GameEvent ]
+                }
 
 instance Renderable World where
-  render world = Pictures $ (render <$> scenery world) ++ (render <$> paddles world) ++ [(render $ ball world)] ++ (render <$> scores world)
+  render world = Pictures $
+                  (render <$> scenery world) ++
+                  [(render $ ball world)] ++
+                  (render <$> players world)
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel + mulSV t (0, -g)) pic }
@@ -23,21 +34,31 @@ gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel +
 integrate :: Float -> World -> World
 integrate t w@World { ball = (Ball pos vel pic) } = w { ball = Ball (pos + mulSV t vel) vel pic }
 
-updatePaddles :: Float -> World -> World
-updatePaddles t world = world { paddles = update t <$> paddles world }
-
-checkForScore :: Float -> World -> World
-checkForScore t world = if any (shape (ball world) !!!) (shape <$> scenery world)
-  then world { events = PointScored 0 : events world }
-  else world
+updatePlayers :: Float -> World -> World
+updatePlayers t world = world { players = update t <$> players world }
 
 increase :: Score -> Score
 increase (Score pos points) = Score pos (points + 1)
 
-incrementScore :: Float -> World -> World
-incrementScore t world = case events world of
+checkForScore :: Float -> World -> World
+checkForScore t world = let newEvents = players world >>= checkScore'
+                         in world { events = newEvents ++ events world } where
+  checkScore' :: Player -> [ GameEvent ]
+  checkScore' player = if shape (ball world) !!! shape (endzone player)
+    then [ PointScored $ index player ]
+    else []
+
+resetBall :: Float -> World -> World
+resetBall t world = case events world of
   []                     -> world
-  (PointScored _ : rest) -> world { events = rest, scores = increase <$> scores world, ball = initialBall world }
+  (PointScored i : rest) -> world
+                              { events = rest
+                              , ball = initialBall world
+                              , players = scorePoint <$> players world } where
+      scorePoint :: Player -> Player
+      scorePoint player = if index player == i
+        then player { score = increase $ score player }
+        else player
 
 ballCollision :: Ball -> Shape -> Ball
 ballCollision ball@(Ball pos vel pic) shp = maybe ball handleCollision (shp !!> shape ball) where
@@ -52,16 +73,16 @@ paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> 
 
 handleCollisions :: Float -> World -> World
 handleCollisions t w = w {
-  paddles = map (\p -> foldl paddleBlockCollision p (scenery w)) (paddles w),
-  ball = foldl ballCollision (ball w) ((shape <$> scenery w) ++ (shape <$> paddles w)) }
+  players = map (\p -> p { paddle = foldl paddleBlockCollision (paddle p) (scenery w) }) (players w),
+  ball = foldl ballCollision (ball w) ((shape <$> scenery w) ++ (shape <$> paddle <$> players w)) }
 
 instance Updatable World where
-  listen event world = world { paddles = listen event <$> paddles world }
+  listen event world = world { players = listen event <$> players world }
   update t world = foldl (\w f -> f t w) world [
-         updatePaddles,
+         updatePlayers,
          gravitate 400,
          integrate,
          checkForScore,
-         incrementScore,
+         resetBall,
          handleCollisions
          ]
