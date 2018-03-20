@@ -14,5 +14,4 @@ instance Renderable Circle where
   render (Circle (x, y) r) = translate x y $ circleSolid r
 
 instance Renderable Shape where
-  render (Rect r) = render r
-  render (Circ c) = render c
+  render shape = either render render (deconstruct shape)

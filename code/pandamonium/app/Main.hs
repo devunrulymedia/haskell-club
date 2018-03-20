@@ -27,12 +27,12 @@ fps :: Int
 fps = 600
 
 scene :: [Block]
-scene = [ Block (Rect (Rectangle (-200) 200 100 90)) white
-        , Block (Rect (Rectangle (-200) 200 (-90) (-100))) white
-        , Block (Rect (Rectangle (-5) 5 (-40) (-90))) white ]
+scene = [ Block (Rect (-200) 200 100 90) white
+        , Block (Rect (-200) 200 (-90) (-100)) white
+        , Block (Rect (-5) 5 (-40) (-90)) white ]
 
-p1paddle = Paddle (-150, 0) (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char 'a') (Char 'z'))
-p2paddle = Paddle (150, 0)  (Rect (Rectangle (-5) 5 25 (-25))) 200 (withKeys (Char '\'') (Char '/'))
+p1paddle = Paddle (-150, 0) (Rect (-5) 5 25 (-25)) 200 (withKeys (Char 'a') (Char 'z'))
+p2paddle = Paddle (150, 0)  (Rect (-5) 5 25 (-25)) 200 (withKeys (Char '\'') (Char '/'))
 
 paddleList = [p1paddle, p2paddle]
 
@@ -43,7 +43,7 @@ playerList =
     , score = 0
     , scoreLocation = (-120, 125)
     , hue = orange
-    , endzone = Block (Rect (Rectangle 190 200 100 (-100))) orange
+    , endzone = Block (Rect 190 200 100 (-100)) orange
     , index = 1
     }
   , Player
@@ -51,7 +51,7 @@ playerList =
     , score = 0
     , scoreLocation = (80, 125)
     , hue = blue
-    , endzone = Block (Rect (Rectangle (-200) (-190) 100 (-100))) blue
+    , endzone = Block (Rect (-200) (-190) 100 (-100)) blue
     , index = 2
     }
   ]

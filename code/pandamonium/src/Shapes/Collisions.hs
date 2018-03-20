@@ -4,6 +4,17 @@ import Shapes.Datatypes
 import Collisions
 import Graphics.Gloss.Data.Vector
 
+sqMagV :: Vector -> Float
+sqMagV (x, y) = x * x + y * y
+
+data RangeComparison = Before | Inside | After
+
+compareRange :: Ord a => a -> a -> a -> RangeComparison
+compareRange start end point
+  | point < start = Before
+  | point <= end  = Inside
+  | otherwise     = After
+
 instance Collides Rectangle where
   (Rectangle la ra ta ba) !!! (Rectangle lb rb tb bb) = not (ta <= bb || tb <= ba || la >= rb || lb >= ra)
   (Rectangle la ra ta ba) !!> (Rectangle lb rb tb bb) = foldl1 smallest [ push (0, 1)  (ta - bb),
@@ -28,29 +39,11 @@ instance Collides Circle where
                                                          lengths = additional_dist / dist
                                                       in Just $ mulSV lengths separation
 
-instance Collides Shape where
-  (Rect a) !!! (Rect b) = a !!! b
-  (Circ a) !!! (Circ b) = a !!! b
-  (Rect a) !!! (Circ b) = rectCircCollision pointCircleCollision projectionCircleCollision insideCollision a b
-  a@(Circ _) !!! b@(Rect _) = b !!! a
-  (Rect a) !!> (Rect b) = a !!> b
-  (Circ a) !!> (Circ b) = a !!> b
-  (Rect a) !!> (Circ b) = rectCircCollision pointCirclePushout projectionCirclePushout insidePushout a b
-  a@(Circ _) !!> b@(Rect _) = negate <$> (b !!> a)
-
-data RangeComparison = Before | Inside | After
-
-compareRange :: Ord a => a -> a -> a -> RangeComparison
-compareRange start end point
-  | point < start = Before
-  | point <= end  = Inside
-  | otherwise     = After
-
-rectCircCollision :: (Vector -> Circle -> a) ->
-                     (Vector -> Float -> Float -> Float -> a) ->
-                     (Rectangle -> Circle -> a) ->
-                     Rectangle -> Circle -> a
-rectCircCollision pointCircle projectionCircle inside rect@(Rectangle l r t b) circ@(Circle (x, y) radius) =
+rectCircInteraction :: (Vector -> Circle -> a) ->
+                       (Vector -> Float -> Float -> Float -> a) ->
+                       (Rectangle -> Circle -> a) ->
+                       Rectangle -> Circle -> a
+rectCircInteraction pointCircle projectionCircle inside rect@(Rectangle l r t b) circ@(Circle (x, y) radius) =
    case (compareRange l r x, compareRange b t y) of
      (Before, Before) -> pointCircle (l, b) circ
      (Before, After)  -> pointCircle (l, t) circ
@@ -71,6 +64,8 @@ projectionCircleCollision _ lineProj circleProj radius = radius > (abs $ linePro
 insideCollision :: Rectangle -> Circle -> Bool
 insideCollision _ _ = True
 
+rectCircCollision = rectCircInteraction pointCircleCollision projectionCircleCollision insideCollision
+
 pointCirclePushout :: Vector -> Circle -> Maybe Vector
 pointCirclePushout corner circle = (Circle corner 0) !!> circle
 
@@ -88,5 +83,16 @@ insidePushout (Rectangle left right top bottom) (Circle (x, y) radius) =
                    (left - radius - x, 0),
                    (radius + right - x, 0) ]
 
-sqMagV :: Vector -> Float
-sqMagV (x, y) = x * x + y * y
+rectCircPushout = rectCircInteraction pointCirclePushout projectionCirclePushout insidePushout
+
+instance Collides Shape where
+  a !!! b = case (deconstruct a, deconstruct b) of
+    (Left x,  Left y)  -> x !!! y
+    (Right x, Right y) -> x !!! y
+    (Left x,  Right y) -> rectCircCollision x y
+    (Right x, Left y)  -> b !!! a
+  a !!> b = case (deconstruct a, deconstruct b) of
+    (Left x,  Left y)  -> x !!> y
+    (Right x, Right y) -> x !!> y
+    (Left x,  Right y) -> rectCircPushout x y
+    (Right x, Left y)  -> negate <$> (b !!> a)
