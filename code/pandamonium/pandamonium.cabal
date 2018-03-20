@@ -23,7 +23,12 @@ library
                      , Block
                      , Renderable
                      , Ball
-                     , Collisions.Shape
+                     , Movable
+                     , Collisions
+                     , Shapes.Shape
+                     , Shapes.Collisions
+                     , Shapes.Movables
+                     , Shapes.Renderables
                      , Score
                      , Controller
                      , Updatable

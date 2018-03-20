@@ -1,36 +1,8 @@
-module Collisions.Shape where
+module Shapes.Collisions where
 
-import Renderable
-import Graphics.Gloss (translate, rectangleSolid, circleSolid, Vector)
+import Shapes.Shape
+import Collisions
 import Graphics.Gloss.Data.Vector
-
-data Rectangle = Rectangle Float Float Float Float deriving (Show, Eq)
-data Circle = Circle Vector Float deriving (Show, Eq)
-
-data Shape = Rect Rectangle | Circ Circle deriving (Show, Eq)
-
-class Movable a where
-  move :: a -> Vector -> a
-
-instance Movable Rectangle where
-  move (Rectangle l r t b) (x, y) = Rectangle (l + x) (r + x) (t + y) (b + y)
-
-instance Movable Circle where
-  move (Circle c r) v = Circle (c + v) r
-
-instance Movable Shape where
-  move (Rect r) v = Rect (move r v)
-  move (Circ c) v = Circ (move c v)
-
-class Shaped t where
-  shape :: t -> Shape
-
-infixl 2 !!!
-infixl 2 !!>
-
-class Collides a where
-  (!!!) :: a -> a -> Bool
-  (!!>) :: a -> a -> Maybe Vector
 
 instance Collides Rectangle where
   (Rectangle la ra ta ba) !!! (Rectangle lb rb tb bb) = not (ta <= bb || tb <= ba || la >= rb || lb >= ra)
@@ -118,17 +90,3 @@ insidePushout (Rectangle left right top bottom) (Circle (x, y) radius) =
 
 sqMagV :: Vector -> Float
 sqMagV (x, y) = x * x + y * y
-
-
-instance Renderable Rectangle where
-  render (Rectangle l r t b) = translate (l + width / 2) (b + height / 2)
-                             $ rectangleSolid width height where
-                             width = r - l
-                             height = t - b
-
-instance Renderable Circle where
-  render (Circle (x, y) r) = translate x y $ circleSolid r
-
-instance Renderable Shape where
-  render (Rect r) = render r
-  render (Circ c) = render c

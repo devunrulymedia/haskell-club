@@ -7,7 +7,11 @@ import Data.Maybe
 import Generators
 import CollisionAssertions
 import Graphics.Gloss.Data.Vector
-import Shape
+import Collisions
+import Movable
+import Shapes.Shape
+import Shapes.Collisions
+import Shapes.Movables
 
 prop_colliding_shapes_have_pushout :: Shape -> Shape -> Bool
 prop_colliding_shapes_have_pushout a b

@@ -1,8 +1,9 @@
 module Block where
 
-import Collisions.Shape
+import Shapes.Shape
 import Graphics.Gloss
 import Renderable
+import Shapes.Renderables
 
 data Block = Block Shape Color deriving (Show, Eq)
 

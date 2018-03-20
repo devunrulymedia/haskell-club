@@ -1,17 +1,15 @@
 module Ball where
 
-import Collisions.Shape
+import Shapes.Shape
+import Shapes.Renderables
 import Renderable
-import Graphics.Gloss
+import Graphics.Gloss (color, yellow, translate, Vector, Picture)
+import Movable
 
 data Ball = Ball Vector Vector Picture deriving (Show, Eq)
 
-class Moving a where
-  velocity :: a -> Vector
-  applyImpulse :: a -> Vector -> a
-
 instance Shaped Ball where
-  shape (Ball pos _ _) = Circ (Collisions.Shape.Circle pos 10)
+  shape (Ball pos _ _) = Circ (Circle pos 10)
 
 instance Renderable Ball where
   render (Ball (x, y) vel pic) = color yellow $ translate x y pic

@@ -7,7 +7,11 @@ import Data.Maybe
 import Generators
 import CollisionAssertions
 import Graphics.Gloss.Data.Vector
-import Shape
+import Movable
+import Collisions
+import Shapes.Shape
+import Shapes.Collisions
+import Shapes.Movables
 
 test_circles_sharing_a_centre_overlap =
   collisionBetween (Circle  (20, 30) 20) (Circle (20, 30) 10)

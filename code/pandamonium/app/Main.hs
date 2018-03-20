@@ -11,7 +11,7 @@ import Ball
 import Renderable
 import Updatable
 import GameEvent
-import Collisions.Shape
+import Shapes.Shape
 import Paddle
 import Score
 import Player
