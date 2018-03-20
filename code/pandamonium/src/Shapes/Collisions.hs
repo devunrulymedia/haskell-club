@@ -15,19 +15,19 @@ compareRange start end point
   | point <= end  = Inside
   | otherwise     = After
 
-instance Collides Rectangle where
-  (Rectangle la ra ta ba) !!! (Rectangle lb rb tb bb) = not (ta <= bb || tb <= ba || la >= rb || lb >= ra)
-  (Rectangle la ra ta ba) !!> (Rectangle lb rb tb bb) = foldl1 smallest [ push (0, 1)  (ta - bb),
-                                                                          push (0, -1) (tb - ba),
-                                                                          push (-1, 0) (rb - la),
-                                                                          push (1, 0)  (ra - lb) ] where
+instance Collides DeRectangle where
+  (DeRectangle la ra ta ba) !!! (DeRectangle lb rb tb bb) = not (ta <= bb || tb <= ba || la >= rb || lb >= ra)
+  (DeRectangle la ra ta ba) !!> (DeRectangle lb rb tb bb) = foldl1 smallest [ push (0, 1)  (ta - bb),
+                                                                              push (0, -1) (tb - ba),
+                                                                              push (-1, 0) (rb - la),
+                                                                              push (1, 0)  (ra - lb) ] where
                                                                push v m = if m <= 0 then Nothing else Just $ mulSV m v
                                                                shortest a b = if sqMagV a < sqMagV b then a else b
                                                                smallest a b = pure shortest <*> a <*> b
 
-instance Collides Circle where
-  (Circle ca ra) !!! (Circle cb rb) = sqMagV (cb - ca) < (ra + rb) * (ra + rb)
-  (Circle ca ra) !!> (Circle cb rb) = pushout where
+instance Collides DeCircle where
+  (DeCircle ca ra) !!! (DeCircle cb rb) = sqMagV (cb - ca) < (ra + rb) * (ra + rb)
+  (DeCircle ca ra) !!> (DeCircle cb rb) = pushout where
      separation = cb - ca
      sq_dist = sqMagV separation
      required_dist = ra + rb
@@ -39,11 +39,11 @@ instance Collides Circle where
                                                          lengths = additional_dist / dist
                                                       in Just $ mulSV lengths separation
 
-rectCircInteraction :: (Vector -> Circle -> a) ->
+rectCircInteraction :: (Vector -> DeCircle -> a) ->
                        (Vector -> Float -> Float -> Float -> a) ->
-                       (Rectangle -> Circle -> a) ->
-                       Rectangle -> Circle -> a
-rectCircInteraction pointCircle projectionCircle inside rect@(Rectangle l r t b) circ@(Circle (x, y) radius) =
+                       (DeRectangle -> DeCircle -> a) ->
+                       DeRectangle -> DeCircle -> a
+rectCircInteraction pointCircle projectionCircle inside rect@(DeRectangle l r t b) circ@(DeCircle (x, y) radius) =
    case (compareRange l r x, compareRange b t y) of
      (Before, Before) -> pointCircle (l, b) circ
      (Before, After)  -> pointCircle (l, t) circ
@@ -55,19 +55,19 @@ rectCircInteraction pointCircle projectionCircle inside rect@(Rectangle l r t b)
      (Inside, After)  -> projectionCircle (0, 1)  t y radius
      (Inside, Inside) -> inside rect circ
 
-pointCircleCollision :: Vector -> Circle -> Bool
-pointCircleCollision corner circle = (Circle corner 0) !!! circle
+pointCircleCollision :: Vector -> DeCircle -> Bool
+pointCircleCollision corner circle = (DeCircle corner 0) !!! circle
 
 projectionCircleCollision :: Vector -> Float -> Float -> Float -> Bool
 projectionCircleCollision _ lineProj circleProj radius = radius > (abs $ lineProj - circleProj)
 
-insideCollision :: Rectangle -> Circle -> Bool
+insideCollision :: DeRectangle -> DeCircle -> Bool
 insideCollision _ _ = True
 
 rectCircCollision = rectCircInteraction pointCircleCollision projectionCircleCollision insideCollision
 
-pointCirclePushout :: Vector -> Circle -> Maybe Vector
-pointCirclePushout corner circle = (Circle corner 0) !!> circle
+pointCirclePushout :: Vector -> DeCircle -> Maybe Vector
+pointCirclePushout corner circle = (DeCircle corner 0) !!> circle
 
 projectionCirclePushout :: Vector -> Float -> Float -> Float -> Maybe Vector
 projectionCirclePushout unit lineProj circleProj radius = if radius > sep
@@ -76,8 +76,8 @@ projectionCirclePushout unit lineProj circleProj radius = if radius > sep
       where sep = abs $ lineProj - circleProj
             req = radius - sep
 
-insidePushout :: Rectangle -> Circle -> Maybe Vector
-insidePushout (Rectangle left right top bottom) (Circle (x, y) radius) =
+insidePushout :: DeRectangle -> DeCircle -> Maybe Vector
+insidePushout (DeRectangle left right top bottom) (DeCircle (x, y) radius) =
   Just $ minimum [ (0, radius + top - y),
                    (0, bottom - radius - y),
                    (left - radius - x, 0),

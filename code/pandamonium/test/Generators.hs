@@ -5,19 +5,19 @@ import Test.QuickCheck.Modifiers
 import Test.QuickCheck.Gen
 import Shape
 
-instance Arbitrary Rectangle where
+instance Arbitrary DeRectangle where
   arbitrary = do
     top <- arbitrary
     bottom <- arbitrary `suchThat` (< top)
     left <- arbitrary
     right <- arbitrary `suchThat` (> left)
-    return $ Rectangle left right top bottom
+    return $ DeRectangle left right top bottom
 
-instance Arbitrary Circle where
+instance Arbitrary DeCircle where
   arbitrary = do
     centre <- arbitrary
     Positive radius <- arbitrary
-    return $ Circle centre radius
+    return $ DeCircle centre radius
 
 instance Arbitrary Shape where
-  arbitrary = oneof [Rect <$> arbitrary, Circ <$> arbitrary]
+  arbitrary = oneof [construct <$> Left <$> arbitrary, construct <$> Right <$> arbitrary]

@@ -8,7 +8,7 @@ import Movable
 data Ball = Ball Vector Vector Picture deriving (Show, Eq)
 
 instance Shaped Ball where
-  shape (Ball pos _ _) = Circ pos 10
+  shape (Ball pos _ _) = Circle pos 10
 
 instance Renderable Ball where
   render (Ball (x, y) vel pic) = color yellow $ translate x y pic
