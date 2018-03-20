@@ -1,6 +1,6 @@
 module Ball where
 
-import Shape
+import Collisions.Shape
 import Renderable
 import Graphics.Gloss
 
@@ -11,7 +11,7 @@ class Moving a where
   applyImpulse :: a -> Vector -> a
 
 instance Shaped Ball where
-  shape (Ball pos _ _) = Circ (Shape.Circle pos 10)
+  shape (Ball pos _ _) = Circ (Collisions.Shape.Circle pos 10)
 
 instance Renderable Ball where
   render (Ball (x, y) vel pic) = color yellow $ translate x y pic

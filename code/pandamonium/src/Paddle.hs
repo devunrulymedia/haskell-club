@@ -1,7 +1,7 @@
 module Paddle where
 
 import Controller
-import Shape
+import Collisions.Shape
 import Updatable
 import Renderable
 import Graphics.Gloss

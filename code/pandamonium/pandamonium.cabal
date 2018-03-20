@@ -23,7 +23,7 @@ library
                      , Block
                      , Renderable
                      , Ball
-                     , Shape
+                     , Collisions.Shape
                      , Score
                      , Controller
                      , Updatable

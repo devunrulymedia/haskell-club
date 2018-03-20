@@ -1,4 +1,4 @@
-module Shape where
+module Collisions.Shape where
 
 import Renderable
 import Graphics.Gloss (translate, rectangleSolid, circleSolid, Vector)

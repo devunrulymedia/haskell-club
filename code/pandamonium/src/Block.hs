@@ -1,6 +1,6 @@
 module Block where
 
-import Shape
+import Collisions.Shape
 import Graphics.Gloss
 import Renderable
 
