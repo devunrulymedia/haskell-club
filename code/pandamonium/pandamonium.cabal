@@ -25,10 +25,11 @@ library
                      , Ball
                      , Movable
                      , Collisions
-                     , Shapes.Shape
+                     , Shapes.Datatypes
                      , Shapes.Collisions
                      , Shapes.Movables
                      , Shapes.Renderables
+                     , Shape
                      , Score
                      , Controller
                      , Updatable

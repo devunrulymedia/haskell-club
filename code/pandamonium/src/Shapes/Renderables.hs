@@ -1,6 +1,6 @@
 module Shapes.Renderables where
 
-import Shapes.Shape
+import Shapes.Datatypes
 import Renderable
 import Graphics.Gloss (translate, rectangleSolid, circleSolid)
 

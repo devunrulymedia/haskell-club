@@ -1,9 +1,7 @@
 module Paddle where
 
 import Controller
-import Shapes.Shape
-import Shapes.Renderables
-import Shapes.Movables
+import Shape
 import Movable
 import Updatable
 import Renderable

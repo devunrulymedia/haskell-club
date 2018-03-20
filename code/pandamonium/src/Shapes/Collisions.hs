@@ -1,6 +1,6 @@
 module Shapes.Collisions where
 
-import Shapes.Shape
+import Shapes.Datatypes
 import Collisions
 import Graphics.Gloss.Data.Vector
 

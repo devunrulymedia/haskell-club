@@ -10,9 +10,8 @@ import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
 import Score
-import Shapes.Shape
+import Shape
 import Collisions
-import Shapes.Collisions
 import Player
 import Movable
 import Data.Maybe

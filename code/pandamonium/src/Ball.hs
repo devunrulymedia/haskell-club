@@ -1,7 +1,6 @@
 module Ball where
 
-import Shapes.Shape
-import Shapes.Renderables
+import Shape
 import Renderable
 import Graphics.Gloss (color, yellow, translate, Vector, Picture)
 import Movable

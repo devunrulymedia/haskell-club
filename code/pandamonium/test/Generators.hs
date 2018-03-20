@@ -3,7 +3,7 @@ module Generators where
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Modifiers
 import Test.QuickCheck.Gen
-import Shapes.Shape
+import Shape
 
 instance Arbitrary Rectangle where
   arbitrary = do

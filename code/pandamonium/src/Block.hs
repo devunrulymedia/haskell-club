@@ -1,7 +1,7 @@
 module Block where
 
-import Shapes.Shape
-import Graphics.Gloss
+import Shape
+import Graphics.Gloss (Color, color)
 import Renderable
 import Shapes.Renderables
 

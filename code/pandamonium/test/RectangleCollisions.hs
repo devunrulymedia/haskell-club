@@ -9,9 +9,7 @@ import CollisionAssertions
 import Graphics.Gloss.Data.Vector
 import Movable
 import Collisions
-import Shapes.Shape
-import Shapes.Movables
-import Shapes.Collisions
+import Shape
 
 test_overlapping_rectangles_collide =
   collisionBetween (Rectangle 10 30 10 (-10)) (Rectangle 10 30 30 5)

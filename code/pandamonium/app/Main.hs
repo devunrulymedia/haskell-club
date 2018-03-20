@@ -11,7 +11,7 @@ import Ball
 import Renderable
 import Updatable
 import GameEvent
-import Shapes.Shape
+import Shape
 import Paddle
 import Score
 import Player

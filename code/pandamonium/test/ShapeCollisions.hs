@@ -9,9 +9,7 @@ import CollisionAssertions
 import Graphics.Gloss.Data.Vector
 import Collisions
 import Movable
-import Shapes.Shape
-import Shapes.Collisions
-import Shapes.Movables
+import Shape
 
 prop_colliding_shapes_have_pushout :: Shape -> Shape -> Bool
 prop_colliding_shapes_have_pushout a b
