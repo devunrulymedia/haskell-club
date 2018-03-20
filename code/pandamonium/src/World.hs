@@ -54,13 +54,14 @@ handleEvents t w = (foldl (flip handleEvent) w (events w)) { events = [] }
 instance GameEvents World where
   handleEvent e world = resetBall e world { players = handleEvent e <$> players world }
 
-ballCollision :: Ball -> Shape -> Ball
-ballCollision ball@(Ball pos vel pic) shp = maybe ball handleCollision (shp !!> shape ball) where
-  handleCollision pushout = Ball bounced_pos reflected_vel pic where
+doCollision :: (Movable a, Moving a, Shaped a) => a -> Shape -> a
+doCollision a wall = maybe a handleCollision (wall !!> shape a) where
+  handleCollision pushout = move (applyImpulse a reflected_vel) offset where
+    vel           = velocity a
     unit_push     = normalizeV pushout
-    bounced_pos   = pos + (mulSV 2 pushout)
+    offset        = mulSV 2 pushout
     normal_proj   = 2 * (vel `dotV` unit_push)
-    reflected_vel = vel - mulSV normal_proj unit_push
+    reflected_vel = negate $ mulSV normal_proj unit_push
 
 paddleBlockCollision :: Paddle -> Block -> Paddle
 paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> shape paddle)
@@ -69,7 +70,8 @@ handleCollisions :: Float -> World -> World
 handleCollisions t w = let walls = shape <$> scenery w
                            bats = shape <$> paddle <$> players w
                         in w { players = restrictBats <$> players w
-                             , ball = foldl ballCollision (ball w) (walls ++ bats) } where
+                             , ball = foldl doCollision (ball w) (walls ++ bats) }
+          where
           restrictBats p = p { paddle = foldl paddleBlockCollision (paddle p) (scenery w) }
 
 instance Updatable World where
