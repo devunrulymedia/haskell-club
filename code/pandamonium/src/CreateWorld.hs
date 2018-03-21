@@ -3,12 +3,13 @@ module CreateWorld where
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 
+import Entities.Block
+import Entities.Ball
+import Entities.Player
+import Entities.Paddle
+
 import Assets
-import Block
-import Ball
 import Controller
-import Player
-import Paddle
 import Shape
 import World
 

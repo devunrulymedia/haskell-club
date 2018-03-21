@@ -20,11 +20,13 @@ description:         Please see the README on Github at <https://github.com/gith
 library
   hs-source-dirs:      src
   exposed-modules:     World
-                     , Block
+                     , Entities.Block
+                     , Entities.Paddle
+                     , Entities.Player
+                     , Entities.Ball
                      , Assets
                      , CreateWorld
                      , Renderable
-                     , Ball
                      , Movable
                      , Collisions
                      , Shapes.Datatypes
@@ -35,8 +37,7 @@ library
                      , Controller
                      , Updatable
                      , GameEvent
-                     , Paddle
-                     , Player
+
   build-depends:       base >= 4.7 && < 5
                      , gloss
                      , bmp

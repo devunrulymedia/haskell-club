@@ -1,19 +1,21 @@
 module World where
 
-import Ball
-import Block
-import Paddle
-import Renderable
-import Updatable
-import GameEvent
+import Data.Maybe
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
+
+import Entities.Ball
+import Entities.Block
+import Entities.Paddle
+import Entities.Player
+
+import GameEvent
 import Shape
+import Renderable
+import Updatable
 import Collisions
-import Player
 import Movable
-import Data.Maybe
 
 data World = World
                 { scenery :: [ Block ]
