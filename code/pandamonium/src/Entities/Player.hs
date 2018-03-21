@@ -1,4 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Entities.Player where
+
+import Control.Lens
 
 import Entities.Paddle
 import Entities.Block
@@ -8,16 +12,18 @@ import World.GameEvent
 import Graphics.Gloss
 
 data Player = Player
-                { score :: Int
-                , scoreLocation :: Point
-                , paddle :: Paddle
-                , endzone :: Block
-                , hue :: Color
-                , playerNumber :: Int
+                { _score :: Int
+                , _scoreLocation :: Point
+                , _paddle :: Paddle
+                , _endzone :: Block
+                , _hue :: Color
+                , _playerNumber :: Int
                 }
 
+makeLenses ''Player
+
 renderScore :: Player -> Picture
-renderScore Player{ score = points, scoreLocation = (x, y) } =
+renderScore Player{ _score = points, _scoreLocation = (x, y) } =
     translate x y
     $ scale 0.25 0.25
     $ Text
@@ -25,17 +31,17 @@ renderScore Player{ score = points, scoreLocation = (x, y) } =
 
 instance Renderable Player where
   render player = Pictures $
-                    color (hue player) <$>
+                    color (player ^. hue) <$>
                     [ renderScore player
-                    , render $ paddle player
-                    , render $ endzone player
+                    , render $ player ^. paddle
+                    , render $ player ^. endzone
                     ]
 
 instance Updatable Player where
-  listen event player = player { paddle = listen event $ paddle player }
-  update time player = player { paddle = update time $ paddle player }
+  listen event = paddle %~ listen event
+  update time = paddle %~ update time
 
 instance GameEvents Player where
-  handleEvent (PointScored i) player = if playerNumber player == i
-    then player { score = score player + 1 }
+  handleEvent (PointScored i) player = if player ^. playerNumber == i
+    then score %~ (+1) $ player
     else player

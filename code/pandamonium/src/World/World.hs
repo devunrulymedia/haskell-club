@@ -21,7 +21,7 @@ import Updatable
 
 data World = World
                 { _scenery :: [ Block ]
-                , _players :: [Player]
+                , _players :: [ Player ]
                 , _ball :: Ball
                 , _initialBall :: Ball
                 , _events :: [ GameEvent ]
@@ -31,9 +31,9 @@ makeLenses ''World
 
 instance Renderable World where
   render world = Pictures $
-                  (render <$> _scenery world) ++
-                  (render <$> _players world) ++
-                  [(render $ _ball world)]
+                  (render <$> world ^. scenery) ++
+                  (render <$> world ^. players) ++
+                  [(render $ world ^. ball)]
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t = ball %~ applyImpulse (0, -(g * t))
@@ -45,21 +45,22 @@ updatePlayers :: Float -> World -> World
 updatePlayers t = players %~ (map $ update t)
 
 checkForScore :: Float -> World -> World
-checkForScore t world = let newEvents = _players world >>= checkScore'
-                         in world { _events = newEvents ++ _events world } where
+checkForScore t world = let newEvents = world ^. players >>= checkScore'
+                         in events %~ (newEvents ++) $ world where
   checkScore' :: Player -> [ GameEvent ]
-  checkScore' player = if shape (world ^. ball) !!! shape (endzone player)
-    then [ PointScored $ playerNumber player ]
+  checkScore' player = if shape (world ^. ball) !!! shape (player ^. endzone)
+    then [ PointScored $ player ^. playerNumber ]
     else []
 
 resetBall :: GameEvent -> World -> World
-resetBall (PointScored _) world = set ball (view initialBall world) world
+resetBall (PointScored _) world = ball .~ (world ^. initialBall) $ world
 
 handleEvents :: Float -> World -> World
-handleEvents t w = (foldl (flip handleEvent) w (_events w)) { _events = [] }
+handleEvents t w = events .~ [] $ (foldl (flip handleEvent) w (w ^. events))
 
 instance GameEvents World where
-  handleEvent e world = resetBall e world { _players = handleEvent e <$> _players world }
+  handleEvent e world = let a = players %~ (map (handleEvent e)) $ world
+                         in resetBall e a
 
 doCollision :: (Movable a, Moving a, Shaped a) => a -> Shape -> a
 doCollision a wall = maybe a handleCollision (wall !!> shape a) where
@@ -75,11 +76,11 @@ paddleBlockCollision a b = maybe a (flip move $ a) (shape b !!> shape a)
 
 handleCollisions :: Float -> World -> World
 handleCollisions t w = let walls = shape <$> _scenery w
-                           bats = shape <$> paddle <$> _players w
+                           bats = shape <$> (view paddle) <$> w ^. players
                         in w { _players = restrictBats <$> _players w
                              , _ball = foldl doCollision (_ball w) (walls ++ bats) }
           where
-          restrictBats p = p { paddle = foldl paddleBlockCollision (paddle p) (_scenery w) }
+          restrictBats p = p { _paddle = foldl paddleBlockCollision (p ^. paddle) (w ^. scenery) }
 
 instance Updatable World where
   listen event world = world { _players = listen event <$> _players world }

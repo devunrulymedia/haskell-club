@@ -22,20 +22,20 @@ walls = [ Block (Rectangle (-200) 200 100 90) white
 playerList :: [Player]
 playerList =
   [ Player
-    { paddle = Paddle (-150, 0) (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char 'a') (Char 'z'))
-    , score = 0
-    , scoreLocation = (-120, 125)
-    , hue = orange
-    , endzone = Block (Rectangle 190 200 100 (-100)) orange
-    , playerNumber = 1
+    { _paddle = Paddle (-150, 0) (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char 'a') (Char 'z'))
+    , _score = 0
+    , _scoreLocation = (-120, 125)
+    , _hue = orange
+    , _endzone = Block (Rectangle 190 200 100 (-100)) orange
+    , _playerNumber = 1
     }
   , Player
-    { paddle = Paddle (150, 0)  (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char '\'') (Char '/'))
-    , score = 0
-    , scoreLocation = (80, 125)
-    , hue = blue
-    , endzone = Block (Rectangle (-200) (-190) 100 (-100)) blue
-    , playerNumber = 2
+    { _paddle = Paddle (150, 0)  (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char '\'') (Char '/'))
+    , _score = 0
+    , _scoreLocation = (80, 125)
+    , _hue = blue
+    , _endzone = Block (Rectangle (-200) (-190) 100 (-100)) blue
+    , _playerNumber = 2
     }
   ]
 
