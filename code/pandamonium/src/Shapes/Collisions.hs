@@ -2,7 +2,25 @@ module Shapes.Collisions where
 
 import Shapes.Datatypes
 import Collisions
+import Movable
 import Graphics.Gloss.Data.Vector
+
+data DeRectangle = DeRectangle Float Float Float Float deriving (Show, Eq)
+data DeCircle = DeCircle Vector Float deriving (Show, Eq)
+
+deconstruct :: Shape -> Either DeRectangle DeCircle
+deconstruct (Rectangle l r t b) = Left $ DeRectangle l r t b
+deconstruct (Circle c r) = Right $ DeCircle c r
+
+construct :: Either DeRectangle DeCircle -> Shape
+construct (Left (DeRectangle l r t b)) = Rectangle l r t b
+construct (Right (DeCircle c r)) = Circle c r
+
+instance Movable DeRectangle where
+  move (DeRectangle l r t b) (x, y ) = DeRectangle (l + x) (r + x) (t + y) (b + y)
+
+instance Movable DeCircle where
+  move (DeCircle c r) v = DeCircle (c + v) r
 
 sqMagV :: Vector -> Float
 sqMagV (x, y) = x * x + y * y
