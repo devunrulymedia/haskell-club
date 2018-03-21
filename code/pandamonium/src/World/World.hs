@@ -36,24 +36,24 @@ instance Renderable World where
                   [(render $ _ball world)]
 
 gravitate :: Float -> Float -> World -> World
-gravitate g t = over ball (applyImpulse (0, -(g * t)))
+gravitate g t = ball %~ applyImpulse (0, -(g * t))
 
 integrate :: Float -> World -> World
-integrate t w@World { _ball = (Ball pos vel pic) } = w { _ball = Ball (pos + mulSV t vel) vel pic }
+integrate t = ball %~ applyVelocity t
 
 updatePlayers :: Float -> World -> World
-updatePlayers t world = world { _players = update t <$> _players world }
+updatePlayers t = players %~ (map $ update t)
 
 checkForScore :: Float -> World -> World
 checkForScore t world = let newEvents = _players world >>= checkScore'
                          in world { _events = newEvents ++ _events world } where
   checkScore' :: Player -> [ GameEvent ]
-  checkScore' player = if shape (_ball world) !!! shape (endzone player)
+  checkScore' player = if shape (world ^. ball) !!! shape (endzone player)
     then [ PointScored $ playerNumber player ]
     else []
 
 resetBall :: GameEvent -> World -> World
-resetBall (PointScored _) world = world { _ball = _initialBall world }
+resetBall (PointScored _) world = set ball (view initialBall world) world
 
 handleEvents :: Float -> World -> World
 handleEvents t w = (foldl (flip handleEvent) w (_events w)) { _events = [] }
@@ -70,8 +70,8 @@ doCollision a wall = maybe a handleCollision (wall !!> shape a) where
     normal_proj   = 2 * (vel `dotV` unit_push)
     reflected_vel = negate $ mulSV normal_proj unit_push
 
-paddleBlockCollision :: Paddle -> Block -> Paddle
-paddleBlockCollision paddle block = maybe paddle (flip move $ paddle) (shape block !!> shape paddle)
+paddleBlockCollision :: (Movable a, Shaped a, Shaped b) => a -> b -> a
+paddleBlockCollision a b = maybe a (flip move $ a) (shape b !!> shape a)
 
 handleCollisions :: Float -> World -> World
 handleCollisions t w = let walls = shape <$> _scenery w
