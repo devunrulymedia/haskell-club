@@ -4,11 +4,10 @@ module Main(
 
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
-import Codec.BMP
 import Renderable
 import Updatable
-import Assets
-import CreateWorld
+import World.Assets
+import World.CreateWorld
 
 window :: Display
 window = InWindow "A window!" (500, 500) (100, 100)

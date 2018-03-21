@@ -1,6 +1,6 @@
 module Entities.Block where
 
-import Shape
+import Shapes.Shape
 import Graphics.Gloss (Color, color)
 import Renderable
 

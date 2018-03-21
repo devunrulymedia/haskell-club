@@ -1,4 +1,4 @@
-module Assets where
+module World.Assets where
 
 import Graphics.Gloss
 import Codec.BMP

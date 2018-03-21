@@ -7,9 +7,7 @@ import Data.Maybe
 import Generators
 import CollisionAssertions
 import Graphics.Gloss.Data.Vector
-import Movable
-import Collisions
-import Shape
+import Shapes.Shape
 
 test_overlapping_DeRectangles_collide =
   collisionBetween (DeRectangle 10 30 10 (-10)) (DeRectangle 10 30 30 5)

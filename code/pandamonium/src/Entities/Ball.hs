@@ -1,9 +1,8 @@
 module Entities.Ball where
 
-import Shape
+import Shapes.Shape
 import Renderable
 import Graphics.Gloss (color, yellow, translate, Vector, Picture)
-import Movable
 
 data Ball = Ball Vector Vector Picture deriving (Show, Eq)
 

@@ -1,4 +1,4 @@
-module World where
+module World.World where
 
 import Data.Maybe
 import Graphics.Gloss
@@ -10,12 +10,10 @@ import Entities.Block
 import Entities.Paddle
 import Entities.Player
 
-import GameEvent
-import Shape
+import World.GameEvent
+import Shapes.Shape
 import Renderable
 import Updatable
-import Collisions
-import Movable
 
 data World = World
                 { scenery :: [ Block ]

@@ -1,4 +1,4 @@
-module CreateWorld where
+module World.CreateWorld where
 
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
@@ -8,10 +8,10 @@ import Entities.Ball
 import Entities.Player
 import Entities.Paddle
 
-import Assets
-import Controller
-import Shape
-import World
+import World.Assets
+import Systems.Controller
+import Shapes.Shape
+import World.World
 
 
 walls :: [Block]

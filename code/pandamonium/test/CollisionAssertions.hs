@@ -4,8 +4,7 @@ module CollisionAssertions where
 
 import Test.Framework
 import Control.Monad
-import Collisions
-import Shape
+import Shapes.Shape
 
 collisionBetween a b = unless (a !!! b) (assertFailure msg)
  where msg = "\n* expected: " ++ show a ++ " to collide with " ++ show b ++ "\n* but got: no collision"

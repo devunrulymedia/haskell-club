@@ -4,7 +4,7 @@ import Entities.Paddle
 import Entities.Block
 import Renderable
 import Updatable
-import GameEvent
+import World.GameEvent
 import Graphics.Gloss
 
 data Player = Player

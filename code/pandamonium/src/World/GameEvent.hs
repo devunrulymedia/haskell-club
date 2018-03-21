@@ -1,4 +1,4 @@
-module GameEvent where
+module World.GameEvent where
 
 data GameEvent = PointScored Int
 

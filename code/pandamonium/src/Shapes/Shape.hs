@@ -1,4 +1,4 @@
-module Shape (
+module Shapes.Shape (
   module Shapes.Datatypes,
   module Shapes.Collisions,
   module Shapes.Movables,

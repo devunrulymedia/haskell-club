@@ -1,8 +1,7 @@
 module Entities.Paddle where
 
-import Controller
-import Shape
-import Movable
+import Systems.Controller
+import Shapes.Shape
 import Updatable
 import Renderable
 import Graphics.Gloss

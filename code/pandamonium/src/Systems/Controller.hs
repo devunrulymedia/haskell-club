@@ -1,4 +1,4 @@
-module Controller where
+module Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
 

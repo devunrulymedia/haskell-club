@@ -1,9 +1,15 @@
 module Shapes.Collisions where
 
 import Shapes.Datatypes
-import Collisions
-import Movable
+import Shapes.Movables
 import Graphics.Gloss.Data.Vector
+
+infixl 2 !!!
+infixl 2 !!>
+
+class Collides a where
+  (!!!) :: a -> a -> Bool
+  (!!>) :: a -> a -> Maybe Vector
 
 -- because the functions here get long, and we have different implementations
 -- for rect/rect, circle/circle and rect/circle cases, it's handy to put these

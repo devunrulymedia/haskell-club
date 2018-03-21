@@ -19,24 +19,22 @@ description:         Please see the README on Github at <https://github.com/gith
 
 library
   hs-source-dirs:      src
-  exposed-modules:     World
-                     , Entities.Block
-                     , Entities.Paddle
-                     , Entities.Player
-                     , Entities.Ball
-                     , Assets
-                     , CreateWorld
-                     , Renderable
-                     , Movable
-                     , Collisions
+  exposed-modules:     Renderable
+                     , Updatable
+                     , Systems.Controller
                      , Shapes.Datatypes
                      , Shapes.Collisions
                      , Shapes.Movables
                      , Shapes.Renderables
-                     , Shape
-                     , Controller
-                     , Updatable
-                     , GameEvent
+                     , Shapes.Shape
+                     , Entities.Block
+                     , Entities.Paddle
+                     , Entities.Player
+                     , Entities.Ball
+                     , World.Assets
+                     , World.CreateWorld
+                     , World.GameEvent
+                     , World.World
 
   build-depends:       base >= 4.7 && < 5
                      , gloss
