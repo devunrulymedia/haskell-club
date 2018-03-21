@@ -36,7 +36,7 @@ instance Renderable World where
                   [(render $ _ball world)]
 
 gravitate :: Float -> Float -> World -> World
-gravitate g t w@World { _ball = (Ball pos vel pic) } = w { _ball = Ball pos (vel + mulSV t (0, -g)) pic }
+gravitate g t = over ball (applyImpulse (0, -(g * t)))
 
 integrate :: Float -> World -> World
 integrate t w@World { _ball = (Ball pos vel pic) } = w { _ball = Ball (pos + mulSV t vel) vel pic }
@@ -63,7 +63,7 @@ instance GameEvents World where
 
 doCollision :: (Movable a, Moving a, Shaped a) => a -> Shape -> a
 doCollision a wall = maybe a handleCollision (wall !!> shape a) where
-  handleCollision pushout = move (applyImpulse a reflected_vel) offset where
+  handleCollision pushout = move offset (applyImpulse reflected_vel a) where
     vel           = velocity a
     unit_push     = normalizeV pushout
     offset        = mulSV 2 pushout
@@ -71,7 +71,7 @@ doCollision a wall = maybe a handleCollision (wall !!> shape a) where
     reflected_vel = negate $ mulSV normal_proj unit_push
 
 paddleBlockCollision :: Paddle -> Block -> Paddle
-paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> shape paddle)
+paddleBlockCollision paddle block = maybe paddle (flip move $ paddle) (shape block !!> shape paddle)
 
 handleCollisions :: Float -> World -> World
 handleCollisions t w = let walls = shape <$> _scenery w

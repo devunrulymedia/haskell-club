@@ -13,8 +13,8 @@ instance Renderable Ball where
   render (Ball (x, y) vel pic) = color yellow $ translate x y pic
 
 instance Movable Ball where
-  move (Ball (x, y) vel pic) (dx, dy) = Ball (x + dx, y + dy) vel pic
+  move (dx, dy) (Ball (x, y) vel pic) = Ball (x + dx, y + dy) vel pic
 
 instance Moving Ball where
   velocity (Ball _ v _) = v
-  applyImpulse (Ball pos (x, y) pic) (dx, dy) = Ball pos (x + dx, y + dy) pic
+  applyImpulse (dx, dy) (Ball pos (x, y) pic) = Ball pos (x + dx, y + dy) pic

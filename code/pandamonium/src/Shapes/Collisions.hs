@@ -30,10 +30,10 @@ construct (Left (DeRectangle l r t b)) = Rectangle l r t b
 construct (Right (DeCircle c r)) = Circle c r
 
 instance Movable DeRectangle where
-  move (DeRectangle l r t b) (x, y ) = DeRectangle (l + x) (r + x) (t + y) (b + y)
+  move  (x, y) (DeRectangle l r t b) = DeRectangle (l + x) (r + x) (t + y) (b + y)
 
 instance Movable DeCircle where
-  move (DeCircle c r) v = DeCircle (c + v) r
+  move v (DeCircle c r) = DeCircle (c + v) r
 
 
 sqMagV :: Vector -> Float

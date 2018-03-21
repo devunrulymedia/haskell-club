@@ -11,10 +11,10 @@ import Graphics.Gloss.Interface.IO.Game
 data Paddle = Paddle Point Shape Float Controller
 
 instance Shaped Paddle where
-  shape (Paddle pos shp _ _) = move shp pos
+  shape (Paddle pos shp _ _) = move pos shp
 
 instance Movable Paddle where
-  move (Paddle pos shp spd cnt) vector = Paddle (pos + vector) shp spd cnt
+  move vector (Paddle pos shp spd cnt) = Paddle (pos + vector) shp spd cnt
 
 instance Updatable Paddle where
   listen event (Paddle pos shp spd cnt) = Paddle pos shp spd (updateController event cnt)
