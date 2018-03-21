@@ -9,7 +9,6 @@ import GameEvent
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
-import Score
 import Shape
 import Collisions
 import Player

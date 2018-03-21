@@ -1,7 +1,6 @@
 module Player where
 
 import Paddle
-import Score
 import Block
 import Renderable
 import Updatable

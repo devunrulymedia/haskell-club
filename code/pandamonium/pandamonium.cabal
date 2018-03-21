@@ -30,7 +30,6 @@ library
                      , Shapes.Movables
                      , Shapes.Renderables
                      , Shape
-                     , Score
                      , Controller
                      , Updatable
                      , GameEvent

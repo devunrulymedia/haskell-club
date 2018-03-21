@@ -13,7 +13,6 @@ import Updatable
 import GameEvent
 import Shape
 import Paddle
-import Score
 import Player
 import Controller
 
