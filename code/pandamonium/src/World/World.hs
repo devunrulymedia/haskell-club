@@ -83,7 +83,7 @@ handleCollisions t w = let walls = shape <$> w ^. scenery
           restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery) 
 
 instance Updatable World where
-  listen event world = world { _players = listen event <$> _players world }
+  listen event = players %~ map (listen event)
   update t world = foldl (\w f -> f t w) world [
          updatePlayers,
          gravitate 400,
