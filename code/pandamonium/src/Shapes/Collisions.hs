@@ -5,6 +5,13 @@ import Collisions
 import Movable
 import Graphics.Gloss.Data.Vector
 
+-- because the functions here get long, and we have different implementations
+-- for rect/rect, circle/circle and rect/circle cases, it's handy to put these
+-- in different functions, each dealing with a separate case. To do so, we
+-- create a collection of types, which together are isomorphic to our sum type,
+-- and provide functions to convert between them. This allows us to have smaller
+-- signatures and not co-locate all the various different patterns.
+
 data DeRectangle = DeRectangle Float Float Float Float deriving (Show, Eq)
 data DeCircle = DeCircle Vector Float deriving (Show, Eq)
 
@@ -21,6 +28,7 @@ instance Movable DeRectangle where
 
 instance Movable DeCircle where
   move (DeCircle c r) v = DeCircle (c + v) r
+
 
 sqMagV :: Vector -> Float
 sqMagV (x, y) = x * x + y * y
