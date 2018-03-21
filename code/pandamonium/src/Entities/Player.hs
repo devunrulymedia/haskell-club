@@ -13,7 +13,7 @@ data Player = Player
                 , paddle :: Paddle
                 , endzone :: Block
                 , hue :: Color
-                , index :: Int
+                , playerNumber :: Int
                 }
 
 renderScore :: Player -> Picture
@@ -36,6 +36,6 @@ instance Updatable Player where
   update time player = player { paddle = update time $ paddle player }
 
 instance GameEvents Player where
-  handleEvent (PointScored i) player = if index player == i
+  handleEvent (PointScored i) player = if playerNumber player == i
     then player { score = score player + 1 }
     else player

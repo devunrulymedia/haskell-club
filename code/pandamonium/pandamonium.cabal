@@ -39,6 +39,7 @@ library
   build-depends:       base >= 4.7 && < 5
                      , gloss
                      , bmp
+                     , lens
   default-language:    Haskell2010
 
 executable pandamonium-exe

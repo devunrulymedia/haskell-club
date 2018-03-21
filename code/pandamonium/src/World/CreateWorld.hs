@@ -27,7 +27,7 @@ playerList =
     , scoreLocation = (-120, 125)
     , hue = orange
     , endzone = Block (Rectangle 190 200 100 (-100)) orange
-    , index = 1
+    , playerNumber = 1
     }
   , Player
     { paddle = Paddle (150, 0)  (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char '\'') (Char '/'))
@@ -35,16 +35,16 @@ playerList =
     , scoreLocation = (80, 125)
     , hue = blue
     , endzone = Block (Rectangle (-200) (-190) 100 (-100)) blue
-    , index = 2
+    , playerNumber = 2
     }
   ]
 
 
 createWorld :: Assets -> World
 createWorld assets = let initBall = Ball (20, 0) (200, 300) (ballSprite assets)
-                      in World { scenery = walls
-                               , ball = initBall
-                               , initialBall = initBall
-                               , events = []
-                               , players = playerList
+                      in World { _scenery = walls
+                               , _ball = initBall
+                               , _initialBall = initBall
+                               , _events = []
+                               , _players = playerList
                                }

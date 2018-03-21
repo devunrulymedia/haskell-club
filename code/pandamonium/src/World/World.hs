@@ -1,4 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module World.World where
+
+import Control.Lens
 
 import Data.Maybe
 import Graphics.Gloss
@@ -16,44 +20,46 @@ import Renderable
 import Updatable
 
 data World = World
-                { scenery :: [ Block ]
-                , players :: [Player]
-                , ball :: Ball
-                , initialBall :: Ball
-                , events :: [ GameEvent ]
+                { _scenery :: [ Block ]
+                , _players :: [Player]
+                , _ball :: Ball
+                , _initialBall :: Ball
+                , _events :: [ GameEvent ]
                 }
+
+makeLenses ''World
 
 instance Renderable World where
   render world = Pictures $
-                  (render <$> scenery world) ++
-                  (render <$> players world) ++
-                  [(render $ ball world)]
+                  (render <$> _scenery world) ++
+                  (render <$> _players world) ++
+                  [(render $ _ball world)]
 
 gravitate :: Float -> Float -> World -> World
-gravitate g t w@World { ball = (Ball pos vel pic) } = w { ball = Ball pos (vel + mulSV t (0, -g)) pic }
+gravitate g t w@World { _ball = (Ball pos vel pic) } = w { _ball = Ball pos (vel + mulSV t (0, -g)) pic }
 
 integrate :: Float -> World -> World
-integrate t w@World { ball = (Ball pos vel pic) } = w { ball = Ball (pos + mulSV t vel) vel pic }
+integrate t w@World { _ball = (Ball pos vel pic) } = w { _ball = Ball (pos + mulSV t vel) vel pic }
 
 updatePlayers :: Float -> World -> World
-updatePlayers t world = world { players = update t <$> players world }
+updatePlayers t world = world { _players = update t <$> _players world }
 
 checkForScore :: Float -> World -> World
-checkForScore t world = let newEvents = players world >>= checkScore'
-                         in world { events = newEvents ++ events world } where
+checkForScore t world = let newEvents = _players world >>= checkScore'
+                         in world { _events = newEvents ++ _events world } where
   checkScore' :: Player -> [ GameEvent ]
-  checkScore' player = if shape (ball world) !!! shape (endzone player)
-    then [ PointScored $ index player ]
+  checkScore' player = if shape (_ball world) !!! shape (endzone player)
+    then [ PointScored $ playerNumber player ]
     else []
 
 resetBall :: GameEvent -> World -> World
-resetBall (PointScored _) world = world { ball = initialBall world }
+resetBall (PointScored _) world = world { _ball = _initialBall world }
 
 handleEvents :: Float -> World -> World
-handleEvents t w = (foldl (flip handleEvent) w (events w)) { events = [] }
+handleEvents t w = (foldl (flip handleEvent) w (_events w)) { _events = [] }
 
 instance GameEvents World where
-  handleEvent e world = resetBall e world { players = handleEvent e <$> players world }
+  handleEvent e world = resetBall e world { _players = handleEvent e <$> _players world }
 
 doCollision :: (Movable a, Moving a, Shaped a) => a -> Shape -> a
 doCollision a wall = maybe a handleCollision (wall !!> shape a) where
@@ -68,15 +74,15 @@ paddleBlockCollision :: Paddle -> Block -> Paddle
 paddleBlockCollision paddle block = maybe paddle (move paddle) (shape block !!> shape paddle)
 
 handleCollisions :: Float -> World -> World
-handleCollisions t w = let walls = shape <$> scenery w
-                           bats = shape <$> paddle <$> players w
-                        in w { players = restrictBats <$> players w
-                             , ball = foldl doCollision (ball w) (walls ++ bats) }
+handleCollisions t w = let walls = shape <$> _scenery w
+                           bats = shape <$> paddle <$> _players w
+                        in w { _players = restrictBats <$> _players w
+                             , _ball = foldl doCollision (_ball w) (walls ++ bats) }
           where
-          restrictBats p = p { paddle = foldl paddleBlockCollision (paddle p) (scenery w) }
+          restrictBats p = p { paddle = foldl paddleBlockCollision (paddle p) (_scenery w) }
 
 instance Updatable World where
-  listen event world = world { players = listen event <$> players world }
+  listen event world = world { _players = listen event <$> _players world }
   update t world = foldl (\w f -> f t w) world [
          updatePlayers,
          gravitate 400,
