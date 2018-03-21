@@ -75,12 +75,12 @@ paddleBlockCollision :: (Movable a, Shaped a, Shaped b) => a -> b -> a
 paddleBlockCollision a b = maybe a (flip move $ a) (shape b !!> shape a)
 
 handleCollisions :: Float -> World -> World
-handleCollisions t w = let walls = shape <$> _scenery w
+handleCollisions t w = let walls = shape <$> w ^. scenery
                            bats = shape <$> (view paddle) <$> w ^. players
-                        in w { _players = restrictBats <$> _players w
-                             , _ball = foldl doCollision (_ball w) (walls ++ bats) }
-          where
-          restrictBats p = p { _paddle = foldl paddleBlockCollision (p ^. paddle) (w ^. scenery) }
+                        in players %~ (map restrictBats)
+                           $ ball %~ flip (foldl doCollision) (walls ++ bats)
+                           $ w where
+          restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery) 
 
 instance Updatable World where
   listen event world = world { _players = listen event <$> _players world }
