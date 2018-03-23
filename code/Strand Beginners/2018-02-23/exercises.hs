@@ -26,10 +26,24 @@ data Color = Red | Orange | Yellow | Green | Blue | Indigo | Violet deriving (Eq
 -- firstColor = Red
 firstColor = minBound :: Color
 
-getFirstColor :: Char	
-getFirstColor = maxBound
+mixColor :: Color -> Color -> Color
+mixColor c1 c2 = toEnum $ (fromEnum c1 + fromEnum c2 + 1) `quot` 2
+
+--getFirstColor :: Char	
+--getFirstColor = maxBound
 
 -- reverseColorOrder = [Violet, Indigo, Blue, Green, Yellow, Orange, Red]
 reverseColorOrder = reverse $ enumFrom Red
 
+englishDigit :: Int -> String
+englishDigit 1 = "one"
+englishDigit 2 = "two"
+englishDigit 3 = "three"
+englishDigit 4 = "four"
+englishDigit 5 = "five"
+englishDigit 6 = "six"
+englishDigit 7 = "seven"
+englishDigit 8 = "eight"
+englishDigit 9 = "nine"
+englishDigit _ = "out of range"
 
