@@ -22,12 +22,14 @@ data Player = Player
 
 makeLenses ''Player
 
+-- Player{ _score = points, _scoreLocation = (x, y) }
+
 renderScore :: Player -> Picture
-renderScore Player{ _score = points, _scoreLocation = (x, y) } =
-    translate x y
-    $ scale 0.25 0.25
-    $ Text
-    $ show (points)
+renderScore player = case player ^. scoreLocation of
+    (x, y) -> translate x y
+              $ scale 0.25 0.25
+              $ Text
+              $ show (player ^. score)
 
 instance Renderable Player where
   render player = Pictures $
