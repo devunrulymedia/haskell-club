@@ -21,4 +21,4 @@ fps = 600
 main :: IO ()
 main = do assets <- loadAssets
           let world = createWorld assets
-          play window background fps world render listen update
+          playIO window background fps world iorender iolisten ioupdate
