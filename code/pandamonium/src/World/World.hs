@@ -29,8 +29,8 @@ data World = World
 
 makeLenses ''World
 
-instance Renderable World where
-  render world = Pictures $
+instance IORenderable World where
+  iorender world = pure $ Pictures $
                   (render <$> world ^. scenery) ++
                   (render <$> world ^. players) ++
                   [(render $ world ^. ball)]
@@ -80,11 +80,11 @@ handleCollisions t w = let walls = shape <$> w ^. scenery
                         in players %~ (map restrictBats)
                            $ ball %~ flip (foldl doCollision) (walls ++ bats)
                            $ w where
-          restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery) 
+          restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery)
 
-instance Updatable World where
-  listen event = players %~ map (listen event)
-  update t world = foldl (\w f -> f t w) world [
+instance IOUpdatable World where
+  iolisten event world = pure $ (players %~ map (listen event)) world
+  ioupdate t world = pure $ foldl (\w f -> f t w) world [
          updatePlayers,
          gravitate 400,
          integrate,
