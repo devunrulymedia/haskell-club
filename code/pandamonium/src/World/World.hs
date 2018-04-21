@@ -3,6 +3,8 @@
 module World.World where
 
 import Control.Lens
+import Control.Arrow
+import System.IO
 
 import Data.Maybe
 import Graphics.Gloss
@@ -83,12 +85,11 @@ handleCollisions t w = let walls = shape <$> w ^. scenery
           restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery)
 
 instance IOUpdatable World where
-  iolisten event world = pure $ (players %~ map (listen event)) world
-  ioupdate t world = pure $ foldl (\w f -> f t w) world [
-         updatePlayers,
-         gravitate 400,
-         integrate,
-         checkForScore,
-         handleEvents,
-         handleCollisions
-         ]
+  iolisten event world = return $ (players %~ map (listen event)) world
+  ioupdate t = updatePlayers t
+           >>> gravitate 400 t
+           >>> integrate t
+           >>> checkForScore t
+           >>> handleEvents t
+           >>> handleCollisions t
+           >>> return
