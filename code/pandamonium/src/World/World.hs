@@ -4,7 +4,7 @@ module World.World where
 
 import Control.Lens
 import Control.Arrow
-import System.IO
+import System.Exit
 
 import Data.Maybe
 import Graphics.Gloss
@@ -84,12 +84,20 @@ handleCollisions w = let walls = shape <$> w ^. scenery
                          $ w where
           restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery)
 
+exitOnEscape :: Event -> World -> IO World
+exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
+  then do exitSuccess
+          return w
+  else return w
+exitOnEscape _ w = return w
+
 instance IOUpdatable World where
-  iolisten event world = return $ (players %~ map (listen event)) world
+  iolisten event = (players %~ map (listen event))
+               >>> exitOnEscape event
   ioupdate t = updatePlayers t
            >>> gravitate 400 t
            >>> integrate t
            >>> checkForScore
            >>> handleEvents
-           >>> handleCollisions 
+           >>> handleCollisions
            >>> return
