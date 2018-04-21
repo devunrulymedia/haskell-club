@@ -46,9 +46,9 @@ integrate t = ball %~ applyVelocity t
 updatePlayers :: Float -> World -> World
 updatePlayers t = players %~ (map $ update t)
 
-checkForScore :: Float -> World -> World
-checkForScore t world = let newEvents = world ^. players >>= checkScore'
-                         in events %~ (newEvents ++) $ world where
+checkForScore :: World -> World
+checkForScore world = let newEvents = world ^. players >>= checkScore'
+                       in events %~ (newEvents ++) $ world where
   checkScore' :: Player -> [ GameEvent ]
   checkScore' player = if shape (world ^. ball) !!! shape (player ^. endzone)
     then [ PointScored $ player ^. playerNumber ]
@@ -57,8 +57,8 @@ checkForScore t world = let newEvents = world ^. players >>= checkScore'
 resetBall :: GameEvent -> World -> World
 resetBall (PointScored _) world = ball .~ (world ^. initialBall) $ world
 
-handleEvents :: Float -> World -> World
-handleEvents t w = events .~ [] $ (foldl (flip handleEvent) w (w ^. events))
+handleEvents :: World -> World
+handleEvents w = events .~ [] $ (foldl (flip handleEvent) w (w ^. events))
 
 instance GameEvents World where
   handleEvent e world = let a = players %~ (map (handleEvent e)) $ world
@@ -76,12 +76,12 @@ doCollision a wall = maybe a handleCollision (wall !!> shape a) where
 paddleBlockCollision :: (Movable a, Shaped a, Shaped b) => a -> b -> a
 paddleBlockCollision a b = maybe a (flip move $ a) (shape b !!> shape a)
 
-handleCollisions :: Float -> World -> World
-handleCollisions t w = let walls = shape <$> w ^. scenery
-                           bats = shape <$> (view paddle) <$> w ^. players
-                        in players %~ (map restrictBats)
-                           $ ball %~ flip (foldl doCollision) (walls ++ bats)
-                           $ w where
+handleCollisions :: World -> World
+handleCollisions w = let walls = shape <$> w ^. scenery
+                         bats = shape <$> (view paddle) <$> w ^. players
+                      in players %~ (map restrictBats)
+                         $ ball %~ flip (foldl doCollision) (walls ++ bats)
+                         $ w where
           restrictBats = paddle %~ flip (foldl paddleBlockCollision) (w ^. scenery)
 
 instance IOUpdatable World where
@@ -89,7 +89,7 @@ instance IOUpdatable World where
   ioupdate t = updatePlayers t
            >>> gravitate 400 t
            >>> integrate t
-           >>> checkForScore t
-           >>> handleEvents t
-           >>> handleCollisions t
+           >>> checkForScore
+           >>> handleEvents
+           >>> handleCollisions 
            >>> return
