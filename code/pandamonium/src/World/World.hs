@@ -91,13 +91,20 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   else return w
 exitOnEscape _ w = return w
 
+say :: String -> a -> IO a
+say word x = do putStrLn word
+                return x
+
 instance IOUpdatable World where
-  iolisten event = (players %~ map (listen event))
-               >>> exitOnEscape event
-  ioupdate t = updatePlayers t
-           >>> gravitate 400 t
-           >>> integrate t
-           >>> checkForScore
-           >>> handleEvents
-           >>> handleCollisions
-           >>> return
+  iolisten event world = return world
+               <&> (players %~ map (listen event))
+               >>= exitOnEscape event
+  ioupdate t world = return world
+           >>= say "Starting"
+           <&> updatePlayers t
+           <&> gravitate 400 t
+           <&> integrate t
+           >>= say "Nearly there"
+           <&> checkForScore
+           <&> handleEvents
+           <&> handleCollisions
