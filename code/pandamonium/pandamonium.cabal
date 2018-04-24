@@ -21,6 +21,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Renderable
                      , Updatable
+                     , Redux
                      , Systems.Controller
                      , Shapes.Datatypes
                      , Shapes.Collisions
@@ -40,6 +41,8 @@ library
                      , gloss
                      , bmp
                      , lens
+                     , mtl
+                     , dlist
   default-language:    Haskell2010
 
 executable pandamonium-exe
