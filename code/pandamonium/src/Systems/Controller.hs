@@ -4,25 +4,25 @@ import Graphics.Gloss.Interface.IO.Game
 
 type ControlUpdater = Event -> ControlState -> ControlState
 
-type UpPressed = Bool
-type DownPressed = Bool
+type LeftPressed = Bool
+type RightPressed = Bool
 
-data ControlState = ControlState UpPressed DownPressed
+data ControlState = ControlState LeftPressed RightPressed
 
 data Controller = Controller ControlState ControlUpdater
 
 updateControlState :: Key -> Key -> ControlUpdater
-updateControlState upKey downKey = update where
+updateControlState leftKey rightKey = update where
   pressed Up = False
   pressed Down = True
-  update (EventKey key state _ _) (ControlState up down)
-    | key == upKey   = ControlState (pressed state) down
-    | key == downKey = ControlState up (pressed state)
-    | otherwise      = ControlState up down
+  update (EventKey key state _ _) (ControlState left right)
+    | key == leftKey   = ControlState (pressed state) right
+    | key == rightKey  = ControlState left (pressed state)
+    | otherwise        = ControlState left right
   update _ state = state
 
 withKeys :: Key -> Key -> Controller
-withKeys upKey downKey = Controller (ControlState False False) (updateControlState upKey downKey)
+withKeys leftKey rightKey = Controller (ControlState False False) (updateControlState leftKey rightKey)
 
 updateController :: Event -> Controller -> Controller
 updateController event (Controller state update) = Controller (update event state) update

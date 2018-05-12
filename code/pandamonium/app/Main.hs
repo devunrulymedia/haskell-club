@@ -10,13 +10,13 @@ import World.Assets
 import World.CreateWorld
 
 window :: Display
-window = InWindow "A window!" (500, 500) (100, 100)
+window = InWindow "A window!" (640, 480) (100, 100)
 
 background :: Color
 background = black
 
 fps :: Int
-fps = 600
+fps = 60
 
 main :: IO ()
 main = do assets <- loadAssets

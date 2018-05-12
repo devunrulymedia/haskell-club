@@ -7,6 +7,7 @@ import Entities.Block
 import Entities.Ball
 import Entities.Player
 import Entities.Paddle
+import Entities.Jumpman
 
 import World.Assets
 import Systems.Controller
@@ -15,36 +16,15 @@ import World.World
 
 
 walls :: [Block]
-walls = [ Block (Rectangle (-200) 200 100 90) white
-        , Block (Rectangle (-200) 200 (-90) (-100)) white
-        , Block (Rectangle (-5) 5 (-40) (-90)) white ]
-
-playerList :: [Player]
-playerList =
-  [ Player
-    { _paddle = Paddle (-150, 0) (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char 'a') (Char 'z'))
-    , _score = 0
-    , _scoreLocation = (-120, 125)
-    , _hue = orange
-    , _endzone = Block (Rectangle 190 200 100 (-100)) orange
-    , _playerNumber = 1
-    }
-  , Player
-    { _paddle = Paddle (150, 0)  (Rectangle (-5) 5 25 (-25)) 200 (withKeys (Char '\'') (Char '/'))
-    , _score = 0
-    , _scoreLocation = (80, 125)
-    , _hue = blue
-    , _endzone = Block (Rectangle (-200) (-190) 100 (-100)) blue
-    , _playerNumber = 2
-    }
-  ]
-
+walls = [ Block (rectangle (-310) 310 230 220) white
+        , Block (rectangle (-310) 310 (-220) (-230)) white
+        , Block (rectangle (-310) (-300) (-230) 230) white
+        , Block (rectangle 300 310 (-230) 230) white
+        ]
 
 createWorld :: Assets -> World
 createWorld assets = let initBall = Ball (20, 0) (200, 300) (ballSprite assets)
                       in World { _scenery = walls
-                               , _ball = initBall
-                               , _initialBall = initBall
                                , _events = []
-                               , _players = playerList
+                               , _jumpman = Jumpman (0, 0) (0, 0) Aerial (withKeys (Char 'z') (Char 'x'))
                                }
