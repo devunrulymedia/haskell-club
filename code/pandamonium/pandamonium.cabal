@@ -29,9 +29,6 @@ library
                      , Shapes.Renderables
                      , Shapes.Shape
                      , Entities.Block
-                     , Entities.Paddle
-                     , Entities.Player
-                     , Entities.Ball
                      , Entities.Jumpman
                      , World.Assets
                      , World.CreateWorld

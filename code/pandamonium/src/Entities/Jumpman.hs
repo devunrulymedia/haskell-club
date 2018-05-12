@@ -13,6 +13,9 @@ import Graphics.Gloss (color, yellow, Vector, Picture)
 hv :: Float
 hv = 200
 
+jv :: Float
+jv = 600
+
 data GroundedState = Grounded | Aerial
 
 data Jumpman = Jumpman
@@ -39,7 +42,13 @@ instance Moving Jumpman where
 
 instance Updatable Jumpman where
   listen event jm = controller %~ updateController event $ jm
-  update t jm = case jm ^. controller of
-    (Controller (ControlState True False) _) -> pos %~ (+ (t*(-hv), 0)) $ jm
-    (Controller (ControlState False True) _) -> pos %~ (+ (t*hv, 0)) $ jm
-    otherwise -> jm
+  update t jm = moveHorizontally . jump $ jm where
+    moveHorizontally :: Jumpman -> Jumpman
+    moveHorizontally jm' = case jm' ^. controller of
+      (Controller (ControlState True False _) _) -> pos %~ (+ (t*(-hv), 0)) $ jm'
+      (Controller (ControlState False True _) _) -> pos %~ (+ (t*hv, 0)) $ jm'
+      otherwise -> jm'
+    jump :: Jumpman -> Jumpman
+    jump jm' = case jm' ^. controller of
+      (Controller (ControlState _ _ True) _) -> vel %~ (+ (0, jv)) $ controller %~ consumeJump $ jm'
+      otherwise -> jm'

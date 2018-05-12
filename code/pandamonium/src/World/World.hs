@@ -11,10 +11,7 @@ import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Interface.IO.Game
 
-import Entities.Ball
 import Entities.Block
-import Entities.Paddle
-import Entities.Player
 import Entities.Jumpman
 
 import World.GameEvent
@@ -67,7 +64,7 @@ instance IOUpdatable World where
                >>= exitOnEscape event
   ioupdate t world = return world
            <&> jumpman %~ update t
-           <&> gravitate 400 t
+           <&> gravitate 1000 t
            <&> integrate t
            -- <&> checkForScore
            -- <&> handleEvents
