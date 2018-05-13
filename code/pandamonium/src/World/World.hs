@@ -64,7 +64,7 @@ instance IOUpdatable World where
                >>= exitOnEscape event
   ioupdate t world = return world
            <&> jumpman %~ update t
-           <&> gravitate 1000 t
+           <&> gravitate 1800 t
            <&> integrate t
            -- <&> checkForScore
            -- <&> handleEvents

@@ -11,12 +11,15 @@ import Systems.Controller
 import Graphics.Gloss (color, yellow, Vector, Picture)
 
 hv :: Float
-hv = 500
+hv = 1500
+
+reverseBoost :: Float
+reverseBoost = 2.5
 
 jv :: Float
-jv = 600
+jv = 750
 
-data GroundedState = Grounded | Aerial
+data GroundedState = Grounded | Ascending | Falling
 
 data Jumpman = Jumpman
   { _pos :: Vector
@@ -28,7 +31,7 @@ data Jumpman = Jumpman
 makeLenses ''Jumpman
 
 instance Shaped Jumpman where
-  shape jm = Circle (jm ^. pos) 16
+  shape jm = let (x, y) = jm ^. pos in rectangle (x-8) (x+8) (y+8) (y-8)
 
 instance Renderable Jumpman where
   render jm = color yellow $ render $ shape jm
@@ -50,12 +53,16 @@ instance Updatable Jumpman where
   listen event jm = controller %~ updateController event $ jm
   update t jm = capSpeed . moveHorizontally . jump $ jm where
     capSpeed :: Jumpman -> Jumpman
-    capSpeed jm' = vel %~ hlimit 300 $ jm'
+    capSpeed jm' = vel %~ hlimit 600 $ jm'
     moveHorizontally :: Jumpman -> Jumpman
-    moveHorizontally jm' = case jm' ^. controller of
-      (Controller (ControlState True False _) _) -> applyImpulse (t*(-hv), 0) $ jm'
-      (Controller (ControlState False True _) _) -> applyImpulse (t*hv, 0) $ jm'
-      otherwise -> jm'
+    moveHorizontally jm' = let (x, y) = velocity jm' in case jm' ^. controller of
+      (Controller (ControlState True False _) _) -> applyImpulse (t*(-hv)*(if x > 0 then reverseBoost else 1), 0) $ jm'
+      (Controller (ControlState False True _) _) -> applyImpulse (t*hv*(if x < 0 then reverseBoost else 1), 0) $ jm'
+      otherwise -> vel %~ (slowBy hv) $ jm' where
+        slowBy :: Float -> Vector -> Vector
+        slowBy f (x, y)
+          | x > 0 = (x - (min x (t*f)), y)
+          | True = (x + (min (-x) (t*f)), y)
     jump :: Jumpman -> Jumpman
     jump jm' = case jm' ^. controller of
       (Controller (ControlState _ _ True) _) -> vel %~ (+ (0, jv)) $ controller %~ consumeJump $ jm'
