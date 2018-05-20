@@ -5,6 +5,8 @@ module World.World where
 import Control.Lens
 import Control.Arrow
 import System.Exit
+import Control.Monad.Writer
+import Data.DList
 
 import Data.Maybe
 import Graphics.Gloss
@@ -18,6 +20,7 @@ import World.GameEvent
 import Shapes.Shape
 import Renderable
 import Updatable
+import Redux
 
 data World = World
                 { _scenery :: [ Block ]
@@ -57,15 +60,28 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   else return w
 exitOnEscape _ w = return w
 
+reduceWorld :: World -> GameEvent -> IO World
+reduceWorld w e = return w
+
+listenWorld :: Event -> World -> Maybe GameEvent
+listenWorld e w = Nothing
+
+updateWorld :: Float -> World -> Writer (DList GameEvent) World
+updateWorld t w = return w
+              <&> jumpman %~ update t
+              <&> gravitate 1800 t
+              <&> integrate t
+              <&> handleCollisions
+
+redux :: Redux World GameEvent
+redux = Redux
+  { reducer = reduceWorld
+  , listener = listenWorld
+  , updater = updateWorld
+  }
+
 instance IOUpdatable World where
   iolisten event world = return world
-               <&> jumpman %~ listen event
-               -- <&> (players %~ map (listen event))
+               <&> jumpman %~ collectEvents event
                >>= exitOnEscape event
-  ioupdate t world = return world
-           <&> jumpman %~ update t
-           <&> gravitate 1800 t
-           <&> integrate t
-           -- <&> checkForScore
-           -- <&> handleEvents
-           <&> handleCollisions
+  ioupdate = reduxUpdate redux

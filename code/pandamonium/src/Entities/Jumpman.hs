@@ -49,21 +49,21 @@ hlimit mx (x, y)
   | x < (-mx) = (-mx, y)
   | otherwise = (x, y)
 
-instance Updatable Jumpman where
-  listen event jm = controller %~ updateController event $ jm
-  update t jm = capSpeed . moveHorizontally . jump $ jm where
-    capSpeed :: Jumpman -> Jumpman
-    capSpeed jm' = vel %~ hlimit 600 $ jm'
-    moveHorizontally :: Jumpman -> Jumpman
-    moveHorizontally jm' = let (x, y) = velocity jm' in case jm' ^. controller of
-      (Controller (ControlState True False _) _) -> applyImpulse (t*(-hv)*(if x > 0 then reverseBoost else 1), 0) $ jm'
-      (Controller (ControlState False True _) _) -> applyImpulse (t*hv*(if x < 0 then reverseBoost else 1), 0) $ jm'
-      otherwise -> vel %~ (slowBy hv) $ jm' where
-        slowBy :: Float -> Vector -> Vector
-        slowBy f (x, y)
-          | x > 0 = (x - (min x (t*f)), y)
-          | True = (x + (min (-x) (t*f)), y)
-    jump :: Jumpman -> Jumpman
-    jump jm' = case jm' ^. controller of
-      (Controller (ControlState _ _ True) _) -> vel %~ (+ (0, jv)) $ controller %~ consumeJump $ jm'
-      otherwise -> jm'
+collectEvents event jm = controller %~ updateController event $ jm
+
+update t jm = capSpeed . moveHorizontally . jump $ jm where
+  capSpeed :: Jumpman -> Jumpman
+  capSpeed jm' = vel %~ hlimit 600 $ jm'
+  moveHorizontally :: Jumpman -> Jumpman
+  moveHorizontally jm' = let (x, y) = velocity jm' in case jm' ^. controller of
+    (Controller (ControlState True False _) _) -> applyImpulse (t*(-hv)*(if x > 0 then reverseBoost else 1), 0) $ jm'
+    (Controller (ControlState False True _) _) -> applyImpulse (t*hv*(if x < 0 then reverseBoost else 1), 0) $ jm'
+    otherwise -> vel %~ (slowBy hv) $ jm' where
+      slowBy :: Float -> Vector -> Vector
+      slowBy f (x, y)
+        | x > 0 = (x - (min x (t*f)), y)
+        | True = (x + (min (-x) (t*f)), y)
+  jump :: Jumpman -> Jumpman
+  jump jm' = case jm' ^. controller of
+    (Controller (ControlState _ _ True) _) -> vel %~ (+ (0, jv)) $ controller %~ consumeJump $ jm'
+    otherwise -> jm'
