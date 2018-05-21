@@ -24,7 +24,6 @@ import Redux
 
 data World = World
                 { _scenery :: [ Block ]
-                , _events :: [ GameEvent ]
                 , _jumpman :: Jumpman
                 }
 
