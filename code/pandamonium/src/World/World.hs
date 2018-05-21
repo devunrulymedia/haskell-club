@@ -60,10 +60,9 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   else return w
 exitOnEscape _ w = return w
 
-
-listenWorld :: Event -> World -> [GameEvent]
-listenWorld (EventKey (Char 'q') _ _ _ ) w = [Quit]
-listenWorld _ _ = []
+listenWorld :: World -> Event -> Writer (DList GameEvent) World
+listenWorld w (EventKey (Char 'q') _ _ _ ) = do fireEvent Quit; return w
+listenWorld w _ = return w
 
 quit :: World -> GameEvent -> IO World
 quit w Quit = do exitSuccess; return w
@@ -83,13 +82,13 @@ updateWorld w t = return w
 
 redux :: Redux World GameEvent
 redux = Redux
-  { reducer = reduceWorld
+  { reducer  = reduceWorld
   , listener = listenWorld
-  , updater = updateWorld
+  , updater  = updateWorld
   }
 
 instance IOUpdatable World where
   iolisten event world = return world
-               <&> jumpman %~ collectEvents event
-               >>= exitOnEscape event
+                     <&> jumpman %~ collectEvents event
+                     >>= exitOnEscape event
   ioupdate = reduxUpdate redux
