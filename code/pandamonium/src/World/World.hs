@@ -29,6 +29,11 @@ data World = World
 
 makeLenses ''World
 
+type Listener = World -> Event -> Writer (DList GameEvent) World
+type Updater  = World -> Float -> Writer (DList GameEvent) World
+type Reducer  = World -> GameEvent -> IO World
+
+
 instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
@@ -59,20 +64,23 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   else return w
 exitOnEscape _ w = return w
 
-listenWorld :: World -> Event -> Writer (DList GameEvent) World
-listenWorld w (EventKey (Char 'q') _ _ _ ) = do fireEvent Quit; return w
-listenWorld w _ = return w
+listenForQuit :: Listener
+listenForQuit w (EventKey (Char 'q') _ _ _ ) = do fireEvent Quit; return w
+listenForQuit w _ = return w
 
-quit :: World -> GameEvent -> IO World
+listenWorld :: Listener
+listenWorld world event = return world
+                      <&> jumpman %~ collectEvents event
+                      >>= (flip listenForQuit) event 
+
+quit :: Reducer
 quit w Quit = do exitSuccess; return w
 quit w _ = return w
 
-reduceWorld :: World -> GameEvent -> IO World
-reduceWorld w e = foldM (\w r -> r w e) w
-  [ quit
-  ]
+reduceWorld :: Reducer
+reduceWorld = compose [ quit ]
 
-updateWorld :: World -> Float -> Writer (DList GameEvent) World
+updateWorld :: Updater
 updateWorld w t = return w
               <&> jumpman %~ update t
               <&> gravitate 1800 t
@@ -87,7 +95,5 @@ redux = Redux
   }
 
 instance IOUpdatable World where
-  iolisten event world = return world
-                     <&> jumpman %~ collectEvents event
-                     >>= exitOnEscape event
+  iolisten = reduxListen redux
   ioupdate = reduxUpdate redux
