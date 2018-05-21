@@ -33,7 +33,6 @@ type Listener = World -> Event -> Writer (DList GameEvent) World
 type Updater  = World -> Float -> Writer (DList GameEvent) World
 type Reducer  = World -> GameEvent -> IO World
 
-
 instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
@@ -69,16 +68,16 @@ listenForQuit w (EventKey (Char 'q') _ _ _ ) = do fireEvent Quit; return w
 listenForQuit w _ = return w
 
 listenWorld :: Listener
-listenWorld world event = return world
-                      <&> jumpman %~ collectEvents event
-                      >>= (flip listenForQuit) event 
+listenWorld w e = return w
+              <&> jumpman %~ collectEvents e
+              >>= (flip listenForQuit) e
 
 quit :: Reducer
 quit w Quit = do exitSuccess; return w
 quit w _ = return w
 
 reduceWorld :: Reducer
-reduceWorld = compose [ quit ]
+reduceWorld = quit
 
 updateWorld :: Updater
 updateWorld w t = return w
