@@ -60,14 +60,22 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   else return w
 exitOnEscape _ w = return w
 
+
+listenWorld :: Event -> World -> [GameEvent]
+listenWorld (EventKey (Char 'q') _ _ _ ) w = [Quit]
+listenWorld _ _ = []
+
+quit :: World -> GameEvent -> IO World
+quit w Quit = do exitSuccess; return w
+quit w _ = return w
+
 reduceWorld :: World -> GameEvent -> IO World
-reduceWorld w e = return w
+reduceWorld w e = foldM (\w r -> r w e) w
+  [ quit
+  ]
 
-listenWorld :: Event -> World -> Maybe GameEvent
-listenWorld e w = Nothing
-
-updateWorld :: Float -> World -> Writer (DList GameEvent) World
-updateWorld t w = return w
+updateWorld :: World -> Float -> Writer (DList GameEvent) World
+updateWorld w t = return w
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
