@@ -6,22 +6,24 @@ import Graphics.Gloss.Interface.IO.Game
 import Control.Monad.Writer
 import Data.DList
 
+type Events e w = Writer (DList e) w
+
 data Redux w e = Redux
-  { reducer :: w -> e -> IO w
-  , updater ::  w -> Float -> Writer (DList e) w
-  , listener :: w -> Event -> Writer (DList e) w
+  { reducer :: e -> w -> IO w
+  , updater ::  Float -> w -> Events e w
+  , listener :: Event -> w -> Events e w
   }
 
-compose :: Monad m => [a -> b -> m a] -> a -> b -> m a
-compose fs a b = foldM (\x f -> f x b) a fs
+compose :: Monad m => [a -> b -> m b] -> a -> b -> m b
+compose fs a b = foldM (\x f -> f a x) b fs
 
-fireEvent :: e -> Writer (DList e) ()
+fireEvent :: e -> Events e ()
 fireEvent event = tell $ singleton event
 
 reduxListen :: Redux w e -> Event -> w -> IO w
-reduxListen r e w = case runWriter $ listener r w e of
-  (world, events) -> foldM (reducer r) world events
+reduxListen r e w = case runWriter $ listener r e w of
+  (world, events) -> foldM (flip $ reducer r) world events
 
 reduxUpdate :: Redux w e -> Float -> w -> IO w
-reduxUpdate r t w = case runWriter $ updater r w t of
-  (world, events) -> foldM (reducer r) world events
+reduxUpdate r t w = case runWriter $ updater r t w of
+  (world, events) -> foldM (flip $ reducer r) world events

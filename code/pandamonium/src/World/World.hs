@@ -29,9 +29,9 @@ data World = World
 
 makeLenses ''World
 
-type Listener = World -> Event -> Writer (DList GameEvent) World
-type Updater  = World -> Float -> Writer (DList GameEvent) World
-type Reducer  = World -> GameEvent -> IO World
+type Listener = Event -> World -> Events GameEvent World
+type Updater  = Float -> World -> Events GameEvent World
+type Reducer  = GameEvent -> World -> IO World
 
 instance IORenderable World where
   iorender world = pure $ Pictures $
@@ -64,23 +64,23 @@ exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
 exitOnEscape _ w = return w
 
 listenForQuit :: Listener
-listenForQuit w (EventKey (Char 'q') _ _ _ ) = do fireEvent Quit; return w
-listenForQuit w _ = return w
+listenForQuit (EventKey (Char 'q') _ _ _ ) w = do fireEvent Quit; return w
+listenForQuit _ w = return w
 
 listenWorld :: Listener
-listenWorld w e = return w
+listenWorld e w = return w
               <&> jumpman %~ collectEvents e
-              >>= (flip listenForQuit) e
+              >>= listenForQuit e
 
 quit :: Reducer
-quit w Quit = do exitSuccess; return w
-quit w _ = return w
+quit Quit w = do exitSuccess; return w
+quit _ w    = return w
 
 reduceWorld :: Reducer
 reduceWorld = quit
 
 updateWorld :: Updater
-updateWorld w t = return w
+updateWorld t w = return w
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
