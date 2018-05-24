@@ -45,13 +45,16 @@ integrate :: Float -> World -> World
 integrate t = jumpman %~ applyVelocity t
 
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
-bounce el a b = return $ maybe a bounce' (shape b !!> shape a) where
-  bounce' pushout = move offset (applyImpulse reflected_vel a) where
-    vel           = velocity a
-    unit_push     = normalizeV pushout
-    offset        = mulSV (1 + el) pushout
-    normal_proj   = (1 + el) * (vel `dotV` unit_push)
-    reflected_vel = negate $ mulSV normal_proj unit_push
+bounce el a b = case (shape b !!> shape a) of
+  Nothing -> return a
+  (Just pushout) -> do
+    fireEvent (JumpmanCollision offset)
+    return (move offset (applyImpulse reflected_vel a)) where
+      vel           = velocity a
+      unit_push     = normalizeV pushout
+      offset        = mulSV (1 + el) pushout
+      normal_proj   = (1 + el) * (vel `dotV` unit_push)
+      reflected_vel = negate $ mulSV normal_proj unit_push
 
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = do
