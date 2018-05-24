@@ -1,5 +1,3 @@
-{-# language MultiParamTypeClasses #-}
-
 module Redux where
 
 import Graphics.Gloss.Interface.IO.Game
