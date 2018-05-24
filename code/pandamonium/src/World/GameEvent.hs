@@ -1,7 +1,6 @@
 module World.GameEvent where
 
-data GameEvent = PointScored Int
-               | Quit
+import Graphics.Gloss
 
-class GameEvents a where
-  handleEvent :: GameEvent -> a -> a
+data GameEvent = JumpmanCollision Vector
+               | Quit

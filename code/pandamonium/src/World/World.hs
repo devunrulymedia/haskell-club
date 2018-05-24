@@ -44,8 +44,8 @@ gravitate g t = jumpman %~ applyImpulse (0, -(g * t))
 integrate :: Float -> World -> World
 integrate t = jumpman %~ applyVelocity t
 
-bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> a
-bounce el a b = maybe a bounce' (shape b !!> shape a) where
+bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
+bounce el a b = return $ maybe a bounce' (shape b !!> shape a) where
   bounce' pushout = move offset (applyImpulse reflected_vel a) where
     vel           = velocity a
     unit_push     = normalizeV pushout
@@ -53,8 +53,10 @@ bounce el a b = maybe a bounce' (shape b !!> shape a) where
     normal_proj   = (1 + el) * (vel `dotV` unit_push)
     reflected_vel = negate $ mulSV normal_proj unit_push
 
-handleCollisions :: World -> World
-handleCollisions w = jumpman %~ flip (foldl $ bounce 0) (w ^. scenery) $ w
+handleCollisions :: World -> Events GameEvent World
+handleCollisions w = do
+  collided <- foldM (bounce 0) (w ^. jumpman) (w ^. scenery)
+  return $ w & jumpman .~ collided
 
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
@@ -84,7 +86,7 @@ updateWorld t w = return w
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
-              <&> handleCollisions
+              >>= handleCollisions
 
 redux :: Redux World GameEvent
 redux = Redux
