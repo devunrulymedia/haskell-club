@@ -9,7 +9,8 @@ import Shapes.Shape
 import Renderable
 import Updatable
 import Systems.Controller
-import Graphics.Gloss (color, yellow, Vector, Picture)
+import Graphics.Gloss (color, yellow, green, Color, Vector, Picture)
+import World.GameEvent
 
 hv :: Float
 hv = 1500
@@ -20,7 +21,7 @@ reverseBoost = 2.5
 jv :: Float
 jv = 750
 
-data GroundedState = Grounded | Ascending | Falling
+data GroundedState = Grounded | Falling
 
 data Jumpman = Jumpman
   { _pos :: Vector
@@ -35,7 +36,7 @@ instance Shaped Jumpman where
   shape jm = let (x, y) = jm ^. pos in rectangle (x-8) (x+8) (y+8) (y-8)
 
 instance Renderable Jumpman where
-  render jm = color yellow $ render $ shape jm
+  render jm = color (colorOf jm) $ render $ shape jm
 
 instance Movable Jumpman where
   move dv jm = pos %~ (+dv) $ jm
@@ -43,6 +44,11 @@ instance Movable Jumpman where
 instance Moving Jumpman where
   velocity jm = jm ^. vel
   applyImpulse da jm = vel %~ (+da) $ jm
+
+colorOf :: Jumpman -> Color
+colorOf jm = case jm ^. grounded of
+  Grounded -> green
+  Falling -> yellow
 
 hlimit :: Float -> Vector -> Vector
 hlimit mx (x, y)
@@ -74,3 +80,12 @@ update :: Float -> Jumpman -> Jumpman
 update t = jump
        >>> moveHorizontally t
        >>> capSpeed
+
+resetGroundedState :: Jumpman -> Jumpman
+resetGroundedState jm = set grounded Falling jm
+
+processCollisions :: GameEvent -> Jumpman -> Jumpman
+processCollisions (JumpmanCollision (x, y)) jm = if y > 0
+  then set grounded Grounded jm
+  else jm
+processCollisions _ jm = jm

@@ -80,10 +80,13 @@ quit Quit w = do exitSuccess; return w
 quit _ w    = return w
 
 reduceWorld :: Reducer
-reduceWorld = quit
+reduceWorld e w = return w
+              <&> jumpman %~ processCollisions e
+              >>= quit e
 
 updateWorld :: Updater
 updateWorld t w = return w
+              <&> jumpman %~ resetGroundedState
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
