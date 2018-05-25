@@ -86,7 +86,6 @@ reduceWorld e w = return w
 
 updateWorld :: Updater
 updateWorld t w = return w
-              <&> jumpman %~ resetGroundedState
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t

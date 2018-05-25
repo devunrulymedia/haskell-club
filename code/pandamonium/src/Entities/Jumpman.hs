@@ -21,7 +21,7 @@ reverseBoost = 2.5
 jv :: Float
 jv = 750
 
-data GroundedState = Grounded | Falling
+data GroundedState = Grounded | Falling deriving (Eq)
 
 data Jumpman = Jumpman
   { _pos :: Vector
@@ -63,7 +63,11 @@ capSpeed jm = vel %~ hlimit 600 $ jm
 
 jump :: Jumpman -> Jumpman
 jump jm = case jm ^. controller of
-  (Controller (ControlState _ _ True) _) -> vel %~ (+ (0, jv)) $ controller %~ consumeJump $ jm
+  (Controller (ControlState _ _ True) _) ->
+    controller %~ consumeJump $
+    if jm ^. grounded == Grounded
+     then vel %~ (+ (0, jv)) $ jm
+     else jm
   otherwise -> jm
 
 moveHorizontally :: Float -> Jumpman -> Jumpman
@@ -78,6 +82,7 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
 
 update :: Float -> Jumpman -> Jumpman
 update t = jump
+       >>> resetGroundedState
        >>> moveHorizontally t
        >>> capSpeed
 
