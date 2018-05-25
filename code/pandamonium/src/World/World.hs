@@ -57,9 +57,7 @@ bounce el a b = case (shape b !!> shape a) of
       reflected_vel = negate $ mulSV normal_proj unit_push
 
 handleCollisions :: World -> Events GameEvent World
-handleCollisions w = do
-  collided <- foldM (bounce 0) (w ^. jumpman) (w ^. scenery)
-  return $ w & jumpman .~ collided
+handleCollisions w = jumpman %%~ (flip (foldM $ bounce 0)) (w ^. scenery) $ w
 
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
