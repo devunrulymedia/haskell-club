@@ -23,9 +23,9 @@ import Updatable
 import Redux
 
 data World = World
-                { _scenery :: [ Block ]
-                , _jumpman :: Jumpman
-                }
+  { _scenery :: [ Block ]
+  , _jumpman :: Jumpman
+  }
 
 makeLenses ''World
 
