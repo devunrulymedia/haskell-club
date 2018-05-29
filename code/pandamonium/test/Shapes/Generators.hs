@@ -1,4 +1,4 @@
-module Generators where
+module Shapes.Generators where
 
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Modifiers

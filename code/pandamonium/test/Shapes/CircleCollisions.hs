@@ -1,11 +1,11 @@
 {-# OPTIONS_GHC -F -pgmF htfpp #-}
-module CircleCollisions (htf_thisModulesTests) where
+module Shapes.CircleCollisions (htf_thisModulesTests) where
 
 import Test.Framework
 import Control.Monad
 import Data.Maybe
-import Generators
-import CollisionAssertions
+import Shapes.Generators
+import Shapes.CollisionAssertions
 import Graphics.Gloss.Data.Vector
 import Shapes.Shape
 

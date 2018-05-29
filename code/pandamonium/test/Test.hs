@@ -3,8 +3,8 @@ module Main where
 
 import Test.Framework
 import Test.Framework.BlackBoxTest
-import {-@ HTF_TESTS @-} CircleCollisions
-import {-@ HTF_TESTS @-} RectangleCollisions
-import {-@ HTF_TESTS @-} ShapeCollisions
+import {-@ HTF_TESTS @-} Shapes.CircleCollisions
+import {-@ HTF_TESTS @-} Shapes.RectangleCollisions
+import {-@ HTF_TESTS @-} Shapes.ShapeCollisions
 
 main = htfMain htf_importedTests

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -F -pgmF htfpp #-}
 
-module CollisionAssertions where
+module Shapes.CollisionAssertions where
 
 import Test.Framework
 import Control.Monad

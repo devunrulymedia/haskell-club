@@ -19,19 +19,22 @@ description:         Please see the README on Github at <https://github.com/gith
 
 library
   hs-source-dirs:      src
+
   exposed-modules:     Renderable
                      , Updatable
-                     , Redux
-                     , Systems.Controller
+                     , World.Assets
+                     , World.CreateWorld
+                     -- exposed for test
                      , Shapes.Datatypes
                      , Shapes.Collisions
                      , Shapes.Movables
                      , Shapes.Renderables
                      , Shapes.Shape
+
+  other-modules:       Redux
+                     , Systems.Controller
                      , Entities.Block
                      , Entities.Jumpman
-                     , World.Assets
-                     , World.CreateWorld
                      , World.GameEvent
                      , World.World
 
@@ -57,11 +60,11 @@ test-suite pandamonium-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Test.hs
-  other-modules:       RectangleCollisions
-                     , CircleCollisions
-                     , ShapeCollisions
-                     , CollisionAssertions
-                     , Generators
+  other-modules:       Shapes.RectangleCollisions
+                     , Shapes.CircleCollisions
+                     , Shapes.ShapeCollisions
+                     , Shapes.CollisionAssertions
+                     , Shapes.Generators
   build-depends:       base
                      , gloss
                      , HTF
