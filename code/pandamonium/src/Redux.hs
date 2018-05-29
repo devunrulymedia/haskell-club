@@ -12,6 +12,16 @@ data Redux w e = Redux
   , listener :: Event -> w -> Events e w
   }
 
+noOp :: Monad m => a -> b -> m b
+noOp a b = return b
+
+noOpRedux :: Redux e w
+noOpRedux = Redux
+  { reducer  = noOp
+  , updater  = noOp
+  , listener = noOp
+  }
+
 compose :: Monad m => [a -> b -> m b] -> a -> b -> m b
 compose fs a b = foldM (\x f -> f a x) b fs
 
