@@ -24,6 +24,7 @@ library
                      , Updatable
                      , World.Assets
                      , World.CreateWorld
+                     , Game.Game
                      -- exposed for test
                      , Shapes.Datatypes
                      , Shapes.Collisions
@@ -33,7 +34,6 @@ library
 
   other-modules:       Redux
                      , Game.Timer
-                     , Game.Game
                      , Game.GameEvent
                      , Systems.Controller
                      , Entities.Block

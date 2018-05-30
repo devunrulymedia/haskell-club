@@ -8,6 +8,7 @@ import Renderable
 import Updatable
 import World.Assets
 import World.CreateWorld
+import Game.Game
 
 window :: Display
 window = InWindow "A window!" (640, 480) (100, 100)
@@ -21,4 +22,5 @@ fps = 600
 main :: IO ()
 main = do assets <- loadAssets
           let world = createWorld assets
-          playIO window background fps world iorender iolisten ioupdate
+          let game = withWorld world
+          playIO window background fps game iorender iolisten ioupdate
