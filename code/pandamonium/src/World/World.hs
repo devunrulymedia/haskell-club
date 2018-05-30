@@ -79,9 +79,16 @@ quit :: Reducer
 quit Quit w = do exitSuccess; return w
 quit _ w    = return w
 
+changeBlockColour :: GameEvent -> World -> World
+changeBlockColour (ChangeSceneryTo color) w = scenery %~ (tint color <$>) $ w where
+  tint :: Color -> Block -> Block
+  tint color (Block shape _) = Block shape color
+changeBlockColour _ w = w
+
 reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> jumpman %~ processCollisions e
+              <&> changeBlockColour e
               >>= quit e
 
 updateWorld :: Updater

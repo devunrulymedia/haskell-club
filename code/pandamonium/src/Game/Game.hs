@@ -9,6 +9,7 @@ import Game.GameEvent
 import Renderable
 import Updatable
 import Redux
+import Graphics.Gloss ( blue )
 
 data Game = Game
   { _world :: World
@@ -20,7 +21,7 @@ makeLenses ''Game
 withWorld :: World -> Game
 withWorld world = Game
   { _world = world
-  , _timer = Timer 0 [] 
+  , _timer = Timer 0 [ Pending 5 $ ChangeSceneryTo blue]
   }
 
 gameRedux :: Redux Game GameEvent
