@@ -21,7 +21,7 @@ makeLenses ''Game
 withWorld :: World -> Game
 withWorld world = Game
   { _world = world
-  , _timer = Timer 0 [ Pending 5 $ ChangeSceneryTo blue]
+  , _timer = Timer 0 [ Repeating 1 1 $ ChangeScenery ]
   }
 
 gameRedux :: Redux Game GameEvent

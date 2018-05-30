@@ -11,6 +11,7 @@ import Data.DList
 import Data.Maybe
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
+import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
 import Entities.Block
@@ -79,10 +80,15 @@ quit :: Reducer
 quit Quit w = do exitSuccess; return w
 quit _ w    = return w
 
+
 changeBlockColour :: GameEvent -> World -> World
-changeBlockColour (ChangeSceneryTo color) w = scenery %~ (tint color <$>) $ w where
-  tint :: Color -> Block -> Block
-  tint color (Block shape _) = Block shape color
+changeBlockColour (ChangeScenery) w = scenery %~ (tint <$>) $ w where
+  tint :: Block -> Block
+  tint (Block shape color) = case rgbaOfColor color of
+    (1,1,1,1)   -> Block shape (makeColor 0 1 1 1)
+    (0,1,1,1)   -> Block shape (makeColor 1 0.5 1 1)
+    (1,0.5,1,1) -> Block shape (makeColor 1 1 0.3 1)
+    otherwise   -> Block shape (makeColor 1 1 1 1)
 changeBlockColour _ w = w
 
 reduceWorld :: Reducer
