@@ -10,7 +10,7 @@ import Renderable
 import Updatable
 import Systems.Controller
 import Graphics.Gloss (color, yellow, green, Color, Vector, Picture)
-import World.GameEvent
+import Game.GameEvent
 
 hv :: Float
 hv = 1500

@@ -16,7 +16,7 @@ import Graphics.Gloss.Interface.IO.Game
 import Entities.Block
 import Entities.Jumpman
 
-import World.GameEvent
+import Game.GameEvent
 import Shapes.Shape
 import Renderable
 import Updatable
@@ -91,13 +91,13 @@ updateWorld t w = return w
               <&> integrate t
               >>= handleCollisions
 
-redux :: Redux World GameEvent
-redux = Redux
+worldRedux :: Redux World GameEvent
+worldRedux = Redux
   { reducer  = reduceWorld
   , listener = listenWorld
   , updater  = updateWorld
   }
 
 instance IOUpdatable World where
-  iolisten = reduxListen redux
-  ioupdate = reduxUpdate redux
+  iolisten = reduxListen worldRedux
+  ioupdate = reduxUpdate worldRedux

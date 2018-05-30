@@ -32,11 +32,12 @@ library
                      , Shapes.Shape
 
   other-modules:       Redux
-                     , Timer
+                     , Game.Timer
+                     , Game.Game
+                     , Game.GameEvent
                      , Systems.Controller
                      , Entities.Block
                      , Entities.Jumpman
-                     , World.GameEvent
                      , World.World
 
   build-depends:       base >= 4.7 && < 5
