@@ -16,7 +16,7 @@ data Timer = Timer
 
 makeLenses ''Timer
 
-reduceTimer :: GameEvent -> Timer -> IO Timer
+reduceTimer :: GameEvent -> Timer -> IOEvents GameEvent Timer
 reduceTimer (TimedEvent delay event) (Timer elapsed pending)
   = return $ Timer elapsed $ Pending (delay + elapsed) event : pending
 reduceTimer (RepeatingEvent delay event) (Timer elapsed pending)

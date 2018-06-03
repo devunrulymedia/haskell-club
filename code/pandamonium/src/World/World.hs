@@ -32,7 +32,7 @@ makeLenses ''World
 
 type Listener = Event -> World -> Events GameEvent World
 type Updater  = Float -> World -> Events GameEvent World
-type Reducer  = GameEvent -> World -> IO World
+type Reducer  = GameEvent -> World -> IOEvents GameEvent World
 
 instance IORenderable World where
   iorender world = pure $ Pictures $
@@ -77,7 +77,7 @@ listenWorld e w = return w
               >>= listenForQuit e
 
 quit :: Reducer
-quit Quit w = do exitSuccess; return w
+quit Quit w = do liftIO exitSuccess; return w
 quit _ w    = return w
 
 

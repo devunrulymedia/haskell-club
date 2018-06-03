@@ -8,9 +8,10 @@ import Control.Lens
 import Data.DList
 
 type Events e w = Writer (DList e) w
+type IOEvents e w = WriterT (DList e) IO w
 
 data Redux w e = Redux
-  { reducer :: e -> w -> IO w
+  { reducer :: e -> w -> IOEvents e w
   , updater ::  Float -> w -> Events e w
   , listener :: Event -> w -> Events e w
   }
@@ -28,13 +29,19 @@ noOpRedux = Redux
 fireEvent :: e -> Events e ()
 fireEvent event = tell $ singleton event
 
+handleRemainingEvents :: Redux w e -> w -> DList e -> IO w
+handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
+                                 case events of
+                                   Nil -> return world
+                                   otherwise -> handleRemainingEvents r world events
+
 reduxListen :: Redux w e -> Event -> w -> IO w
 reduxListen r e w = case runWriter $ listener r e w of
-  (world, events) -> foldM (flip $ reducer r) world events
+  (world, events) -> handleRemainingEvents r world events
 
 reduxUpdate :: Redux w e -> Float -> w -> IO w
 reduxUpdate r t w = case runWriter $ updater r t w of
-  (world, events) -> foldM (flip $ reducer r) world events
+  (world, events) -> handleRemainingEvents r world events
 
 lensing :: Functor f => Lens b b a a -> (e -> a -> f a) -> e -> b -> f b
 lensing lens f = \e -> lens %%~ (f e)
