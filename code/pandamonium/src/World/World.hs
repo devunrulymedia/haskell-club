@@ -81,20 +81,22 @@ quit Quit w = do liftIO exitSuccess; return w
 quit _ w    = return w
 
 
-changeBlockColour :: GameEvent -> World -> World
-changeBlockColour (ChangeScenery) w = scenery %~ (tint <$>) $ w where
-  tint :: Block -> Block
-  tint (Block shape color) = case rgbaOfColor color of
-    (1,1,1,1)   -> Block shape (makeColor 0 1 1 1)
-    (0,1,1,1)   -> Block shape (makeColor 1 0.5 1 1)
-    (1,0.5,1,1) -> Block shape (makeColor 1 1 0.3 1)
-    otherwise   -> Block shape (makeColor 1 1 1 1)
-changeBlockColour _ w = w
+changeBlockColour :: GameEvent -> World -> IOEvents GameEvent World
+changeBlockColour (ChangeScenery) w = do
+  tell $ singleton (TimedEvent 1 ChangeScenery)
+  return (scenery %~ (tint <$>) $ w) where
+    tint :: Block -> Block
+    tint (Block shape color) = case rgbaOfColor color of
+      (1,1,1,1)   -> Block shape (makeColor 0 1 1 1)
+      (0,1,1,1)   -> Block shape (makeColor 1 0.5 1 1)
+      (1,0.5,1,1) -> Block shape (makeColor 1 1 0.3 1)
+      otherwise   -> Block shape (makeColor 1 1 1 1)
+changeBlockColour _ w = return w
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> jumpman %~ processCollisions e
-              <&> changeBlockColour e
+              >>= changeBlockColour e
               >>= quit e
 
 updateWorld :: Updater
