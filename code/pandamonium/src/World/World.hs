@@ -84,7 +84,7 @@ quit _ w    = return w
 changeBlockColour :: GameEvent -> World -> IOEvents GameEvent World
 changeBlockColour (ChangeScenery) w = do
   tell $ singleton (TimedEvent 1 ChangeScenery)
-  return (scenery %~ (tint <$>) $ w) where
+  return $ scenery %~ (tint <$>) $ w where
     tint :: Block -> Block
     tint (Block shape color) = case rgbaOfColor color of
       (1,1,1,1)   -> Block shape (makeColor 0 1 1 1)
