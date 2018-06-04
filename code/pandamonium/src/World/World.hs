@@ -16,6 +16,7 @@ import Graphics.Gloss.Interface.IO.Game
 
 import Entities.Block
 import Entities.Jumpman
+import Entities.Coin
 
 import Game.GameEvent
 import Shapes.Shape
@@ -26,6 +27,7 @@ import Redux
 data World = World
   { _scenery :: [ Block ]
   , _jumpman :: Jumpman
+  , _coins :: [ Coin ]
   }
 
 makeLenses ''World
@@ -37,7 +39,8 @@ type Reducer  = GameEvent -> World -> IOEvents GameEvent World
 instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
-                   [render $ world ^. jumpman]
+                   (render <$> world ^. coins) ++
+                   [render $ world ^. jumpman] 
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t = jumpman %~ applyImpulse (0, -(g * t))

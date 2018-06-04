@@ -38,6 +38,7 @@ library
                      , Systems.Controller
                      , Entities.Block
                      , Entities.Jumpman
+                     , Entities.Coin
                      , World.World
 
   build-depends:       base >= 4.7 && < 5

@@ -5,6 +5,7 @@ import Graphics.Gloss.Interface.IO.Game
 
 import Entities.Block
 import Entities.Jumpman
+import Entities.Coin
 
 import World.Assets
 import Systems.Controller
@@ -17,6 +18,7 @@ walls = [ Block (rectangle (-310) 310 230 220) white
         , Block (rectangle (-310) 310 (-220) (-230)) white
         , Block (rectangle (-310) (-300) (-230) 230) white
         , Block (rectangle 300 310 (-230) 230) white
+        -- platforms
         , Block (rectangle (-210) (-130) (-110) (-120)) white
         , Block (rectangle 130 210 (-110) (-120)) white
         , Block (rectangle (-210) (-130) 120 110) white
@@ -27,4 +29,5 @@ walls = [ Block (rectangle (-310) 310 230 220) white
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls
                            , _jumpman = Jumpman (0, 0) (0, 0) Falling (withKeys (Char 'z') (Char 'x') (Char '/'))
+                           , _coins = [ Coin "coin1" (-170, -70), Coin "coin2" (170, -70) ]
                            }
