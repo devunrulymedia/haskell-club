@@ -40,7 +40,7 @@ instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
-                   [render $ world ^. jumpman] 
+                   [render $ world ^. jumpman]
 
 gravitate :: Float -> Float -> World -> World
 gravitate g t = jumpman %~ applyImpulse (0, -(g * t))
@@ -62,6 +62,22 @@ bounce el a b = case (shape b !!> shape a) of
 
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
+
+pickupCoin :: Jumpman -> Coin -> Events GameEvent ()
+pickupCoin jm coin@(Coin name _) = if (shape jm !!! shape coin)
+  then do fireEvent $ CoinPickedUp name; return ()
+  else return ()
+
+checkForPickups :: World -> Events GameEvent World
+checkForPickups w = do traverse (pickupCoin $ w ^. jumpman) (w ^. coins)
+                       return w
+
+removeCollectedCoins :: GameEvent -> World -> World
+removeCollectedCoins (CoinPickedUp name) world = coins %~ (filter $ diffName name) $ world where
+  diffName :: String -> Coin -> Bool
+  diffName name (Coin name' _) = name /= name'
+removeCollectedCoins _ world = world
+
 
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
@@ -100,6 +116,7 @@ reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> jumpman %~ processCollisions e
               >>= changeBlockColour e
+              <&> removeCollectedCoins e
               >>= quit e
 
 updateWorld :: Updater
@@ -107,6 +124,7 @@ updateWorld t w = return w
               <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
+              >>= checkForPickups
               >>= handleCollisions
 
 worldRedux :: Redux World GameEvent

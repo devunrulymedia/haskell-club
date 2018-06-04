@@ -4,5 +4,6 @@ import Graphics.Gloss
 
 data GameEvent = JumpmanCollision Vector
                | TimedEvent Float GameEvent
-               | ChangeScenery 
+               | CoinPickedUp String
+               | ChangeScenery
                | Quit
