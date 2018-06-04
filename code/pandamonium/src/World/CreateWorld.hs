@@ -29,5 +29,11 @@ walls = [ Block (rectangle (-310) 310 230 220) white
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls
                            , _jumpman = Jumpman (0, 0) (0, 0) Falling (withKeys (Char 'z') (Char 'x') (Char '/'))
-                           , _coins = [ Coin "coin1" (-170, -70), Coin "coin2" (170, -70) ]
+                           , _coins =
+                             [ Coin "coin1" (-170, -70)
+                             , Coin "coin2" (170, -70)
+                             , Coin "coin3" (-170, 160)
+                             , Coin "coin4" (170, 160)
+                             , Coin "coin5" (0, 30)
+                             ]
                            }
