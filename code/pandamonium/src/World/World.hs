@@ -73,9 +73,11 @@ checkForPickups w = do traverse (pickupCoin $ w ^. jumpman) (w ^. coins)
                        return w
 
 removeCollectedCoins :: GameEvent -> World -> World
-removeCollectedCoins (CoinPickedUp name) world = coins %~ (filter $ diffName name) $ world where
-  diffName :: String -> Coin -> Bool
-  diffName name (Coin name' _) = name /= name'
+removeCollectedCoins (CoinPickedUp name) world = coins %~ (reject $ sameName name) $ world where
+  sameName :: String -> Coin -> Bool
+  sameName name (Coin name' _) = name == name'
+  reject :: (a -> Bool) -> [a] -> [a]
+  reject test = filter (\x -> not $ test x)
 removeCollectedCoins _ world = world
 
 
