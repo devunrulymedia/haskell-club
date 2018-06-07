@@ -64,8 +64,10 @@ handleCollisions :: World -> Events GameEvent World
 handleCollisions w = jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
 pickupCoin :: Jumpman -> Coin -> Events GameEvent ()
-pickupCoin jm coin@(Coin name _) = if (shape jm !!! shape coin)
-  then do fireEvent $ CoinPickedUp name; return ()
+pickupCoin jm coin@(Coin name loc) = if (shape jm !!! shape coin)
+  then do fireEvent $ CoinPickedUp name
+          fireEvent $ TimedEvent 5 (RespawnCoin name loc)
+          return ()
   else return ()
 
 checkForPickups :: World -> Events GameEvent World
@@ -80,6 +82,9 @@ removeCollectedCoins (CoinPickedUp name) world = coins %~ (reject $ sameName nam
   reject test = filter (\x -> not $ test x)
 removeCollectedCoins _ world = world
 
+respawnCoins :: GameEvent -> World -> World
+respawnCoins (RespawnCoin name loc) world = coins %~ (Coin name loc :) $ world
+respawnCoins _ world = world
 
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
@@ -114,11 +119,17 @@ changeBlockColour (ChangeScenery) w = do
       otherwise   -> Block shape (makeColor 1 1 1 1)
 changeBlockColour _ w = return w
 
+checkForCompletion :: World -> Events GameEvent World
+checkForCompletion w = case w ^. coins of
+  [] -> do fireEvent Quit; return w
+  otherwise -> return w
+
 reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> jumpman %~ processCollisions e
               >>= changeBlockColour e
               <&> removeCollectedCoins e
+              <&> respawnCoins e
               >>= quit e
 
 updateWorld :: Updater
@@ -128,6 +139,7 @@ updateWorld t w = return w
               <&> integrate t
               >>= checkForPickups
               >>= handleCollisions
+              >>= checkForCompletion
 
 worldRedux :: Redux World GameEvent
 worldRedux = Redux
