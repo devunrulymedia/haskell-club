@@ -15,8 +15,7 @@ import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
 import Entities.Block
-import Entities.Jumpman
-import Entities.Coin
+import Entities.Thruster
 
 import Game.GameEvent
 import Shapes.Shape
@@ -25,10 +24,7 @@ import Redux
 
 data World = World
   { _scenery :: [ Block ]
-  , _jumpman :: Jumpman
-  , _coins :: [ Coin ]
-  , _score :: Int
-  , _numbers :: [ Picture ]
+  , _thruster :: Thruster
   }
 
 makeLenses ''World
@@ -40,8 +36,6 @@ type Reducer  = GameEvent -> World -> IOEvents GameEvent World
 instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
-                   (render <$> world ^. coins) ++
-                   (drawNumber 200 200 (world ^. score) (world ^. numbers)) ++
                    [render $ world ^. jumpman]
 
 drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
@@ -50,6 +44,9 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
                             currentDigit = translate (fromIntegral x) (fromIntegral y) (nums !! digit)
                             remainingDigits = drawNumber (x - 16) y nextColumn nums
                          in currentDigit : remainingDigits
+
+integrate :: Float -> World -> World
+integrate t = thruster %~ applyVelocity t
 
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
@@ -64,32 +61,7 @@ bounce el a b = case (shape b !!> shape a) of
       reflected_vel = negate $ mulSV normal_proj unit_push
 
 handleCollisions :: World -> Events GameEvent World
-handleCollisions w = do
-  tell $ singleton ResetCollisions
-  jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
-
-pickupCoin :: Jumpman -> Coin -> Events GameEvent ()
-pickupCoin jm coin@(Coin name loc) = if (shape jm !!! shape coin)
-  then do fireEvent $ CoinPickedUp name
-          fireEvent $ TimedEvent 5 (RespawnCoin name loc)
-          return ()
-  else return ()
-
-checkForPickups :: World -> Events GameEvent World
-checkForPickups w = do traverse (pickupCoin $ w ^. jumpman) (w ^. coins)
-                       return w
-
-removeCollectedCoins :: GameEvent -> World -> World
-removeCollectedCoins (CoinPickedUp name) world = coins %~ (reject $ sameName name) $ world where
-  sameName :: String -> Coin -> Bool
-  sameName name (Coin name' _) = name == name'
-  reject :: (a -> Bool) -> [a] -> [a]
-  reject test = filter (\x -> not $ test x)
-removeCollectedCoins _ world = world
-
-respawnCoins :: GameEvent -> World -> World
-respawnCoins (RespawnCoin name loc) world = coins %~ (Coin name loc :) $ world
-respawnCoins _ world = world
+handleCollisions w = thruster %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
 scoreCoin :: GameEvent -> World -> World
 scoreCoin (CoinPickedUp _) world = score +~ 5 $ world
@@ -105,6 +77,11 @@ exitOnEscape _ w = return w
 listenForQuit :: Listener
 listenForQuit (EventKey (Char 'q') _ _ _ ) w = do fireEvent Quit; return w
 listenForQuit _ w = return w
+
+listenWorld :: Listener
+listenWorld e w = return w
+              <&> thruster %~ collectEvents e
+              >>= listenForQuit e
 
 quit :: Reducer
 quit Quit w = do liftIO exitSuccess; return w
@@ -123,28 +100,17 @@ changeBlockColour (ChangeScenery) w = do
       otherwise   -> Block shape (makeColor 1 1 1 1)
 changeBlockColour _ w = return w
 
-checkForCompletion :: World -> Events GameEvent World
-checkForCompletion w = case w ^. coins of
-  [] -> do fireEvent Quit; return w
-  otherwise -> return w
-
-listenWorld :: Listener
-listenWorld e w = return w
-              >>= listenForQuit e
-
 reduceWorld :: Reducer
 reduceWorld e w = return w
+              <&> thruster %~ processCollisions e
               >>= changeBlockColour e
-              <&> removeCollectedCoins e
-              <&> scoreCoin e
-              <&> respawnCoins e
               >>= quit e
 
 updateWorld :: Updater
 updateWorld t w = return w
-              >>= checkForPickups
+              <&> thruster %~ update t
+              <&> integrate t
               >>= handleCollisions
-              >>= checkForCompletion
 
 topLevelRedux :: Redux World GameEvent
 topLevelRedux = Redux

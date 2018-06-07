@@ -38,8 +38,7 @@ library
                      , Shapes.Renderables
                      , Graphics.SpriteSheet
                      , Entities.Block
-                     , Entities.Jumpman
-                     , Entities.Coin
+                     , Entities.Thruster
                      , World.World
 
   build-depends:       base >= 4.7 && < 5
