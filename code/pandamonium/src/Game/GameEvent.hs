@@ -4,6 +4,7 @@ import Graphics.Gloss
 
 data GameEvent = ResetCollisions
                | JumpmanCollision Vector
+               | JumpPressed
                | TimedEvent Float GameEvent
                | CoinPickedUp String
                | RespawnCoin String Vector

@@ -63,22 +63,19 @@ hlimit mx (x, y)
   | x < (-mx) = (-mx, y)
   | otherwise = (x, y)
 
-collectEvents :: Event -> Jumpman -> Jumpman
-collectEvents event jm = controller %~ updateController event $ jm
+collectEvents :: Event -> Jumpman -> Events GameEvent Jumpman
+collectEvents event jm = controller %%~ updateController event $ jm
 
 capSpeed :: Jumpman -> Jumpman
 capSpeed jm = vel %~ hlimit 600 $ jm
 
-jump :: Jumpman -> Jumpman
-jump jm = case jm ^. controller of
-  (Controller (ControlState _ _ True) _) ->
-    controller %~ consumeJump $
-    if jm ^. grounded == Grounded
-     then grounded .~ Ascending
-        $ vel %~ (+ (0, jv))
-        $ jm
-     else jm
+jump :: GameEvent -> Jumpman -> Jumpman
+jump (JumpPressed) jm = case jm ^. grounded of
+  Grounded -> grounded .~ Ascending
+            $ vel %~ (+ (0, jv))
+            $ jm
   otherwise -> jm
+jump _ jm = jm
 
 moveHorizontally :: Float -> Jumpman -> Jumpman
 moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
@@ -103,7 +100,7 @@ processCollisions _ jm = jm
 
 updateJumpman :: Float -> Jumpman -> Events GameEvent Jumpman
 updateJumpman t jm = return jm
-                 <&> jump
+                 -- <&> jump
                  <&> moveHorizontally t
                  <&> capSpeed
                  <&> gravitate t
@@ -112,10 +109,11 @@ updateJumpman t jm = return jm
 reduceJumpman :: GameEvent -> Jumpman -> IOEvents GameEvent Jumpman
 reduceJumpman e jm = return jm
                  <&> processCollisions e
+                 <&> jump e
 
 listenJumpman :: Event -> Jumpman -> Events GameEvent Jumpman
 listenJumpman e jm = return jm
-                 <&> collectEvents e
+                 >>= collectEvents e
 
 jumpmanRedux :: Redux Jumpman GameEvent
 jumpmanRedux = Redux
