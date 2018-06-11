@@ -21,7 +21,6 @@ import Entities.Coin
 import Game.GameEvent
 import Shapes.Shape
 import Renderable
-import Updatable
 import Redux
 
 data World = World
@@ -144,7 +143,3 @@ worldRedux = compose
   [ connect jumpmanRedux jumpman
   , topLevelRedux
   ]
-
-instance IOUpdatable World where
-  iolisten = reduxListen worldRedux
-  ioupdate = reduxUpdate worldRedux

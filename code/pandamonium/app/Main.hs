@@ -5,7 +5,7 @@ module Main(
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Renderable
-import Updatable
+import Redux
 import World.Assets
 import World.CreateWorld
 import Game.Game
@@ -23,4 +23,4 @@ main :: IO ()
 main = do assets <- loadAssets
           let world = createWorld assets
           let game = withWorld world
-          playIO window background fps game iorender iolisten ioupdate
+          playIO window background fps game iorender (reduxListen gameRedux) (reduxUpdate gameRedux)

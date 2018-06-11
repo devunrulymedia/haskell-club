@@ -7,7 +7,6 @@ import World.World
 import Game.Timer
 import Game.GameEvent
 import Renderable
-import Updatable
 import Redux
 import Graphics.Gloss ( blue )
 
@@ -32,7 +31,3 @@ gameRedux = compose
 
 instance IORenderable Game where
   iorender game = iorender (game ^. world)
-
-instance IOUpdatable Game where
-  iolisten = reduxListen gameRedux
-  ioupdate = reduxUpdate gameRedux

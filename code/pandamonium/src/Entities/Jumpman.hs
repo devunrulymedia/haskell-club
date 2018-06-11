@@ -8,7 +8,6 @@ import Control.Arrow
 import Control.Monad
 import Shapes.Shape
 import Renderable
-import Updatable
 import Redux
 import Systems.Controller
 import Systems.Physics
@@ -86,13 +85,7 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
       | x > 0 = (x - (min x (t*f)), y)
       | True = (x + (min (-x) (t*f)), y)
 
-update :: Float -> Jumpman -> Events GameEvent Jumpman
-update t jm = return jm
-          <&> jump
-          <&> moveHorizontally t
-          <&> capSpeed
-          <&> gravitate t
-          <&> integrate t
+
 
 processCollisions :: GameEvent -> Jumpman -> Jumpman
 processCollisions ResetCollisions jm = case jm ^. grounded of
@@ -102,6 +95,14 @@ processCollisions (JumpmanCollision (x, y)) jm = if y > 0
   then set grounded Grounded jm
   else jm
 processCollisions _ jm = jm
+
+updateJumpman :: Float -> Jumpman -> Events GameEvent Jumpman
+updateJumpman t jm = return jm
+                 <&> jump
+                 <&> moveHorizontally t
+                 <&> capSpeed
+                 <&> gravitate t
+                 <&> integrate t
 
 reduceJumpman :: GameEvent -> Jumpman -> IOEvents GameEvent Jumpman
 reduceJumpman e jm = return jm
@@ -114,6 +115,6 @@ listenJumpman e jm = return jm
 jumpmanRedux :: Redux Jumpman GameEvent
 jumpmanRedux = Redux
   { reducer  = reduceJumpman
-  , updater  = update
+  , updater  = updateJumpman
   , listener = listenJumpman
   }
