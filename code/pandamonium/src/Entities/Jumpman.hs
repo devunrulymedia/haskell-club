@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 
-module Entities.Jumpman (Jumpman(Jumpman), GroundedState(Falling), jumpmanRedux) where
+module Entities.Jumpman (Jumpman, mkJumpman, jumpmanRedux) where
 
 import Control.Lens
 import Control.Arrow
@@ -32,6 +32,9 @@ data Jumpman = Jumpman
   , _grounded :: GroundedState
   , _controller :: Controller
   }
+
+mkJumpman :: Vector -> Controller -> Jumpman
+mkJumpman p c = Jumpman p (0, 0) Falling c
 
 makeLenses ''Jumpman
 
@@ -71,7 +74,9 @@ jump jm = case jm ^. controller of
   (Controller (ControlState _ _ True) _) ->
     controller %~ consumeJump $
     if jm ^. grounded == Grounded
-     then vel %~ (+ (0, jv)) $ jm
+     then grounded .~ Ascending
+        $ vel %~ (+ (0, jv))
+        $ jm
      else jm
   otherwise -> jm
 
