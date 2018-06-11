@@ -99,11 +99,6 @@ listenForQuit :: Listener
 listenForQuit (EventKey (Char 'q') _ _ _ ) w = do fireEvent Quit; return w
 listenForQuit _ w = return w
 
-listenWorld :: Listener
-listenWorld e w = return w
-              <&> jumpman %~ collectEvents e
-              >>= listenForQuit e
-
 quit :: Reducer
 quit Quit w = do liftIO exitSuccess; return w
 quit _ w    = return w
@@ -126,9 +121,13 @@ checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Quit; return w
   otherwise -> return w
 
+listenWorld :: Listener
+listenWorld e w = return w
+              <&> jumpman %~ collectEvents e
+              >>= listenForQuit e
+
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              <&> jumpman %~ processCollisions e
               >>= changeBlockColour e
               <&> removeCollectedCoins e
               <&> respawnCoins e
@@ -136,19 +135,24 @@ reduceWorld e w = return w
 
 updateWorld :: Updater
 updateWorld t w = return w
-              <&> jumpman %~ update t
               <&> gravitate 1800 t
               <&> integrate t
               >>= checkForPickups
               >>= handleCollisions
               >>= checkForCompletion
 
-worldRedux :: Redux World GameEvent
-worldRedux = Redux
+topLevelRedux :: Redux World GameEvent
+topLevelRedux = Redux
   { reducer  = reduceWorld
   , listener = listenWorld
   , updater  = updateWorld
   }
+
+worldRedux :: Redux World GameEvent
+worldRedux = compose
+  [ connect jumpmanRedux jumpman
+  , topLevelRedux
+  ]
 
 instance IOUpdatable World where
   iolisten = reduxListen worldRedux

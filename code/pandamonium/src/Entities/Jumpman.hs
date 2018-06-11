@@ -5,11 +5,13 @@ module Entities.Jumpman where
 
 import Control.Lens
 import Control.Arrow
+import Control.Monad
 import Shapes.Shape
 import Renderable
 import Updatable
+import Redux
 import Systems.Controller
-import Graphics.Gloss (color, yellow, green, Color, Vector, Picture)
+import Graphics.Gloss (color, yellow, green, blue, Color, Vector, Picture)
 import Game.GameEvent
 
 hv :: Float
@@ -21,7 +23,7 @@ reverseBoost = 2.5
 jv :: Float
 jv = 750
 
-data GroundedState = Grounded | Falling deriving (Eq)
+data GroundedState = Grounded | Ascending | Falling deriving (Eq)
 
 data Jumpman = Jumpman
   { _pos :: Vector
@@ -49,6 +51,7 @@ colorOf :: Jumpman -> Color
 colorOf jm = case jm ^. grounded of
   Grounded -> green
   Falling -> yellow
+  Ascending -> blue
 
 hlimit :: Float -> Vector -> Vector
 hlimit mx (x, y)
@@ -80,14 +83,28 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
       | x > 0 = (x - (min x (t*f)), y)
       | True = (x + (min (-x) (t*f)), y)
 
-update :: Float -> Jumpman -> Jumpman
-update t = jump
-       >>> moveHorizontally t
-       >>> capSpeed
+update :: Float -> Jumpman -> Events GameEvent Jumpman
+update t jm = return jm
+          <&> jump
+          <&> moveHorizontally t
+          <&> capSpeed
 
 processCollisions :: GameEvent -> Jumpman -> Jumpman
-processCollisions ResetCollisions jm = set grounded Falling jm
+processCollisions ResetCollisions jm = case jm ^. grounded of
+  Grounded  -> grounded .~ Falling $ jm
+  otherwise -> jm
 processCollisions (JumpmanCollision (x, y)) jm = if y > 0
   then set grounded Grounded jm
   else jm
 processCollisions _ jm = jm
+
+reduceJumpman :: GameEvent -> Jumpman -> IOEvents GameEvent Jumpman
+reduceJumpman e jm = return jm
+                 <&> processCollisions e
+
+jumpmanRedux :: Redux Jumpman GameEvent
+jumpmanRedux = Redux
+  { reducer  = reduceJumpman
+  , updater  = update
+  , listener = noOp
+  }
