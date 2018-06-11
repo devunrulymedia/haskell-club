@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 
-module Entities.Jumpman where
+module Entities.Jumpman (Jumpman(Jumpman), GroundedState(Falling), jumpmanRedux) where
 
 import Control.Lens
 import Control.Arrow
@@ -13,6 +13,7 @@ import Redux
 import Systems.Controller
 import Systems.Physics
 import Graphics.Gloss (color, yellow, green, blue, Color, Vector, Picture)
+import Graphics.Gloss.Interface.IO.Game (Event)
 import Game.GameEvent
 
 hv :: Float
@@ -60,6 +61,7 @@ hlimit mx (x, y)
   | x < (-mx) = (-mx, y)
   | otherwise = (x, y)
 
+collectEvents :: Event -> Jumpman -> Jumpman
 collectEvents event jm = controller %~ updateController event $ jm
 
 capSpeed :: Jumpman -> Jumpman
@@ -105,9 +107,13 @@ reduceJumpman :: GameEvent -> Jumpman -> IOEvents GameEvent Jumpman
 reduceJumpman e jm = return jm
                  <&> processCollisions e
 
+listenJumpman :: Event -> Jumpman -> Events GameEvent Jumpman
+listenJumpman e jm = return jm
+                 <&> collectEvents e
+
 jumpmanRedux :: Redux Jumpman GameEvent
 jumpmanRedux = Redux
   { reducer  = reduceJumpman
   , updater  = update
-  , listener = noOp
+  , listener = listenJumpman
   }

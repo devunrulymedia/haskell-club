@@ -117,7 +117,6 @@ checkForCompletion w = case w ^. coins of
 
 listenWorld :: Listener
 listenWorld e w = return w
-              <&> jumpman %~ collectEvents e
               >>= listenForQuit e
 
 reduceWorld :: Reducer
