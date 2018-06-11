@@ -42,12 +42,6 @@ instance IORenderable World where
                    (render <$> world ^. coins) ++
                    [render $ world ^. jumpman]
 
-gravitate :: Float -> Float -> World -> World
-gravitate g t = jumpman %~ applyImpulse (0, -(g * t))
-
-integrate :: Float -> World -> World
-integrate t = jumpman %~ applyVelocity t
-
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
   Nothing -> return a
@@ -135,8 +129,6 @@ reduceWorld e w = return w
 
 updateWorld :: Updater
 updateWorld t w = return w
-              <&> gravitate 1800 t
-              <&> integrate t
               >>= checkForPickups
               >>= handleCollisions
               >>= checkForCompletion

@@ -36,6 +36,7 @@ library
                      , Game.Timer
                      , Game.GameEvent
                      , Systems.Controller
+                     , Systems.Physics
                      , Entities.Block
                      , Entities.Jumpman
                      , Entities.Coin

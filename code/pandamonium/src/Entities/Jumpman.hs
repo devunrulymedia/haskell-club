@@ -11,6 +11,7 @@ import Renderable
 import Updatable
 import Redux
 import Systems.Controller
+import Systems.Physics
 import Graphics.Gloss (color, yellow, green, blue, Color, Vector, Picture)
 import Game.GameEvent
 
@@ -88,6 +89,8 @@ update t jm = return jm
           <&> jump
           <&> moveHorizontally t
           <&> capSpeed
+          <&> gravitate t
+          <&> integrate t
 
 processCollisions :: GameEvent -> Jumpman -> Jumpman
 processCollisions ResetCollisions jm = case jm ^. grounded of
