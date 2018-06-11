@@ -82,14 +82,11 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
 
 update :: Float -> Jumpman -> Jumpman
 update t = jump
-       >>> resetGroundedState
        >>> moveHorizontally t
        >>> capSpeed
 
-resetGroundedState :: Jumpman -> Jumpman
-resetGroundedState jm = set grounded Falling jm
-
 processCollisions :: GameEvent -> Jumpman -> Jumpman
+processCollisions ResetCollisions jm = set grounded Falling jm
 processCollisions (JumpmanCollision (x, y)) jm = if y > 0
   then set grounded Grounded jm
   else jm

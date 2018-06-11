@@ -61,7 +61,9 @@ bounce el a b = case (shape b !!> shape a) of
       reflected_vel = negate $ mulSV normal_proj unit_push
 
 handleCollisions :: World -> Events GameEvent World
-handleCollisions w = jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
+handleCollisions w = do
+  tell $ singleton ResetCollisions
+  jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
 pickupCoin :: Jumpman -> Coin -> Events GameEvent ()
 pickupCoin jm coin@(Coin name loc) = if (shape jm !!! shape coin)
