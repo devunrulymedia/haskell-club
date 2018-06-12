@@ -22,19 +22,26 @@ reverseBoost :: Float
 reverseBoost = 2.5
 
 jv :: Float
-jv = 750
+jv = 450
+
+jboost :: Float
+jboost = 1800
+
+jfuel :: Float
+jfuel = 0.2
 
 data GroundedState = Grounded | Ascending | Falling deriving (Eq)
 
 data Jumpman = Jumpman
   { _pos :: Vector
   , _vel :: Vector
+  , _fuel :: Float
   , _grounded :: GroundedState
   , _controller :: Controller
   }
 
 mkJumpman :: Vector -> Controller -> Jumpman
-mkJumpman p c = Jumpman p (0, 0) Falling c
+mkJumpman p c = Jumpman p (0, 0) 0 Falling c
 
 makeLenses ''Jumpman
 
@@ -73,9 +80,21 @@ jump :: GameEvent -> Jumpman -> Jumpman
 jump (JumpPressed) jm = case jm ^. grounded of
   Grounded -> grounded .~ Ascending
             $ vel %~ (+ (0, jv))
+            $ fuel .~ jfuel
             $ jm
   otherwise -> jm
 jump _ jm = jm
+
+ascend :: Float -> Jumpman -> Jumpman
+ascend t jm = ascend' (jm ^. grounded) (jm ^. controller) where
+  ascend' Ascending c = if jumpPressed c && jm ^. fuel > 0
+    then fuel %~ (\x -> x - t)
+       $ applyImpulse (0, t * jboost)
+       $ jm
+    else grounded .~ Falling
+       $ fuel .~ 0
+       $ jm
+  ascend' _ _ = jm
 
 moveHorizontally :: Float -> Jumpman -> Jumpman
 moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
@@ -87,21 +106,19 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
       | x > 0 = (x - (min x (t*f)), y)
       | True = (x + (min (-x) (t*f)), y)
 
-
-
 processCollisions :: GameEvent -> Jumpman -> Jumpman
 processCollisions ResetCollisions jm = case jm ^. grounded of
   Grounded  -> grounded .~ Falling $ jm
   otherwise -> jm
 processCollisions (JumpmanCollision (x, y)) jm = if y > 0
-  then set grounded Grounded jm
+  then grounded .~ Grounded $ jm
   else jm
 processCollisions _ jm = jm
 
 updateJumpman :: Float -> Jumpman -> Events GameEvent Jumpman
 updateJumpman t jm = return jm
-                 -- <&> jump
                  <&> moveHorizontally t
+                 <&> ascend t
                  <&> capSpeed
                  <&> gravitate t
                  <&> integrate t

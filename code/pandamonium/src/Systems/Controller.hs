@@ -27,6 +27,15 @@ updateControlState leftKey rightKey jumpKey = update where
     | otherwise        = return $ ControlState left right jump
   update _ state = return $ state
 
+leftPressed :: Controller -> Bool
+leftPressed (Controller (ControlState l _ _) _ ) = l
+
+rightPressed :: Controller -> Bool
+rightPressed (Controller (ControlState _ r _) _ ) = r
+
+jumpPressed :: Controller -> Bool
+jumpPressed (Controller (ControlState _ _ j) _ ) = j
+
 withKeys :: Key -> Key -> Key -> Controller
 withKeys leftKey rightKey jumpKey = Controller (ControlState False False False) (updateControlState leftKey rightKey jumpKey)
 
