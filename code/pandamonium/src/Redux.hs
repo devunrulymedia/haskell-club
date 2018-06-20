@@ -2,6 +2,8 @@
 
 module Redux where
 
+-- adding a comment because why not?
+
 import Graphics.Gloss.Interface.IO.Game
 import Control.Monad.Writer
 import Control.Lens
