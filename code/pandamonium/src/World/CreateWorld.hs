@@ -21,5 +21,5 @@ walls = [ Block (rectangle (-310) 310 230 220) white
 
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls
-                           , _thruster = Thruster (0, 0) (0, 0) Falling (withKeys (Char 'z') (Char 'x') (Char '/')) (ballSprite assets)
+                           , _thruster = Thruster (0, 0) (0, 0) 0 Falling (withKeys (Char 'z') (Char 'x') (Char '/')) (shipSprite assets)
                            }
