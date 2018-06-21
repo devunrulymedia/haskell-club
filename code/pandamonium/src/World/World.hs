@@ -102,7 +102,6 @@ changeBlockColour _ w = return w
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              <&> thruster %~ processCollisions e
               >>= changeBlockColour e
               >>= quit e
 
