@@ -27,6 +27,7 @@ data World = World
   { _scenery :: [ Block ]
   , _jumpman :: Jumpman
   , _coins :: [ Coin ]
+  , _numbers :: [ Picture ]
   }
 
 makeLenses ''World
@@ -39,7 +40,13 @@ instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
+                   (drawScore world) ++
                    [render $ world ^. jumpman]
+
+drawScore :: World -> [ Picture ]
+drawScore w = [ translate 200 200 ((w ^. numbers) !! 2)
+              , translate 216 200 ((w ^. numbers) !! 5)
+              ]
 
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of

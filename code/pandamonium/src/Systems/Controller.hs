@@ -21,9 +21,10 @@ updateControlState leftKey rightKey jumpKey = update where
   update (EventKey key state _ _) (ControlState left right jump)
     | key == leftKey   = return $ ControlState (pressed state) right jump
     | key == rightKey  = return $ ControlState left (pressed state) jump
-    | key == jumpKey   = do
-       fireEvent JumpPressed
-       return $ ControlState left right (pressed state)
+    | key == jumpKey   = if pressed state
+       then do fireEvent JumpPressed
+               return $ ControlState left right (pressed state)
+       else return $ ControlState left right (pressed state)
     | otherwise        = return $ ControlState left right jump
   update _ state = return $ state
 
