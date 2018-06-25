@@ -27,6 +27,7 @@ data World = World
   { _scenery :: [ Block ]
   , _jumpman :: Jumpman
   , _coins :: [ Coin ]
+  , _score :: Int
   , _numbers :: [ Picture ]
   }
 
@@ -40,13 +41,15 @@ instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
-                   (drawScore world) ++
+                   (drawNumber 200 200 (world ^. score) (world ^. numbers)) ++
                    [render $ world ^. jumpman]
 
-drawScore :: World -> [ Picture ]
-drawScore w = [ translate 200 200 ((w ^. numbers) !! 2)
-              , translate 216 200 ((w ^. numbers) !! 5)
-              ]
+drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
+drawNumber x y 0 nums = []
+drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
+                            currentDigit = translate (fromIntegral x) (fromIntegral y) (nums !! digit)
+                            remainingDigits = drawNumber (x - 16) y nextColumn nums
+                         in currentDigit : remainingDigits
 
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
@@ -87,6 +90,10 @@ removeCollectedCoins _ world = world
 respawnCoins :: GameEvent -> World -> World
 respawnCoins (RespawnCoin name loc) world = coins %~ (Coin name loc :) $ world
 respawnCoins _ world = world
+
+scoreCoin :: GameEvent -> World -> World
+scoreCoin (CoinPickedUp _) world = score +~ 5 $ world
+scoreCoin _ world = world
 
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
@@ -129,6 +136,7 @@ reduceWorld :: Reducer
 reduceWorld e w = return w
               >>= changeBlockColour e
               <&> removeCollectedCoins e
+              <&> scoreCoin e
               <&> respawnCoins e
               >>= quit e
 

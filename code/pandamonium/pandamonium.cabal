@@ -36,6 +36,7 @@ library
                      , Game.GameEvent
                      , Systems.Controller
                      , Systems.Physics
+                     , Graphics.SpriteSheet
                      , Entities.Block
                      , Entities.Jumpman
                      , Entities.Coin

@@ -36,5 +36,6 @@ createWorld assets = World { _scenery = walls
                              , Coin "coin4" (170, 160)
                              , Coin "coin5" (0, 30)
                              ]
+                           , _score = 0
                            , _numbers = numberSprites assets
                            }
