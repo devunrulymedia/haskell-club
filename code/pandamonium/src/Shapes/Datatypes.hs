@@ -2,7 +2,10 @@ module Shapes.Datatypes where
 
 import Graphics.Gloss (Vector)
 
-data Shape = Rectangle Float Float Float Float | Circle Vector Float deriving (Show, Eq)
+data Shape = Rectangle Float Float Float Float
+           | Circle Vector Float
+           | Polygon [ Vector ]
+           deriving (Show, Eq)
 
 rectangle :: Float -> Float -> Float -> Float -> Shape
 rectangle l r t b = Rectangle (min l r) (max l r) (max t b) (min t b)

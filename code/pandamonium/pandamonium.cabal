@@ -27,7 +27,10 @@ library
                      , Game.Game
                      -- exposed for test
                      , Shapes.Datatypes
-                     , Shapes.Collisions
+                     , Shapes.Collisions.Collisions
+                     , Shapes.Collisions.RectangleCollisions
+                     , Shapes.Collisions.CircleCollisions
+                     , Shapes.Collisions.PolygonCollisions
                      , Shapes.Movables
                      , Shapes.Renderables
                      , Shapes.Shape
@@ -36,6 +39,7 @@ library
                      , Game.GameEvent
                      , Systems.Controller
                      , Systems.Physics
+                     , Shapes.Collisions.CollisionClass
                      , Graphics.SpriteSheet
                      , Entities.Block
                      , Entities.Jumpman
@@ -67,6 +71,7 @@ test-suite pandamonium-test
   main-is:             Test.hs
   other-modules:       Shapes.RectangleCollisions
                      , Shapes.CircleCollisions
+                     , Shapes.PolygonCollisions
                      , Shapes.ShapeCollisions
                      , Shapes.CollisionAssertions
                      , Shapes.Generators

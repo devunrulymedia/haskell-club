@@ -8,7 +8,7 @@ import Game.Timer
 import Game.GameEvent
 import Renderable
 import Redux
-import Graphics.Gloss ( blue )
+import Graphics.Gloss ( blue, scale )
 
 data Game = Game
   { _world :: World
@@ -30,4 +30,4 @@ gameRedux = compose
   ]
 
 instance IORenderable Game where
-  iorender game = iorender (game ^. world)
+  iorender game = scale 3 3 <$> iorender (game ^. world)

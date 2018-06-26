@@ -4,6 +4,8 @@ import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Modifiers
 import Test.QuickCheck.Gen
 import Shapes.Shape
+import Shapes.Collisions.RectangleCollisions
+import Shapes.Collisions.CircleCollisions
 
 instance Arbitrary DeRectangle where
   arbitrary = do
@@ -20,4 +22,4 @@ instance Arbitrary DeCircle where
     return $ DeCircle centre radius
 
 instance Arbitrary Shape where
-  arbitrary = oneof [construct <$> Left <$> arbitrary, construct <$> Right <$> arbitrary]
+  arbitrary = oneof [construct <$> Rec <$> arbitrary, construct <$> Circ <$> arbitrary]

@@ -11,7 +11,7 @@ import World.CreateWorld
 import Game.Game
 
 window :: Display
-window = InWindow "A window!" (640, 480) (100, 100)
+window = FullScreen
 
 background :: Color
 background = black

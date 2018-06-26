@@ -6,6 +6,7 @@ import Control.Monad
 import Data.Maybe
 import Shapes.Generators
 import Shapes.CollisionAssertions
+import Shapes.Collisions.RectangleCollisions
 import Graphics.Gloss.Data.Vector
 import Shapes.Shape
 

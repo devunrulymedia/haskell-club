@@ -1,7 +1,7 @@
 module World.CreateWorld where
 
-import Graphics.Gloss
-import Graphics.Gloss.Interface.IO.Game
+import Graphics.Gloss (white, yellow)
+import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
 import Entities.Block
 import Entities.Jumpman
@@ -24,6 +24,7 @@ walls = [ Block (rectangle (-310) 310 230 220) white
         , Block (rectangle (-210) (-130) 120 110) white
         , Block (rectangle 130 210 120 110) white
         , Block (rectangle (-40) 40 (-10) (-20)) white
+        , Block (Polygon [((-300), (-220)), ((-300), (-120)), ((-100), (-220))]) yellow
         ]
 
 createWorld :: Assets -> World
