@@ -31,6 +31,7 @@ library
                      , Shapes.Collisions.RectangleCollisions
                      , Shapes.Collisions.CircleCollisions
                      , Shapes.Collisions.PolygonCollisions
+                     , Shapes.Polygon
                      , Shapes.Movables
                      , Shapes.Renderables
                      , Shapes.Shape

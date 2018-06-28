@@ -4,7 +4,7 @@ import Graphics.Gloss (Vector)
 
 data Shape = Rectangle Float Float Float Float
            | Circle Vector Float
-           | Polygon [ Vector ]
+           | Polygon [ Vector ] [ Vector ]
            deriving (Show, Eq)
 
 rectangle :: Float -> Float -> Float -> Float -> Shape
