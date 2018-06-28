@@ -21,3 +21,11 @@ test_overlapping_tips_collide =
 
 test_diagonally_separated_triangles_dont_collide =
   noCollisionBetween (poly [(0, 0), (3, 0), (0, 4)]) (poly [(4, 0), (1, 4), (4, 4)])
+
+test_horizontal_pushout =
+  assertEqual (Just (1, 0)) $
+  poly [(0,0), (3,0), (3,4)] !!> poly [(2,0), (2,4), (5, 0)]
+
+-- test_diagonal_pushout =
+--   assertNearlyEqual (Just (3, 4)) $
+--   poly [(0,0), (40, 0), (0, 30)] !!> poly [(17,11), (17, 42), (46, 11)]

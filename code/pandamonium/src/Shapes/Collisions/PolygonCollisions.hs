@@ -31,6 +31,13 @@ push (min1, max1) (min2, max2)
                  then Just pushLeft
                  else Just pushRight
 
+pushes :: DePoly -> DePoly -> [ (Vector, Maybe Float) ]
+pushes (DePoly p1s n1s) (DePoly p2s n2s) = push' p1s p2s <$> (n1s ++ n2s) where
+  push' p1s p2s normal = let proj1 = project p1s normal
+                             proj2 = project p2s normal
+                             pushout = push proj1 proj2
+                          in (normal, pushout)
+
 shorter :: Vector -> Vector -> Vector
 shorter a b = if sqMagV a < sqMagV b then a else b
 
