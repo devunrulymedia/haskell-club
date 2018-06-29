@@ -19,11 +19,11 @@ walls = [ Block (rectangle (-310) 310 230 220) white
         , Block (rectangle (-310) (-300) (-230) 230) white
         , Block (rectangle 300 310 (-230) 230) white
         -- platforms
-        , Block (rectangle (-210) (-130) (-110) (-120)) white
-        , Block (rectangle 130 210 (-110) (-120)) white
-        , Block (rectangle (-210) (-130) 120 110) white
-        , Block (rectangle 130 210 120 110) white
-        , Block (rectangle (-40) 40 (-10) (-20)) white
+        -- , Block (rectangle (-210) (-130) (-110) (-120)) white
+        -- , Block (rectangle 130 210 (-110) (-120)) white
+        -- , Block (rectangle (-210) (-130) 120 110) white
+        -- , Block (rectangle 130 210 120 110) white
+        -- , Block (rectangle (-40) 40 (-10) (-20)) white
         , Block (Polygon [((-300), (-220)), ((-300), (-120)), ((-100), (-220))] []) yellow
         ]
 

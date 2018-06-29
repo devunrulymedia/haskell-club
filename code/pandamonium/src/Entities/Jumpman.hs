@@ -46,7 +46,7 @@ mkJumpman p c = Jumpman p (0, 0) 0 Falling c
 makeLenses ''Jumpman
 
 instance Shaped Jumpman where
-  shape jm = let (x, y) = jm ^. pos in rectangle (x-8) (x+8) (y+8) (y-8)
+  shape jm = Circle (jm ^. pos) 8
 
 instance Renderable Jumpman where
   render jm = color (colorOf jm) $ render $ shape jm

@@ -26,21 +26,16 @@ library
                      , World.CreateWorld
                      , Game.Game
                      -- exposed for test
-                     , Shapes.Datatypes
-                     , Shapes.Collisions.Collisions
-                     , Shapes.Collisions.RectangleCollisions
-                     , Shapes.Collisions.CircleCollisions
-                     , Shapes.Collisions.PolygonCollisions
-                     , Shapes.Polygon
-                     , Shapes.Movables
-                     , Shapes.Renderables
                      , Shapes.Shape
 
   other-modules:       Game.Timer
                      , Game.GameEvent
                      , Systems.Controller
                      , Systems.Physics
-                     , Shapes.Collisions.CollisionClass
+                     , Shapes.Shapes
+                     , Shapes.Collisions
+                     , Shapes.Movables
+                     , Shapes.Renderables
                      , Graphics.SpriteSheet
                      , Entities.Block
                      , Entities.Jumpman
@@ -54,7 +49,6 @@ library
                      , mtl
                      , dlist
                      , bytestring
-                     , HTF
   default-language:    Haskell2010
 
 executable pandamonium-exe
@@ -71,12 +65,10 @@ test-suite pandamonium-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Test.hs
-  other-modules:       Shapes.RectangleCollisions
-                     , Shapes.CircleCollisions
-                     , Shapes.PolygonCollisions
-                     , Shapes.ShapeCollisions
+  other-modules:       Shapes.CircleCollisions
                      , Shapes.CollisionAssertions
                      , Shapes.Generators
+                     , Shapes.RectangleCollisions
   build-depends:       base
                      , gloss
                      , HTF
