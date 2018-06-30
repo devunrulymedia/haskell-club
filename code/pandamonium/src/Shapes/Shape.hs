@@ -5,7 +5,7 @@ module Shapes.Shape (
   module Shapes.Renderables
 ) where
 
-import Shapes.Shapes
+import Shapes.Shapes (Shape, Shaped (shape), polygon, rectangle, circle)
 import Shapes.Collisions
 import Shapes.Movables
 import Shapes.Renderables

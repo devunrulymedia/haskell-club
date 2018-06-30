@@ -17,7 +17,7 @@ arbitraryCircle :: Gen Shape
 arbitraryCircle = do
     centre <- arbitrary
     Positive radius <- arbitrary
-    return $ Circle centre radius
+    return $ circle centre radius
 
 instance Arbitrary Shape where
   arbitrary = oneof [arbitraryRect, arbitraryCircle]
