@@ -24,7 +24,8 @@ walls = [ Block (rectangle (-310) 310 230 220) white
         , Block (rectangle (-210) (-130) 120 110) white
         , Block (rectangle 130 210 120 110) white
         , Block (rectangle (-40) 40 (-10) (-20)) white
-        , Block (polygon [((-300), (-220)), ((-300), (-120)), ((-100), (-220))]) yellow
+        , Block (polygon [((-300), (-220)), ((-300), (-120)), ((-100), (-220))]) white
+        , Block (polygon [((300), (-220)), ((300), (-120)), ((100), (-220))]) white
         ]
 
 createWorld :: Assets -> World
