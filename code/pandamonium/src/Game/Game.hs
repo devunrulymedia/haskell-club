@@ -27,8 +27,8 @@ withWorld world = Game
   }
 
 adjustZoom :: Event -> Game -> Events GameEvent Game
-adjustZoom (EventKey (Char '+') Down _ _) = return . (mag %~ (* 1.1))
-adjustZoom (EventKey (Char '-') Down _ _) = return . (mag %~ (/ 1.1))
+adjustZoom (EventKey (Char '+') Down _ _) = return . (mag *~ 1.1)
+adjustZoom (EventKey (Char '-') Down _ _) = return . (mag //~ 1.1)
 adjustZoom _ = return
 
 
