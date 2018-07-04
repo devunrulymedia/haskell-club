@@ -11,8 +11,9 @@ import Renderable
 import Redux
 import Systems.Controller
 import Systems.Physics
-import Graphics.Gloss (color, yellow, green, blue, Color, Vector, Picture)
-import Graphics.Gloss.Interface.IO.Game (Event)
+import Graphics.Gloss
+import Graphics.Gloss.Interface.IO.Game
+import Graphics.Gloss.Data.Vector
 import Game.GameEvent
 
 hv :: Float
@@ -22,7 +23,7 @@ reverseBoost :: Float
 reverseBoost = 2.5
 
 jv :: Float
-jv = 450
+jv = 500
 
 jboost :: Float
 jboost = 1800
@@ -36,12 +37,12 @@ data Jumpman = Jumpman
   { _pos :: Vector
   , _vel :: Vector
   , _fuel :: Float
-  , _grounded :: GroundedState
+  , _touching :: Maybe Vector
   , _controller :: Controller
   }
 
 mkJumpman :: Vector -> Controller -> Jumpman
-mkJumpman p c = Jumpman p (0, 0) 0 Falling c
+mkJumpman p c = Jumpman p (0, 0) 0 Nothing c
 
 makeLenses ''Jumpman
 
@@ -49,7 +50,10 @@ instance Shaped Jumpman where
   shape jm = let (x, y) = jm ^. pos in rectangle (x-8) (x+8) (y-8) (y+8)
 
 instance Renderable Jumpman where
-  render jm = color (colorOf jm) $ render $ shape jm
+  render jm = Pictures
+    [ color yellow $ render $ shape jm
+    , color red $ line $ (jm ^. pos + ) <$> [(0, 0), maybe (0, 0) (mulSV 100) (jm ^. touching)]
+    ]
 
 instance Movable Jumpman where
   move dv jm = pos %~ (+dv) $ jm
@@ -57,12 +61,6 @@ instance Movable Jumpman where
 instance Moving Jumpman where
   velocity jm = jm ^. vel
   applyImpulse da jm = vel %~ (+da) $ jm
-
-colorOf :: Jumpman -> Color
-colorOf jm = case jm ^. grounded of
-  Grounded -> green
-  Falling -> yellow
-  Ascending -> blue
 
 hlimit :: Float -> Vector -> Vector
 hlimit mx (x, y)
@@ -77,24 +75,23 @@ capSpeed :: Jumpman -> Jumpman
 capSpeed jm = vel %~ hlimit 600 $ jm
 
 jump :: GameEvent -> Jumpman -> Jumpman
-jump (JumpPressed) jm = case jm ^. grounded of
-  Grounded -> grounded .~ Ascending
-            $ vel %~ (+ (0, jv))
-            $ fuel .~ jfuel
-            $ jm
-  otherwise -> jm
+jump (JumpPressed) jm = case (jm ^. touching, jm ^. vel) of
+  (Nothing, _) -> jm
+  (Just n, (vx, vy)) -> jump' n
+    where
+      jump' (nx, ny)
+        | ny > 0.5   = vel .~ (vx, jv) $ fuel .~ jfuel $ jm
+        | otherwise = vel .~ (1500 * nx, jv/2) $ fuel .~ jfuel $ jm
+
 jump _ jm = jm
 
 ascend :: Float -> Jumpman -> Jumpman
-ascend t jm = ascend' (jm ^. grounded) (jm ^. controller) where
-  ascend' Ascending c = if jumpPressed c && jm ^. fuel > 0
+ascend t jm = ascend' (jm ^. controller) where
+  ascend' c = if jumpPressed c && jm ^. fuel > 0
     then fuel %~ (\x -> x - t)
        $ applyImpulse (0, t * jboost)
        $ jm
-    else grounded .~ Falling
-       $ fuel .~ 0
-       $ jm
-  ascend' _ _ = jm
+    else fuel .~ 0 $ jm
 
 moveHorizontally :: Float -> Jumpman -> Jumpman
 moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
@@ -107,12 +104,8 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
       | True = (x + (min (-x) (t*f)), y)
 
 processCollisions :: GameEvent -> Jumpman -> Jumpman
-processCollisions ResetCollisions jm = case jm ^. grounded of
-  Grounded  -> grounded .~ Falling $ jm
-  otherwise -> jm
-processCollisions (JumpmanCollision (x, y)) jm = if y > 0
-  then grounded .~ Grounded $ jm
-  else jm
+processCollisions ResetCollisions jm = touching .~ Nothing $ jm
+processCollisions (JumpmanCollision v) jm = touching .~ Just (normalizeV v) $ jm
 processCollisions _ jm = jm
 
 updateJumpman :: Float -> Jumpman -> Events GameEvent Jumpman
