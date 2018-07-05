@@ -22,8 +22,11 @@ hv = 1500
 reverseBoost :: Float
 reverseBoost = 2.5
 
-jv :: Float
-jv = 500
+jump_power :: Float
+jump_power = 500
+
+walljump_power :: Float
+walljump_power = 350
 
 jboost :: Float
 jboost = 1800
@@ -80,8 +83,8 @@ jump (JumpPressed) jm = case (jm ^. touching, jm ^. vel) of
   (Just n, (vx, vy)) -> jump' n
     where
       jump' (nx, ny)
-        | ny > 0.5   = vel .~ (vx, jv) $ fuel .~ jfuel $ jm
-        | otherwise = vel .~ (1500 * nx, jv/2) $ fuel .~ jfuel $ jm
+        | ny > 0.5   = vel .~ (vx, jump_power) $ fuel .~ jfuel $ jm
+        | otherwise = vel .~ (1500 * nx, walljump_power) $ fuel .~ jfuel $ jm
 
 jump _ jm = jm
 
@@ -105,7 +108,16 @@ moveHorizontally t jm = let (x, y) = velocity jm in case jm ^. controller of
 
 processCollisions :: GameEvent -> Jumpman -> Jumpman
 processCollisions ResetCollisions jm = touching .~ Nothing $ jm
-processCollisions (JumpmanCollision v) jm = touching .~ Just (normalizeV v) $ jm
+processCollisions (JumpmanCollision nv) jm =
+  let (nx, ny) = normalizeV nv
+      v = case jm ^. touching of
+        (Nothing)       -> (nx, ny)
+        (Just (ox, oy)) -> if ny > oy
+          then (nx, ny)
+          else (ox, oy)
+   in touching .~ Just v $ jm
+
+
 processCollisions _ jm = jm
 
 updateJumpman :: Float -> Jumpman -> Events GameEvent Jumpman
