@@ -17,6 +17,7 @@ import Graphics.Gloss.Interface.IO.Game
 import Entities.Block
 import Entities.Jumpman
 import Entities.Coin
+import Systems.Physics
 
 import Game.GameEvent
 import Shapes.Shape
@@ -51,17 +52,6 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
                             remainingDigits = drawNumber (x - 16) y nextColumn nums
                          in currentDigit : remainingDigits
 
-bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
-bounce el a b = case (shape b !!> shape a) of
-  Nothing -> return a
-  (Just pushout) -> do
-    fireEvent (JumpmanCollision offset)
-    return (move offset (applyImpulse reflected_vel a)) where
-      vel           = velocity a
-      unit_push     = normalizeV pushout
-      offset        = mulSV (1 + el) pushout
-      normal_proj   = (1 + el) * (vel `dotV` unit_push)
-      reflected_vel = negate $ mulSV normal_proj unit_push
 
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = do
