@@ -47,7 +47,6 @@ instance Movable Thruster where
   move dv th = pos %~ (+dv) $ th
 
 instance Moving Thruster where
-<<<<<<< HEAD
   velocity th = th ^. vel
   applyImpulse da th = vel %~ (+da) $ th
 
