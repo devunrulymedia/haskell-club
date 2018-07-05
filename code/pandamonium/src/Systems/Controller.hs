@@ -8,37 +8,25 @@ type ControlUpdater = Event -> ControlState -> Events GameEvent ControlState
 
 type LeftPressed = Bool
 type RightPressed = Bool
-type JumpPressed = Bool
+type ThrustPressed = Bool
 
-data ControlState = ControlState LeftPressed RightPressed JumpPressed
+data ControlState = ControlState LeftPressed RightPressed ThrustPressed
 
 data Controller = Controller ControlState ControlUpdater
 
 updateControlState :: Key -> Key -> Key -> ControlUpdater
-updateControlState leftKey rightKey jumpKey = update where
+updateControlState leftKey rightKey thrustKey = update where
   pressed Up = False
   pressed Down = True
-  update (EventKey key state _ _) (ControlState left right jump)
-    | key == leftKey   = return $ ControlState (pressed state) right jump
-    | key == rightKey  = return $ ControlState left (pressed state) jump
-    | key == jumpKey   = if pressed state
-       then do fireEvent JumpPressed
-               return $ ControlState left right (pressed state)
-       else return $ ControlState left right (pressed state)
-    | otherwise        = return $ ControlState left right jump
-  update _ state = return $ state
-
-leftPressed :: Controller -> Bool
-leftPressed (Controller (ControlState l _ _) _ ) = l
-
-rightPressed :: Controller -> Bool
-rightPressed (Controller (ControlState _ r _) _ ) = r
-
-jumpPressed :: Controller -> Bool
-jumpPressed (Controller (ControlState _ _ j) _ ) = j
+  update (EventKey key state _ _) (ControlState left right thrust)
+    | key == leftKey   = ControlState (pressed state) right thrust
+    | key == rightKey  = ControlState left (pressed state) thrust
+    | key == thrustKey = ControlState left right (pressed state)
+    | otherwise        = ControlState left right thrust
+  update _ state = state
 
 withKeys :: Key -> Key -> Key -> Controller
-withKeys leftKey rightKey jumpKey = Controller (ControlState False False False) (updateControlState leftKey rightKey jumpKey)
+withKeys leftKey rightKey thrustKey = Controller (ControlState False False False) (updateControlState leftKey rightKey thrustKey)
 
 updateController :: Event -> Controller -> Events GameEvent Controller
 updateController event (Controller state update) = do

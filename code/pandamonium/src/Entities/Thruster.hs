@@ -47,6 +47,7 @@ instance Movable Thruster where
   move dv th = pos %~ (+dv) $ th
 
 instance Moving Thruster where
+<<<<<<< HEAD
   velocity th = th ^. vel
   applyImpulse da th = vel %~ (+da) $ th
 
@@ -66,6 +67,12 @@ thrust t th = thruster where
         otherwise -> (0,0)
       totalAccel = gravity + accelDueToThrust
       thruster = accel .~ totalAccel $ th
+
+thrust :: Float -> Thruster -> Thruster
+thrust t th = case th ^. controller of
+    (Controller (ControlState _ _ True) _) -> accel .~ (5,5) $ th
+    otherwise -> accel .~ (0,0) $ th
+
 
 update :: Float -> Thruster -> Thruster
 update t = spin t . thrust t

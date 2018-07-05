@@ -46,7 +46,9 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
                          in currentDigit : remainingDigits
 
 integrate :: Float -> World -> World
-integrate t = thruster %~ applyVelocity t
+integrate t w = thruster %~ accelerate t
+                $ thruster %~ applyVelocity t
+                $ w
 
 bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
@@ -109,6 +111,7 @@ updateWorld :: Updater
 updateWorld t w = return w
               <&> thruster %~ update t
               <&> integrate t
+
               >>= handleCollisions
 
 topLevelRedux :: Redux World GameEvent
