@@ -67,12 +67,6 @@ thrust t th = thruster where
       totalAccel = gravity + accelDueToThrust
       thruster = accel .~ totalAccel $ th
 
-thrust :: Float -> Thruster -> Thruster
-thrust t th = case th ^. controller of
-    (Controller (ControlState _ _ True) _) -> accel .~ (5,5) $ th
-    otherwise -> accel .~ (0,0) $ th
-
-
 update :: Float -> Thruster -> Thruster
 update t = spin t . thrust t
 
