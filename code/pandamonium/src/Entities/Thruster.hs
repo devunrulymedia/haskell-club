@@ -17,6 +17,9 @@ import Redux
 spinSpeed :: Float
 spinSpeed = pi * 2
 
+spinSpeed :: Float
+spinSpeed = pi * 2
+
 thrustPower :: Float
 thrustPower = 700
 
