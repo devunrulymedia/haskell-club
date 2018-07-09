@@ -4,7 +4,7 @@ import Graphics.Gloss (white, yellow)
 import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
 import Entities.Block
-import Entities.Jumpman
+import Entities.Panda
 import Entities.Coin
 
 import World.Assets
@@ -30,7 +30,7 @@ walls = [ Block (rectangle (-310) 310 230 220) white
 
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls
-                           , _jumpman = mkJumpman (0, 0) (withKeys (Char 'z') (Char 'x') (Char '/'))
+                           , _panda = mkPanda (0, 0) (withKeys (Char 'z') (Char 'x') (Char '/'))
                            , _coins =
                              [ Coin "coin1" (-170, -70)
                              , Coin "coin2" (170, -70)

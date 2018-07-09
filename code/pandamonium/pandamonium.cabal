@@ -38,7 +38,7 @@ library
                      , Shapes.Renderables
                      , Graphics.SpriteSheet
                      , Entities.Block
-                     , Entities.Jumpman
+                     , Entities.Panda
                      , Entities.Coin
                      , World.World
 

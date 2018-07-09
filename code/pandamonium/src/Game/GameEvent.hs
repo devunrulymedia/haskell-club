@@ -3,7 +3,7 @@ module Game.GameEvent where
 import Graphics.Gloss
 
 data GameEvent = ResetCollisions
-               | JumpmanCollision Vector
+               | PandaCollision Vector
                | JumpPressed
                | TimedEvent Float GameEvent
                | CoinPickedUp String

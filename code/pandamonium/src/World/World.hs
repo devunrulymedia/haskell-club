@@ -15,7 +15,7 @@ import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
 import Entities.Block
-import Entities.Jumpman
+import Entities.Panda
 import Entities.Coin
 import Systems.Physics
 
@@ -26,7 +26,7 @@ import Redux
 
 data World = World
   { _scenery :: [ Block ]
-  , _jumpman :: Jumpman
+  , _panda :: Panda
   , _coins :: [ Coin ]
   , _score :: Int
   , _numbers :: [ Picture ]
@@ -43,7 +43,7 @@ instance IORenderable World where
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
                    (drawNumber 200 200 (world ^. score) (world ^. numbers)) ++
-                   [render $ world ^. jumpman]
+                   [render $ world ^. panda]
 
 drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
 drawNumber x y 0 nums = []
@@ -56,17 +56,17 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = do
   tell $ singleton ResetCollisions
-  jumpman %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
+  panda %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
-pickupCoin :: Jumpman -> Coin -> Events GameEvent ()
-pickupCoin jm coin@(Coin name loc) = if (shape jm !!! shape coin)
+pickupCoin :: Panda -> Coin -> Events GameEvent ()
+pickupCoin pd coin@(Coin name loc) = if (shape pd !!! shape coin)
   then do fireEvent $ CoinPickedUp name
           fireEvent $ TimedEvent 5 (RespawnCoin name loc)
           return ()
   else return ()
 
 checkForPickups :: World -> Events GameEvent World
-checkForPickups w = do traverse (pickupCoin $ w ^. jumpman) (w ^. coins)
+checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
                        return w
 
 removeCollectedCoins :: GameEvent -> World -> World
@@ -145,6 +145,6 @@ topLevelRedux = Redux
 
 worldRedux :: Redux World GameEvent
 worldRedux = compose
-  [ connect jumpmanRedux jumpman
+  [ connect pandaRedux panda
   , topLevelRedux
   ]
