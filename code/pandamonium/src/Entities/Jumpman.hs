@@ -34,8 +34,6 @@ jboost = 1800
 jfuel :: Float
 jfuel = 0.2
 
-data GroundedState = Grounded | Ascending | Falling deriving (Eq)
-
 data Jumpman = Jumpman
   { _pos :: Vector
   , _vel :: Vector
