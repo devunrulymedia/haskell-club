@@ -35,26 +35,24 @@ jfuel :: Float
 jfuel = 0.2
 
 data Panda = Panda
-  { _pos :: Vector
+  { _sprite :: Picture
+  , _pos :: Vector
   , _vel :: Vector
   , _fuel :: Float
   , _touching :: Maybe Vector
   , _controller :: Controller
   }
 
-mkPanda :: Vector -> Controller -> Panda
-mkPanda p c = Panda p (0, 0) 0 Nothing c
+mkPanda :: Picture -> Vector -> Controller -> Panda
+mkPanda s p c = Panda s p (0, 0) 0 Nothing c
 
 makeLenses ''Panda
 
 instance Shaped Panda where
-  shape pd = let (x, y) = pd ^. pos in rectangle (x-8) (x+8) (y-8) (y+8)
+  shape pd = let (x, y) = pd ^. pos in rectangle (x-24) (x+24) (y-18) (y+18)
 
 instance Renderable Panda where
-  render pd = Pictures
-    [ color yellow $ render $ shape pd
-    , color red $ line $ (pd ^. pos + ) <$> [(0, 0), maybe (0, 0) (mulSV 100) (pd ^. touching)]
-    ]
+  render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ pd ^. sprite
 
 instance Movable Panda where
   move dv pd = pos %~ (+dv) $ pd

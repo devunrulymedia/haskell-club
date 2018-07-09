@@ -30,7 +30,7 @@ walls = [ Block (rectangle (-310) 310 230 220) white
 
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls
-                           , _panda = mkPanda (0, 0) (withKeys (Char 'z') (Char 'x') (Char '/'))
+                           , _panda = mkPanda (pandas assets !! 1) (0, 0) (withKeys (Char 'z') (Char 'x') (Char '/'))
                            , _coins =
                              [ Coin "coin1" (-170, -70)
                              , Coin "coin2" (170, -70)
