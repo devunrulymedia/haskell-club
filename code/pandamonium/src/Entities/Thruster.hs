@@ -7,11 +7,12 @@ import Control.Lens
 import Control.Arrow
 import Shapes.Shape
 import Renderable
-import Updatable
 import Systems.Controller
 import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, Picture)
+import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Game.GameEvent
+import Redux
 
 spinSpeed :: Float
 spinSpeed = pi * 2
@@ -34,7 +35,7 @@ data Thruster = Thruster
 makeLenses ''Thruster
 
 instance Shaped Thruster where
-  shape th = Circle (th ^. pos) 16
+  shape th = let (x, y) = th ^. pos in rectangle (x-8) (x+8) (y-8) (y+8)
 
 instance Renderable Thruster where
   render th = r where
@@ -50,7 +51,8 @@ instance Moving Thruster where
   velocity th = th ^. vel
   applyImpulse da th = vel %~ (+da) $ th
 
-collectEvents event th = controller %~ updateController event $ th
+collectEvents :: Event -> Thruster -> Events GameEvent Thruster
+collectEvents event th = controller %%~ updateController event $ th
 
 spin :: Float -> Thruster -> Thruster
 spin t th = case th ^. controller of
@@ -72,3 +74,22 @@ update t = spin t . thrust t
 
 accelerate :: Float -> Thruster -> Thruster
 accelerate t thruster = vel %~ (+ mulSV t (thruster ^. accel)) $ thruster
+
+updateThruster :: Float -> Thruster -> Events GameEvent Thruster
+updateThruster t th = return th
+                 <&> update t
+                 <&> accelerate t
+
+reduceThruster :: GameEvent -> Thruster -> IOEvents GameEvent Thruster
+reduceThruster e th = return th
+
+listenThruster :: Event -> Thruster -> Events GameEvent Thruster
+listenThruster e th = return th
+                 >>= collectEvents e
+
+thrusterRedux :: Redux Thruster GameEvent
+thrusterRedux = Redux
+  { reducer  = reduceThruster
+  , updater  = updateThruster
+  , listener = listenThruster
+  }

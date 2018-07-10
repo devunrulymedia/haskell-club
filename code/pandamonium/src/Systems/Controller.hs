@@ -19,12 +19,21 @@ updateControlState leftKey rightKey thrustKey = update where
   pressed Up = False
   pressed Down = True
   update (EventKey key state _ _) (ControlState left right thrust)
-    | key == leftKey   = ControlState (pressed state) right thrust
-    | key == rightKey  = ControlState left (pressed state) thrust
-    | key == thrustKey = ControlState left right (pressed state)
-    | otherwise        = ControlState left right thrust
-  update _ state = state
+    | key == leftKey   = return $ ControlState (pressed state) right thrust
+    | key == rightKey  = return $ ControlState left (pressed state) thrust
+    | key == thrustKey = return $ ControlState left right (pressed state)
+    | otherwise        = return $ ControlState left right thrust
+  update _ state = return $ state
+{-
+  leftPressed :: Controller -> Bool
+  leftPressed (Controller (ControlState l _ _) _ ) = l
 
+  rightPressed :: Controller -> Bool
+  rightPressed (Controller (ControlState _ r _) _ ) = r
+
+  jumpPressed :: Controller -> Bool
+  jumpPressed (Controller (ControlState _ _ j) _ ) = j
+-}
 withKeys :: Key -> Key -> Key -> Controller
 withKeys leftKey rightKey thrustKey = Controller (ControlState False False False) (updateControlState leftKey rightKey thrustKey)
 

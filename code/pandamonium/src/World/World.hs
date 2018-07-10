@@ -36,7 +36,7 @@ type Reducer  = GameEvent -> World -> IOEvents GameEvent World
 instance IORenderable World where
   iorender world = pure $ Pictures $
                    (render <$> world ^. scenery) ++
-                   [render $ world ^. jumpman]
+                   [render $ world ^. thruster]
 
 drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
 drawNumber x y 0 nums = []
@@ -65,10 +65,6 @@ bounce el a b = case (shape b !!> shape a) of
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = thruster %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
-scoreCoin :: GameEvent -> World -> World
-scoreCoin (CoinPickedUp _) world = score +~ 5 $ world
-scoreCoin _ world = world
-
 exitOnEscape :: Event -> World -> IO World
 exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
   then do exitSuccess
@@ -82,7 +78,6 @@ listenForQuit _ w = return w
 
 listenWorld :: Listener
 listenWorld e w = return w
-              <&> thruster %~ collectEvents e
               >>= listenForQuit e
 
 quit :: Reducer
@@ -111,7 +106,6 @@ updateWorld :: Updater
 updateWorld t w = return w
               <&> thruster %~ update t
               <&> integrate t
-
               >>= handleCollisions
 
 topLevelRedux :: Redux World GameEvent
@@ -123,6 +117,6 @@ topLevelRedux = Redux
 
 worldRedux :: Redux World GameEvent
 worldRedux = compose
-  [ connect jumpmanRedux jumpman
+  [ connect thrusterRedux thruster
   , topLevelRedux
   ]
