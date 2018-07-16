@@ -31,7 +31,6 @@ library
   other-modules:       Game.Timer
                      , Game.GameEvent
                      , Systems.Controller
-                     , Systems.Physics
                      , Shapes.Shapes
                      , Shapes.Collisions
                      , Shapes.Movables
