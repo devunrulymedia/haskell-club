@@ -11,15 +11,17 @@ import Systems.Controller
 import Shapes.Shape
 import World.World
 
-
 walls :: [Block]
-walls = [ Block (rectangle (-310) 310 230 220) white
-        , Block (rectangle (-310) 310 (-220) (-230)) white
-        , Block (rectangle (-310) (-300) (-230) 230) white
-        , Block (rectangle 300 310 (-230) 230) white
+walls = [ Block (rectangleV (-310, 230) (620, 10)) white
+        , Block (rectangleV (-310, -230) (620, 10)) white
+        , Block (rectangleV (-310, -230) (10, 470)) white
+        , Block (rectangleV (310, -230) (10, 470)) white
         ]
 
+surface :: [Block]
+surface = [ Block (rectangleV (-300, 100) (100,2)) white ]
+
 createWorld :: Assets -> World
-createWorld assets = World { _scenery = walls
+createWorld assets = World { _scenery = walls ++ surface
                            , _thruster = Thruster (0, 0) (0, 0) (0, 0) (0, 1) (withKeys (Char 'z') (Char 'x') (Char 'm')) (shipSprite assets)
                            }

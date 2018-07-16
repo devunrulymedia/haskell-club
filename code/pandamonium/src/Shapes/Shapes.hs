@@ -65,5 +65,13 @@ rectangle l r t b = polygon
   , (max l r, min t b)
   ]
 
+rectangleV :: Vector -> Vector -> Shape
+rectangleV (x,y) (w,h) = polygon
+  [ (x, y)
+  , (x, y+h)
+  , (x+w, y+h)
+  , (x+w, y)
+  ]
+
 circle :: Vector -> Float -> Shape
 circle = Circle
