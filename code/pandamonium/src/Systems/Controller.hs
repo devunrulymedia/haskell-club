@@ -24,16 +24,7 @@ updateControlState leftKey rightKey thrustKey = update where
     | key == thrustKey = return $ ControlState left right (pressed state)
     | otherwise        = return $ ControlState left right thrust
   update _ state = return $ state
-{-
-  leftPressed :: Controller -> Bool
-  leftPressed (Controller (ControlState l _ _) _ ) = l
 
-  rightPressed :: Controller -> Bool
-  rightPressed (Controller (ControlState _ r _) _ ) = r
-
-  jumpPressed :: Controller -> Bool
-  jumpPressed (Controller (ControlState _ _ j) _ ) = j
--}
 withKeys :: Key -> Key -> Key -> Controller
 withKeys leftKey rightKey thrustKey = Controller (ControlState False False False) (updateControlState leftKey rightKey thrustKey)
 
