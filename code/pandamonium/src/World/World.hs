@@ -99,7 +99,6 @@ changeBlockColour _ w = return w
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              >>= changeBlockColour e
               >>= quit e
 
 updateWorld :: Updater
