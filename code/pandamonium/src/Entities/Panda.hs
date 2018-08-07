@@ -15,6 +15,8 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Game.GameEvent
+import Entities.Panda.Movement
+import Entities.Panda.Panda
 
 hv :: Float
 hv = 1500
@@ -34,19 +36,7 @@ jboost = 1800
 jfuel :: Float
 jfuel = 0.2
 
-data Panda = Panda
-  { _sprite :: Picture
-  , _pos :: Vector
-  , _vel :: Vector
-  , _fuel :: Float
-  , _touching :: Maybe Vector
-  , _controller :: Controller
-  }
 
-mkPanda :: Picture -> Vector -> Controller -> Panda
-mkPanda s p c = Panda s p (0, 0) 0 Nothing c
-
-makeLenses ''Panda
 
 instance Shaped Panda where
   shape pd = let (x, y) = pd ^. pos in rectangle (x-24) (x+24) (y-18) (y+18)
@@ -73,24 +63,27 @@ collectEvents event pd = controller %%~ updateController event $ pd
 capSpeed :: Panda -> Panda
 capSpeed pd = vel %~ hlimit 600 $ pd
 
-jump :: GameEvent -> Panda -> Panda
-jump (JumpPressed) pd = case (pd ^. touching, pd ^. vel) of
-  (Nothing, _) -> pd
-  (Just n, (vx, vy)) -> jump' n
-    where
-      jump' (nx, ny)
-        | ny > 0.5   = vel .~ (vx, jump_power) $ fuel .~ jfuel $ pd
-        | otherwise = vel .~ (1500 * nx, walljump_power) $ fuel .~ jfuel $ pd
+jump :: Panda -> Panda
+jump pd = case (pd ^. state, pd ^. vel) of
+  (Grounded, (vx, vy)) -> vel .~ (vx, jump_power)
+                        $ state .~ Jumping jfuel
+                        $ pd
+  (WallHugging d, (vx, vy)) -> vel .~ (pushOff d 1500, walljump_power)
+                             $ state .~ WallJumping (invert d) jfuel
+                             $ pd
+  otherwise -> pd
 
-jump _ pd = pd
+pandaHandle :: GameEvent -> Panda -> Panda
+pandaHandle (JumpPressed) = jump
+pandaHandle _ = id
 
-ascend :: Float -> Panda -> Panda
-ascend t pd = ascend' (pd ^. controller) where
-  ascend' c = if jumpPressed c && pd ^. fuel > 0
-    then fuel %~ (\x -> x - t)
-       $ applyImpulse (0, t * jboost)
-       $ pd
-    else fuel .~ 0 $ pd
+-- ascend :: Float -> Panda -> Panda
+-- ascend t pd = ascend' (pd ^. controller) where
+--   ascend' c = if jumpPressed c && pd ^. fuel > 0
+--     then fuel %~ (\x -> x - t)
+--        $ applyImpulse (0, t * jboost)
+--        $ pd
+--     else fuel .~ 0 $ pd
 
 moveHorizontally :: Float -> Panda -> Panda
 moveHorizontally t pd = let (x, y) = velocity pd in case pd ^. controller of
@@ -102,36 +95,22 @@ moveHorizontally t pd = let (x, y) = velocity pd in case pd ^. controller of
       | x > 0 = (x - (min x (t*f)), y)
       | True = (x + (min (-x) (t*f)), y)
 
-processCollisions :: GameEvent -> Panda -> Panda
-processCollisions ResetCollisions pd = touching .~ Nothing $ pd
-processCollisions (PandaCollision nv) pd =
-  let (nx, ny) = normalizeV nv
-      v = case pd ^. touching of
-        (Nothing)       -> (nx, ny)
-        (Just (ox, oy)) -> if ny > oy
-          then (nx, ny)
-          else (ox, oy)
-   in touching .~ Just v $ pd
-
-
-processCollisions _ pd = pd
-
 updatePanda :: Float -> Panda -> Events GameEvent Panda
 updatePanda t pd = return pd
-                 <&> moveHorizontally t
-                 <&> ascend t
-                 <&> capSpeed
-                 <&> gravitate t
-                 <&> integrate t
+               <&> moveHorizontally t
+               -- <&> ascend t
+               <&> capSpeed
+               <&> gravitate t
+               <&> integrate t
 
 reducePanda :: GameEvent -> Panda -> IOEvents GameEvent Panda
 reducePanda e pd = return pd
-                 <&> processCollisions e
-                 <&> jump e
+               <&> state %~ handleCollisions e
+               <&> pandaHandle e
 
 listenPanda :: Event -> Panda -> Events GameEvent Panda
 listenPanda e pd = return pd
-                 >>= collectEvents e
+               >>= collectEvents e
 
 pandaRedux :: Redux Panda GameEvent
 pandaRedux = Redux

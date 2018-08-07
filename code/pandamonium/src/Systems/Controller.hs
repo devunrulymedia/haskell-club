@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
@@ -39,6 +41,20 @@ jumpPressed (Controller (ControlState _ _ j) _ ) = j
 
 withKeys :: Key -> Key -> Key -> Controller
 withKeys leftKey rightKey jumpKey = Controller (ControlState False False False) (updateControlState leftKey rightKey jumpKey)
+
+data DPad = JLeft | JRight | JNeutral deriving (Eq, Show)
+data Button = Pressed | Released deriving (Eq, Show)
+
+data Joypad = Joypad DPad Button
+
+toJoypad :: Controller -> Joypad
+toJoypad (Controller (ControlState l r j) _) = Joypad
+  (direction l r)
+  (if j then Pressed else Released)
+  where
+    direction True False = JLeft
+    direction False True = JRight
+    direction _ _ = JNeutral
 
 updateController :: Event -> Controller -> Events GameEvent Controller
 updateController event (Controller state update) = do

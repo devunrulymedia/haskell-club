@@ -39,6 +39,9 @@ library
                      , Graphics.SpriteSheet
                      , Entities.Block
                      , Entities.Panda
+                     , Entities.Panda.MovementStateMachine
+                     , Entities.Panda.Collisions
+                     , Entities.Panda.Movement
                      , Entities.Coin
                      , World.World
 
@@ -67,6 +70,7 @@ test-suite pandamonium-test
   main-is:             Test.hs
   other-modules:       Shapes.CircleCollisions
                      , Shapes.CollisionAssertions
+                     , Shapes.PolygonCollisions
                      , Shapes.Generators
                      , Shapes.RectangleCollisions
   build-depends:       base
