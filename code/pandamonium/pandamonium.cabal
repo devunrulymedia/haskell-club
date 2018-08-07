@@ -39,6 +39,7 @@ library
                      , Graphics.SpriteSheet
                      , Entities.Block
                      , Entities.Panda
+                     , Entities.Panda.Panda
                      , Entities.Panda.MovementStateMachine
                      , Entities.Panda.Collisions
                      , Entities.Panda.Movement

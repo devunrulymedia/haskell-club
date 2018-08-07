@@ -3,6 +3,7 @@ module Graphics.SpriteSheet (loadSpriteSheet) where
 import Graphics.Gloss
 import Codec.BMP
 import qualified Data.ByteString as B
+import Data.Word
 import Debug.Trace
 
 loadBMP' :: String -> IO BMP
@@ -11,12 +12,11 @@ loadBMP' filename = do picture <- readBMP filename
                          (Right sprite) -> return sprite
                          (Left e)       -> error $ show e
 
-splitSprites :: Int -> Int -> BMP -> [BMP]
+splitSprites :: Int -> Int -> BMP -> [B.ByteString]
 splitSprites w h pic = let (x, y) = bmpDimensions pic
                            cols = x `quot` w
                            rows = y `quot` h
-                           bytes = fst $ sprites (w * 4) cols h rows (unpackBMPToRGBA32 pic)
-                        in packRGBA32ToBMP w h <$> bytes
+                        in fst $ sprites (w * 4) cols h rows (unpackBMPToRGBA32 pic)
 
 -- takes single pixel rows from the spritesheet
 segments :: Int -> Int -> B.ByteString -> ([B.ByteString], B.ByteString)
@@ -39,7 +39,23 @@ sprites w cols h rows bytes = let (row, rest) = layers w cols h bytes
                                   (rows', leftovers) = sprites w cols h (rows - 1) rest
                                in (row ++ rows', leftovers)
 
+setTransparent :: B.ByteString -> B.ByteString
+setTransparent bytes = B.pack $ setTransparent' $ B.unpack bytes where
+  setTransparent' :: [ Word8 ] -> [ Word8 ]
+  setTransparent' [] = []
+  setTransparent' bytes = let (pixel, rest) = splitAt 4 bytes
+                              newPixel = makeTransparent pixel
+                           in newPixel ++ setTransparent' rest where
+    makeTransparent :: [ Word8 ] -> [ Word8 ]
+    makeTransparent [0, 0, 0, _] = [0, 0, 0, 0]
+    makeTransparent x = x
+
+
+
+
 loadSpriteSheet :: Int -> Int -> String -> IO [Picture]
 loadSpriteSheet w h file = do sprite <- loadBMP' file
-                              let sprites = splitSprites w h sprite
+                              let bytes = splitSprites w h sprite
+                              let transparency = setTransparent <$> bytes
+                              let sprites = packRGBA32ToBMP w h <$> transparency
                               return $ bitmapOfBMP <$> sprites

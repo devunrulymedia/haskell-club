@@ -14,7 +14,7 @@ window :: Display
 window = FullScreen
 
 background :: Color
-background = black
+background = makeColor 0.1 0.2 0.5 1
 
 fps :: Int
 fps = 600
