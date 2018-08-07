@@ -30,9 +30,6 @@ jump_power = 500
 walljump_power :: Float
 walljump_power = 350
 
-jboost :: Float
-jboost = 1800
-
 jfuel :: Float
 jfuel = 0.2
 
@@ -41,13 +38,6 @@ instance Shaped Panda where
 
 instance Renderable Panda where
   render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ pd ^. sprite
-
-instance Movable Panda where
-  move dv pd = pos %~ (+dv) $ pd
-
-instance Moving Panda where
-  velocity pd = pd ^. vel
-  applyImpulse da pd = vel %~ (+da) $ pd
 
 hlimit :: Float -> Vector -> Vector
 hlimit mx (x, y)
@@ -96,7 +86,7 @@ moveHorizontally t pd = let (x, y) = velocity pd in case pd ^. controller of
 updatePanda :: Float -> Panda -> Events GameEvent Panda
 updatePanda t pd = return pd
                <&> moveHorizontally t
-               -- <&> ascend t
+               <&> ascend t
                <&> capSpeed
                <&> gravitate t
                <&> integrate t
