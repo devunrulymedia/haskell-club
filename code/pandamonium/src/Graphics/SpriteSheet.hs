@@ -11,13 +11,12 @@ loadBMP' filename = do picture <- readBMP filename
                          (Right sprite) -> return sprite
                          (Left e)       -> error $ show e
 
-splitSprites :: Int -> Int -> BMP -> [Picture]
+splitSprites :: Int -> Int -> BMP -> [BMP]
 splitSprites w h pic = let (x, y) = bmpDimensions pic
                            cols = x `quot` w
                            rows = y `quot` h
                            bytes = fst $ sprites (w * 4) cols h rows (unpackBMPToRGBA32 pic)
-                           bmps = packRGBA32ToBMP w h <$> bytes
-                        in bitmapOfBMP <$> bmps
+                        in packRGBA32ToBMP w h <$> bytes
 
 -- takes single pixel rows from the spritesheet
 segments :: Int -> Int -> B.ByteString -> ([B.ByteString], B.ByteString)
@@ -41,4 +40,6 @@ sprites w cols h rows bytes = let (row, rest) = layers w cols h bytes
                                in (row ++ rows', leftovers)
 
 loadSpriteSheet :: Int -> Int -> String -> IO [Picture]
-loadSpriteSheet w h file = splitSprites w h <$> loadBMP' file
+loadSpriteSheet w h file = do sprite <- loadBMP' file
+                              let sprites = splitSprites w h sprite
+                              return $ bitmapOfBMP <$> sprites

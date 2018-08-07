@@ -36,8 +36,6 @@ jboost = 1800
 jfuel :: Float
 jfuel = 0.2
 
-
-
 instance Shaped Panda where
   shape pd = let (x, y) = pd ^. pos in rectangle (x-24) (x+24) (y-18) (y+18)
 
