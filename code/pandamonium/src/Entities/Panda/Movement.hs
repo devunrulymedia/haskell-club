@@ -25,8 +25,8 @@ continueJump t f pd = case toJoypad $ pd ^. controller of
                              $ pd
 
 wallJumpImpulse :: Direction -> Vector
-wallJumpImpulse DLeft = (0, 3000)
-wallJumpImpulse DRight = (0, 3000)
+wallJumpImpulse DLeft = ((-3000), 1200)
+wallJumpImpulse DRight = (3000, 1200)
 
 continueWallJump :: Float -> Direction -> Float -> Panda -> Panda
 continueWallJump t d f pd = case toJoypad $ pd ^. controller of

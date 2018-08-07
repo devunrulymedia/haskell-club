@@ -8,7 +8,7 @@ import Game.Timer
 import Game.GameEvent
 import Renderable
 import Redux
-import Graphics.Gloss ( blue, scale )
+import Graphics.Gloss (scale)
 import Graphics.Gloss.Interface.IO.Game
 
 data Game = Game
