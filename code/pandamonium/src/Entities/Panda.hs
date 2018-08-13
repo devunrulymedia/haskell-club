@@ -24,12 +24,6 @@ hv = 1500
 reverseBoost :: Float
 reverseBoost = 2.5
 
-jump_power :: Float
-jump_power = 500
-
-walljump_power :: Float
-walljump_power = 350
-
 jfuel :: Float
 jfuel = 0.2
 
@@ -51,29 +45,9 @@ collectEvents event pd = controller %%~ updateController event $ pd
 capSpeed :: Panda -> Panda
 capSpeed pd = vel %~ hlimit 600 $ pd
 
-jump :: Panda -> Panda
-jump pd = case (pd ^. state, pd ^. vel) of
-  (Grounded, (vx, vy)) -> vel .~ (vx, jump_power)
-                        $ state .~ Airborne
-                        $ impulse .~ Just (Impulse 0.2 (0, 1800))
-                        $ pd
-  (WallHugging d, (vx, vy)) -> vel .~ (pushOff d 1500, walljump_power)
-                             $ state .~ Airborne
-                             $ impulse .~ Just (Impulse 0.2 (pushOff d 3000, 1200))
-                             $ pd
-  otherwise -> pd
-
 pandaHandle :: GameEvent -> Panda -> Panda
 pandaHandle (JumpPressed) = jump
 pandaHandle _ = id
-
--- ascend :: Float -> Panda -> Panda
--- ascend t pd = ascend' (pd ^. controller) where
---   ascend' c = if jumpPressed c && pd ^. fuel > 0
---     then fuel %~ (\x -> x - t)
---        $ applyImpulse (0, t * jboost)
---        $ pd
---     else fuel .~ 0 $ pd
 
 moveHorizontally :: Float -> Panda -> Panda
 moveHorizontally t pd = let (x, y) = velocity pd in case pd ^. controller of
