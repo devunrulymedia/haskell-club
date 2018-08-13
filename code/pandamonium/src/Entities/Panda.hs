@@ -55,9 +55,11 @@ jump :: Panda -> Panda
 jump pd = case (pd ^. state, pd ^. vel) of
   (Grounded, (vx, vy)) -> vel .~ (vx, jump_power)
                         $ state .~ Jumping
+                        $ impulse .~ Just (Impulse 0.2 (0, 1800))
                         $ pd
   (WallHugging d, (vx, vy)) -> vel .~ (pushOff d 1500, walljump_power)
-                             $ state .~ WallJumping (invert d) jfuel
+                             $ state .~ Jumping 
+                             $ impulse .~ Just (Impulse 0.2 (pushOff d 3000, 1200))
                              $ pd
   otherwise -> pd
 

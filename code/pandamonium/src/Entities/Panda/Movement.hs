@@ -16,11 +16,17 @@ jboost :: Vector
 jboost = (0, 1800)
 
 continueJump :: Float -> Panda -> Panda
-continueJump t pd = case toJoypad $ pd ^. controller of
-  (Joypad _ Released) -> state .~ Falling $ pd
-  (Joypad _ Pressed)  -> state .~ Jumping
-                           $ applyImpulse (mulSV t jboost)
-                           $ pd
+continueJump t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
+  cj (Joypad _ Released) _         = state .~ Falling $ pd
+  cj _ Nothing                     = state .~ Falling $ pd
+  cj (Joypad _ Pressed) (Just (Impulse f v)) =
+    let remainingFuel = f -t
+        newImpulse = if remainingFuel > 0
+                   then Just (Impulse remainingFuel v)
+                   else Nothing
+     in impulse .~ newImpulse
+      $ applyImpulse (mulSV t v)
+      $ pd
 
 wallJumpImpulse :: Direction -> Vector
 wallJumpImpulse DLeft = ((-3000), 1200)
