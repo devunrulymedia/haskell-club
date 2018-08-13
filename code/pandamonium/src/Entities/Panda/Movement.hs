@@ -17,8 +17,6 @@ jboost = (0, 1800)
 
 ascend :: Float -> Panda -> Panda
 ascend t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
-  cj (Joypad _ Released) _         = state .~ Falling $ pd
-  cj _ Nothing                     = state .~ Falling $ pd
   cj (Joypad _ Pressed) (Just (Impulse f v)) =
     let remainingFuel = f -t
         newImpulse = if remainingFuel > 0
@@ -27,3 +25,4 @@ ascend t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
      in impulse .~ newImpulse
       $ applyImpulse (mulSV t v)
       $ pd
+  cj _ _ = pd
