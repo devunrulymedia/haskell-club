@@ -28,21 +28,7 @@ continueJump t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
       $ applyImpulse (mulSV t v)
       $ pd
 
-wallJumpImpulse :: Direction -> Vector
-wallJumpImpulse DLeft = ((-3000), 1200)
-wallJumpImpulse DRight = (3000, 1200)
-
-continueWallJump :: Float -> Direction -> Float -> Panda -> Panda
-continueWallJump t d f pd = case toJoypad $ pd ^. controller of
-  (Joypad _ Released) -> state .~ Falling $ pd
-  (Joypad _ Pressed)  -> if f - t < 0
-                       then state .~ Falling $ pd
-                       else state .~ WallJumping d (f - t)
-                             $ applyImpulse (mulSV t (wallJumpImpulse d))
-                             $ pd
-
 ascend :: Float -> Panda -> Panda
 ascend t pd = case pd ^. state of
   Jumping           -> continueJump t pd
-  (WallJumping d f) -> continueWallJump t d f pd
   otherwise         -> pd

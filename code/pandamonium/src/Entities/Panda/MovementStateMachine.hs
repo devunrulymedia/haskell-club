@@ -21,5 +21,4 @@ data MovementState = Grounded
                    | Jumping
                    | Falling
                    | WallHugging Direction
-                   | WallJumping Direction Fuel
                    deriving (Show, Eq)
