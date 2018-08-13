@@ -6,7 +6,7 @@ import Game.GameEvent
 import Systems.Controller
 
 resetCollisions :: MovementState -> MovementState
-resetCollisions _ = Falling
+resetCollisions _ = Airborne
 
 processCollisions :: Vector -> MovementState -> MovementState
 processCollisions (x, y) ms

@@ -54,11 +54,11 @@ capSpeed pd = vel %~ hlimit 600 $ pd
 jump :: Panda -> Panda
 jump pd = case (pd ^. state, pd ^. vel) of
   (Grounded, (vx, vy)) -> vel .~ (vx, jump_power)
-                        $ state .~ Falling
+                        $ state .~ Airborne
                         $ impulse .~ Just (Impulse 0.2 (0, 1800))
                         $ pd
   (WallHugging d, (vx, vy)) -> vel .~ (pushOff d 1500, walljump_power)
-                             $ state .~ Falling
+                             $ state .~ Airborne
                              $ impulse .~ Just (Impulse 0.2 (pushOff d 3000, 1200))
                              $ pd
   otherwise -> pd

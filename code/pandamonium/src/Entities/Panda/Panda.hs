@@ -20,7 +20,7 @@ data Panda = Panda
   }
 
 mkPanda :: Picture -> Vector -> Controller -> Panda
-mkPanda s p c = Panda s p (0, 0) Falling Nothing c
+mkPanda s p c = Panda s p (0, 0) Airborne Nothing c
 
 makeLenses ''Panda
 

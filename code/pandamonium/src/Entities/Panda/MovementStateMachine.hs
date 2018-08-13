@@ -18,6 +18,6 @@ invert DLeft = DRight
 invert DRight = DLeft
 
 data MovementState = Grounded
-                   | Falling
+                   | Airborne
                    | WallHugging Direction
                    deriving (Show, Eq)
