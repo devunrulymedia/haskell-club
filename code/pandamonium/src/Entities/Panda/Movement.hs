@@ -15,8 +15,8 @@ import Graphics.Gloss.Data.Vector
 jboost :: Vector
 jboost = (0, 1800)
 
-continueJump :: Float -> Panda -> Panda
-continueJump t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
+ascend :: Float -> Panda -> Panda
+ascend t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
   cj (Joypad _ Released) _         = state .~ Falling $ pd
   cj _ Nothing                     = state .~ Falling $ pd
   cj (Joypad _ Pressed) (Just (Impulse f v)) =
@@ -27,8 +27,3 @@ continueJump t pd = cj (toJoypad $ pd ^. controller) (pd ^. impulse) where
      in impulse .~ newImpulse
       $ applyImpulse (mulSV t v)
       $ pd
-
-ascend :: Float -> Panda -> Panda
-ascend t pd = case pd ^. state of
-  Jumping           -> continueJump t pd
-  otherwise         -> pd
