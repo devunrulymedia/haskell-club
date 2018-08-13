@@ -21,3 +21,12 @@ moveHorizontally t pd = let (x, y) = velocity pd in case pd ^. controller of
     slowBy f (x, y)
       | x > 0 = (x - (min x (t*f)), y)
       | True = (x + (min (-x) (t*f)), y)
+
+hlimit :: Float -> Vector -> Vector
+hlimit mx (x, y)
+  | x > mx = (mx, y)
+  | x < (-mx) = (-mx, y)
+  | otherwise = (x, y)
+
+capSpeed :: Panda -> Panda
+capSpeed pd = vel %~ hlimit 600 $ pd

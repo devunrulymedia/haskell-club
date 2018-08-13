@@ -25,18 +25,6 @@ instance Shaped Panda where
 instance Renderable Panda where
   render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ pd ^. sprite
 
-hlimit :: Float -> Vector -> Vector
-hlimit mx (x, y)
-  | x > mx = (mx, y)
-  | x < (-mx) = (-mx, y)
-  | otherwise = (x, y)
-
-collectEvents :: Event -> Panda -> Events GameEvent Panda
-collectEvents event pd = controller %%~ updateController event $ pd
-
-capSpeed :: Panda -> Panda
-capSpeed pd = vel %~ hlimit 600 $ pd
-
 pandaHandle :: GameEvent -> Panda -> Panda
 pandaHandle (JumpPressed) = jump
 pandaHandle _ = id
@@ -56,7 +44,7 @@ reducePanda e pd = return pd
 
 listenPanda :: Event -> Panda -> Events GameEvent Panda
 listenPanda e pd = return pd
-               >>= collectEvents e
+               >>= controller %%~ updateController e
 
 pandaRedux :: Redux Panda GameEvent
 pandaRedux = Redux
