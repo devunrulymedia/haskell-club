@@ -8,16 +8,19 @@ import Entities.Panda.MovementStateMachine
 import Control.Lens
 import Systems.Controller
 
+data Impulse = Impulse Float Vector
+
 data Panda = Panda
   { _sprite :: Picture
   , _pos :: Vector
   , _vel :: Vector
   , _state :: MovementState
+  , _impulse :: Maybe Impulse
   , _controller :: Controller
   }
 
 mkPanda :: Picture -> Vector -> Controller -> Panda
-mkPanda s p c = Panda s p (0, 0) Falling c
+mkPanda s p c = Panda s p (0, 0) Falling Nothing c
 
 makeLenses ''Panda
 

@@ -18,7 +18,7 @@ invert DLeft = DRight
 invert DRight = DLeft
 
 data MovementState = Grounded
-                   | Jumping Fuel
+                   | Jumping
                    | Falling
                    | WallHugging Direction
                    | WallJumping Direction Fuel

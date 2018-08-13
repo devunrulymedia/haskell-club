@@ -15,14 +15,12 @@ import Graphics.Gloss.Data.Vector
 jboost :: Vector
 jboost = (0, 1800)
 
-continueJump :: Float -> Float -> Panda -> Panda
-continueJump t f pd = case toJoypad $ pd ^. controller of
+continueJump :: Float -> Panda -> Panda
+continueJump t pd = case toJoypad $ pd ^. controller of
   (Joypad _ Released) -> state .~ Falling $ pd
-  (Joypad _ Pressed)  -> if f - t < 0
-                       then state .~ Falling $ pd
-                       else state .~ Jumping (f - t)
-                             $ applyImpulse (mulSV t jboost)
-                             $ pd
+  (Joypad _ Pressed)  -> state .~ Jumping
+                           $ applyImpulse (mulSV t jboost)
+                           $ pd
 
 wallJumpImpulse :: Direction -> Vector
 wallJumpImpulse DLeft = ((-3000), 1200)
@@ -39,6 +37,6 @@ continueWallJump t d f pd = case toJoypad $ pd ^. controller of
 
 ascend :: Float -> Panda -> Panda
 ascend t pd = case pd ^. state of
-  (Jumping f)       -> continueJump t f pd
+  Jumping           -> continueJump t pd
   (WallJumping d f) -> continueWallJump t d f pd
   otherwise         -> pd

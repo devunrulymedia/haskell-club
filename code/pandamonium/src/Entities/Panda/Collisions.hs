@@ -6,7 +6,7 @@ import Game.GameEvent
 import Systems.Controller
 
 resetCollisions :: MovementState -> MovementState
-resetCollisions (Jumping f) = Jumping f
+resetCollisions Jumping = Jumping
 resetCollisions (WallJumping d f) = WallJumping d f
 resetCollisions _ = Falling
 
