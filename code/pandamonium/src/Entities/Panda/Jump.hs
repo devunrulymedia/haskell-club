@@ -1,9 +1,4 @@
-module Entities.Panda.Movement
-  ( module Entities.Panda.Collisions
-  , module Entities.Panda.MovementStateMachine
-  , ascend
-  , jump
-  ) where
+module Entities.Panda.Jump (ascend, jump) where
 
 import Shapes.Shape
 import Entities.Panda.Panda

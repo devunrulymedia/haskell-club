@@ -42,7 +42,7 @@ library
                      , Entities.Panda.Panda
                      , Entities.Panda.MovementStateMachine
                      , Entities.Panda.Collisions
-                     , Entities.Panda.Movement
+                     , Entities.Panda.Jump
                      , Entities.Coin
                      , World.World
 

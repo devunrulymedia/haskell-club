@@ -15,7 +15,8 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Game.GameEvent
-import Entities.Panda.Movement
+import Entities.Panda.Jump
+import Entities.Panda.Collisions
 import Entities.Panda.Panda
 
 hv :: Float
