@@ -43,6 +43,7 @@ library
                      , Entities.Panda.MovementStateMachine
                      , Entities.Panda.Collisions
                      , Entities.Panda.Jump
+                     , Entities.Panda.Run
                      , Entities.Coin
                      , World.World
 
