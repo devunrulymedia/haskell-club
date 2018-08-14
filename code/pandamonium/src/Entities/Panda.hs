@@ -32,6 +32,7 @@ updatePanda t pd = return pd
                <&> moveHorizontally t
                <&> ascend t
                <&> capSpeed
+               <&> setFacing
                <&> gravitate t
                <&> integrate t
 

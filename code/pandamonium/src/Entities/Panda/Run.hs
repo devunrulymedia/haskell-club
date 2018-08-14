@@ -2,6 +2,7 @@ module Entities.Panda.Run where
 
 import Control.Lens
 import Entities.Panda.Panda
+import Entities.Panda.MovementStateMachine
 import Graphics.Gloss.Data.Vector
 import Shapes.Movables
 import Systems.Controller
@@ -30,3 +31,11 @@ hlimit mx (x, y)
 
 capSpeed :: Panda -> Panda
 capSpeed pd = vel %~ hlimit 600 $ pd
+
+setFacing :: Panda -> Panda
+setFacing pd = let (x, y) = pd ^. vel in
+    if x < 0
+  then (facing .~ DLeft) pd
+  else if x > 0
+     then (facing .~ DRight) pd
+     else pd

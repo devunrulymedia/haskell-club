@@ -12,5 +12,14 @@ spriteFor pd = (pd ^. sprites) !! (frame $ pd ^. state) where
   frame Airborne = 7
   frame (WallHugging _) = 2
 
+faceRightDirection :: Panda -> Picture -> Picture
+faceRightDirection pd = case pd ^. facing of
+  DLeft -> scale (-1) 1
+  DRight -> id
+
 instance Renderable Panda where
-  render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ spriteFor pd
+  render pd = let (x, y) = pd ^. pos
+               in translate x y
+                $ scale 2 2
+                $ faceRightDirection pd
+                $ spriteFor pd

@@ -1,12 +1,9 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Entities.Panda.MovementStateMachine where
 
 import Control.Lens
 import Graphics.Gloss.Data.Vector
 import Game.GameEvent
 
-type Fuel = Float
 data Direction = DLeft | DRight deriving (Show, Eq)
 
 pushOff :: Direction -> Float -> Float

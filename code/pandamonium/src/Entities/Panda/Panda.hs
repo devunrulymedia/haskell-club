@@ -16,11 +16,12 @@ data Panda = Panda
   , _vel :: Vector
   , _state :: MovementState
   , _impulse :: Maybe Impulse
+  , _facing :: Direction
   , _controller :: Controller
   }
 
 mkPanda :: [ Picture ] -> Vector -> Controller -> Panda
-mkPanda s p c = Panda s p (0, 0) Airborne Nothing c
+mkPanda s p c = Panda s p (0, 0) Airborne Nothing DRight c
 
 makeLenses ''Panda
 
