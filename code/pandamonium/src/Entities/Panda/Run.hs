@@ -33,9 +33,9 @@ capSpeed :: Panda -> Panda
 capSpeed pd = vel %~ hlimit 600 $ pd
 
 setFacing :: Panda -> Panda
-setFacing pd = let (x, y) = pd ^. vel in
-    if x < 0
-  then (facing .~ DLeft) pd
-  else if x > 0
-     then (facing .~ DRight) pd
-     else pd
+setFacing pd = setFacing' (pd ^. state) (pd ^. vel) where
+  setFacing' Grounded (x, _)
+    | x < 0 = facing .~ DLeft $ pd
+    | x > 0 = facing .~ DRight $ pd
+    | otherwise = pd
+  setFacing' _ _ = pd

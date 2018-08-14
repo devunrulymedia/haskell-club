@@ -31,6 +31,7 @@ jump pd = case (pd ^. state, pd ^. vel) of
                         $ pd
   (WallHugging d, (vx, vy)) -> vel .~ (pushOff d 1500, walljump_power)
                              $ state .~ Airborne
+                             $ facing .~ invert d
                              $ impulse .~ Just (Impulse extra_lift_duration (wboost d))
                              $ pd
   otherwise -> pd
