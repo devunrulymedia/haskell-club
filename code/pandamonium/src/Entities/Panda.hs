@@ -23,7 +23,7 @@ instance Shaped Panda where
   shape pd = let (x, y) = pd ^. pos in rectangle (x-24) (x+24) (y-18) (y+18)
 
 instance Renderable Panda where
-  render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ pd ^. sprite
+  render pd = let (x, y) = pd ^. pos in translate x y $ scale 2 2 $ (pd ^. sprites) !! 0
 
 pandaHandle :: GameEvent -> Panda -> Panda
 pandaHandle (JumpPressed) = jump

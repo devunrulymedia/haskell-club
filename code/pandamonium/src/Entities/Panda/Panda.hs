@@ -11,7 +11,7 @@ import Systems.Controller
 data Impulse = Impulse Float Vector
 
 data Panda = Panda
-  { _sprite :: Picture
+  { _sprites :: [ Picture ]
   , _pos :: Vector
   , _vel :: Vector
   , _state :: MovementState
@@ -19,7 +19,7 @@ data Panda = Panda
   , _controller :: Controller
   }
 
-mkPanda :: Picture -> Vector -> Controller -> Panda
+mkPanda :: [ Picture ] -> Vector -> Controller -> Panda
 mkPanda s p c = Panda s p (0, 0) Airborne Nothing c
 
 makeLenses ''Panda
