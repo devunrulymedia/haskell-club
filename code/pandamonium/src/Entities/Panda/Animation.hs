@@ -9,6 +9,15 @@ import Control.Lens
 hang_speed :: Float
 hang_speed = 150
 
+pixels_per_frame :: Float
+pixels_per_frame = 15
+
+runningSprite :: Panda -> Int
+runningSprite pd = runningSprite' (pd ^. facing) (pd ^. pos) (pd ^. vel) where
+  runningSprite' _ _ (0, _) = 1
+  runningSprite' DRight (x, _) _ = 3 + ((floor (x / pixels_per_frame)) `mod` 4)
+  runningSprite' DLeft (x, _) _ = 3 + ((floor ((-x) / pixels_per_frame)) `mod` 4)
+
 jumpingSprite :: Panda -> Int
 jumpingSprite pd = js' (pd ^. vel) where
   js' (x, y)
@@ -18,7 +27,7 @@ jumpingSprite pd = js' (pd ^. vel) where
 
 spriteFor :: Panda -> Picture
 spriteFor pd = (pd ^. sprites) !! (frame $ pd ^. state) where
-  frame Grounded = 1
+  frame Grounded = runningSprite pd
   frame Airborne = jumpingSprite pd
   frame (WallHugging _) = 2
 
