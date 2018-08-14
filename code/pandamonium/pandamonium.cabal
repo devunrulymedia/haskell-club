@@ -44,6 +44,7 @@ library
                      , Entities.Panda.Collisions
                      , Entities.Panda.Jump
                      , Entities.Panda.Run
+                     , Entities.Panda.Animation
                      , Entities.Coin
                      , World.World
 
