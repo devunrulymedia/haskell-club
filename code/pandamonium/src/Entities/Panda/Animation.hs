@@ -10,20 +10,25 @@ hang_speed :: Float
 hang_speed = 150
 
 pixels_per_frame :: Float
-pixels_per_frame = 15
+pixels_per_frame = 30
 
 runningSprite :: Panda -> Int
-runningSprite pd = runningSprite' (pd ^. facing) (pd ^. pos) (pd ^. vel) where
-  runningSprite' _ _ (0, _) = 1
-  runningSprite' DRight (x, _) _ = 3 + ((floor (x / pixels_per_frame)) `mod` 4)
-  runningSprite' DLeft (x, _) _ = 3 + ((floor ((-x) / pixels_per_frame)) `mod` 4)
+runningSprite pd = runningSprite' (pd ^. pos) (pd ^. vel) where
+  runningSprite' _ (0, _) = 1
+  runningSprite' (x, _) _ = [0, 1, 2, 1] !! ((floor (x / pixels_per_frame)) `mod` 4)
 
 jumpingSprite :: Panda -> Int
-jumpingSprite pd = js' (pd ^. vel) where
-  js' (x, y)
-    | y > hang_speed = 7
-    | y < (-hang_speed) = 9
+jumpingSprite pd = js' (pd ^. facing) (pd ^. vel) where
+  js' d (x, y)
+    | forwards d x && y > hang_speed = 7
+    | forwards d x && y < (-hang_speed) = 9
+    | y > hang_speed = 10
+    | y < (-hang_speed) = 11
     | otherwise = 8
+
+forwards :: Direction -> Float -> Bool
+forwards DRight x = x > 0
+forwards DLeft x = x < 0
 
 spriteFor :: Panda -> Picture
 spriteFor pd = (pd ^. sprites) !! (frame $ pd ^. state) where
