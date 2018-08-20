@@ -21,7 +21,7 @@ import Entities.Panda.Panda
 import Entities.Panda.Animation
 
 instance Shaped Panda where
-  shape pd = let (x, y) = pd ^. pos in rectangle (x-24) (x+24) (y-18) (y+18)
+  shape pd = let (x, y) = pd ^. pos in rectangle (x-48) (x+48) (y-36) (y+36)
 
 pandaHandle :: GameEvent -> Panda -> Panda
 pandaHandle (JumpPressed) = jump

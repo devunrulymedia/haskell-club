@@ -44,6 +44,6 @@ faceRightDirection pd = case pd ^. facing of
 instance Renderable Panda where
   render pd = let (x, y) = pd ^. pos
                in translate x y
-                $ scale 2 2
+                $ scale 4 4
                 $ faceRightDirection pd
                 $ spriteFor pd
