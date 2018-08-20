@@ -10,7 +10,7 @@ hang_speed :: Float
 hang_speed = 150
 
 pixels_per_frame :: Float
-pixels_per_frame = 30
+pixels_per_frame = 40
 
 runningSprite :: Panda -> Int
 runningSprite pd = runningSprite' (pd ^. pos) (pd ^. vel) where

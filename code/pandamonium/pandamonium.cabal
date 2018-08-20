@@ -26,6 +26,7 @@ library
                      , World.CreateWorld
                      , Game.Game
                      , World.Stages.Stage1
+                     , World.Stages.Stage2
                      -- exposed for test
                      , Shapes.Shape
 

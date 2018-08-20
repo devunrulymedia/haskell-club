@@ -8,7 +8,7 @@ import Renderable
 import Redux
 import World.Assets
 import World.CreateWorld
-import World.Stages.Stage1
+import World.Stages.Stage2
 import Game.Game
 
 window :: Display
@@ -22,6 +22,6 @@ fps = 600
 
 main :: IO ()
 main = do assets <- loadAssets
-          let world = createWorld assets stage1
+          let world = createWorld assets stage2
           let game = withWorld world
           playIO window background fps game iorender (reduxListen gameRedux) (reduxUpdate gameRedux)
