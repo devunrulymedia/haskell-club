@@ -25,6 +25,7 @@ library
                      , World.Assets
                      , World.CreateWorld
                      , Game.Game
+                     , World.Stages.Stage1
                      -- exposed for test
                      , Shapes.Shape
 
@@ -47,6 +48,7 @@ library
                      , Entities.Panda.Animation
                      , Entities.Coin
                      , World.World
+                     , World.Stage
 
   build-depends:       base >= 4.7 && < 5
                      , gloss

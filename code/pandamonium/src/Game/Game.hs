@@ -31,8 +31,6 @@ adjustZoom (EventKey (Char '+') Down _ _) = return . (mag *~ 1.1)
 adjustZoom (EventKey (Char '-') Down _ _) = return . (mag //~ 1.1)
 adjustZoom _ = return
 
-
-
 gameRedux :: Redux Game GameEvent
 gameRedux = compose
   [ connect timerRedux timer
