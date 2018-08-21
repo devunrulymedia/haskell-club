@@ -115,7 +115,7 @@ changeBlockColour _ w = return w
 
 checkForCompletion :: World -> Events GameEvent World
 checkForCompletion w = case w ^. coins of
-  [] -> do fireEvent Quit; return w
+  [] -> do fireEvent Cleared; return w
   otherwise -> return w
 
 listenWorld :: Listener

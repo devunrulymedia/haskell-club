@@ -9,4 +9,5 @@ data GameEvent = ResetCollisions
                | CoinPickedUp String
                | RespawnCoin String Vector
                | ChangeScenery
+               | Cleared
                | Quit
