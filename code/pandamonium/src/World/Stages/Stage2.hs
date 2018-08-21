@@ -12,11 +12,11 @@ walls = [ Block (rectangle (-710) 710 430 420) white
         , Block (rectangle 700 710 (-430) 430) white
         ]
 
-coins = [ Coin "coin1" (-170, -70)
-        , Coin "coin2" (170, -70)
-        , Coin "coin3" (-170, 160)
-        , Coin "coin4" (170, 160)
-        , Coin "coin5" (0, 30)
+coins = [ Coin "coin1" (-200, -325)
+        , Coin "coin2" (-100, -235)
+        , Coin "coin3" (0, -200)
+        , Coin "coin4" (100, -235)
+        , Coin "coin5" (200, -325)
         ]
 
 stage2 :: Stage
