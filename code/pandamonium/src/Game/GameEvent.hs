@@ -2,6 +2,6 @@ module Game.GameEvent where
 
 import Graphics.Gloss
 
-data GameEvent = JumpmanCollision Vector
+data GameEvent = ThrusterCollision Vector
                | TimedEvent Float GameEvent
                | Quit
