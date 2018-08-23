@@ -13,7 +13,6 @@ import Graphics.Gloss.Interface.IO.Game
 
 data Game = Game
   { _world :: World
-  , _timer :: Timer
   , _mag :: Float
   }
 
@@ -22,7 +21,6 @@ makeLenses ''Game
 withWorld :: World -> Game
 withWorld world = Game
   { _world = world
-  , _timer = Timer 0 [ Pending 1 ChangeScenery ]
   , _mag = 2
   }
 
@@ -35,8 +33,7 @@ adjustZoom _ = return
 
 gameRedux :: Redux Game GameEvent
 gameRedux = compose
-  [ connect timerRedux timer
-  , connect worldRedux world
+  [ connect worldRedux world
   , noOpRedux { listener = adjustZoom }
   ]
 
