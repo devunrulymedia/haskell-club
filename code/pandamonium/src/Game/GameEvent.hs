@@ -2,10 +2,6 @@ module Game.GameEvent where
 
 import Graphics.Gloss
 
-data GameEvent = ResetCollisions
-               | JumpmanCollision Vector
-               | JumpPressed
+data GameEvent = JumpmanCollision Vector
                | TimedEvent Float GameEvent
-               | CoinPickedUp String
-               | RespawnCoin String Vector
                | Quit
