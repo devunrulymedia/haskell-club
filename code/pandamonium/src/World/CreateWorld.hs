@@ -19,7 +19,7 @@ walls = [ Block (rectangleV (-310, 230) (620, 10)) white
         ]
 
 surface :: [Block]
-surface = [ Block (rectangleV (-300, 100) (100,2)) white ]
+surface = [ Block (rectangleV (-300, 100) (100, 2)) white ]
 
 createWorld :: Assets -> World
 createWorld assets = World { _scenery = walls ++ surface
