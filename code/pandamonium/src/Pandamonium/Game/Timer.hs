@@ -3,7 +3,7 @@
 module Pandamonium.Game.Timer where
 
 import Control.Lens
-import Pandamonium.Redux
+import Common.Redux
 import Pandamonium.Game.GameEvent
 
 data Pending = Pending Float GameEvent

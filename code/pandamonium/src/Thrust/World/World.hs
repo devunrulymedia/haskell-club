@@ -19,8 +19,8 @@ import Thrust.Entities.Thruster
 
 import Thrust.Game.GameEvent
 import Thrust.Shapes.Shape
-import Thrust.Renderable
-import Thrust.Redux
+import Common.Renderable
+import Common.Redux
 
 data World = World
   { _scenery :: [ Block ]

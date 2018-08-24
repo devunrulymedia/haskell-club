@@ -1,7 +1,7 @@
 module Pandamonium.Entities.Panda.Animation where
 
 import Graphics.Gloss
-import Pandamonium.Renderable
+import Common.Renderable
 import Pandamonium.Entities.Panda.Panda
 import Pandamonium.Entities.Panda.MovementStateMachine
 import Control.Lens

@@ -6,13 +6,13 @@ module Thrust.Entities.Thruster where
 import Control.Lens
 import Control.Arrow
 import Thrust.Shapes.Shape
-import Thrust.Renderable
+import Common.Renderable
 import Thrust.Systems.Controller
 import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, Picture)
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Thrust.Game.GameEvent
-import Thrust.Redux
+import Common.Redux
 
 spinSpeed :: Float
 spinSpeed = pi * 2

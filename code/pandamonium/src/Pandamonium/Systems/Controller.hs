@@ -3,7 +3,7 @@
 module Pandamonium.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
-import Pandamonium.Redux
+import Common.Redux
 import Pandamonium.Game.GameEvent
 
 type ControlUpdater = Event -> ControlState -> Events GameEvent ControlState

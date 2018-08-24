@@ -9,8 +9,8 @@ import Pandamonium.World.Assets
 import Pandamonium.World.CreateWorld
 import Pandamonium.Game.Timer
 import Pandamonium.Game.GameEvent
-import Pandamonium.Renderable
-import Pandamonium.Redux
+import Common.Renderable
+import Common.Redux
 import Graphics.Gloss (scale)
 import Graphics.Gloss.Interface.IO.Game
 

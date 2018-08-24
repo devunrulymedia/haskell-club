@@ -1,6 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 
-module Pandamonium.Redux where
+module Common.Redux where
 
 -- adding a comment because why not?
 

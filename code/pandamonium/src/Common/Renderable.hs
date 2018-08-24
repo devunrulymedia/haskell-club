@@ -1,4 +1,4 @@
-module Pandamonium.Renderable where
+module Common.Renderable where
 
 import Graphics.Gloss
 

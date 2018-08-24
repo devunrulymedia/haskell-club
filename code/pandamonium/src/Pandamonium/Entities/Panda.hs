@@ -6,8 +6,8 @@ import Control.Lens
 import Control.Arrow
 import Control.Monad
 import Pandamonium.Shapes.Shape
-import Pandamonium.Renderable
-import Pandamonium.Redux
+import Common.Renderable
+import Common.Redux
 import Pandamonium.Systems.Controller
 import Pandamonium.Systems.Physics
 import Graphics.Gloss

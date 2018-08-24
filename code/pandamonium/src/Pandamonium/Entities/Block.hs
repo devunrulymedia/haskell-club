@@ -2,7 +2,7 @@ module Pandamonium.Entities.Block where
 
 import Pandamonium.Shapes.Shape
 import Graphics.Gloss (Color, color)
-import Pandamonium.Renderable
+import Common.Renderable
 
 data Block = Block Shape Color deriving (Show, Eq)
 

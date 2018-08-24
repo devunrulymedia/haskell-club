@@ -21,8 +21,8 @@ import Pandamonium.Systems.Physics
 
 import Pandamonium.Game.GameEvent
 import Pandamonium.Shapes.Shape
-import Pandamonium.Renderable
-import Pandamonium.Redux
+import Common.Renderable
+import Common.Redux
 
 data World = World
   { _scenery :: [ Block ]

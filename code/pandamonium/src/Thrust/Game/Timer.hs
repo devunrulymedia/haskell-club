@@ -3,7 +3,7 @@
 module Thrust.Game.Timer where
 
 import Control.Lens
-import Thrust.Redux
+import Common.Redux
 import Thrust.Game.GameEvent
 
 data Pending = Pending Float GameEvent

@@ -1,7 +1,7 @@
 module Pandamonium.Shapes.Renderables where
 
 import Pandamonium.Shapes.Shapes
-import Pandamonium.Renderable
+import Common.Renderable
 import Graphics.Gloss (translate, rectangleSolid, circleSolid, polygon)
 
 instance Renderable Shape where

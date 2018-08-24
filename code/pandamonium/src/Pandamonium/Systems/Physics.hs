@@ -1,7 +1,7 @@
 module Pandamonium.Systems.Physics where
 
 import Graphics.Gloss.Data.Vector
-import Pandamonium.Redux
+import Common.Redux
 import Pandamonium.Shapes.Shape
 import Pandamonium.Game.GameEvent
 
