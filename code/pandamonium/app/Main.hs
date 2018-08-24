@@ -20,7 +20,15 @@ fps :: Int
 fps = 600
 
 main :: IO ()
-main = do assets <- loadAssets
-          let world = createWorld assets
-          let game = withWorld world
-          playIO window background fps game iorender (reduxListen gameRedux) (reduxUpdate gameRedux)
+main = thrust
+
+thrust :: IO ()
+thrust = do assets <- loadAssets
+            let world = createWorld assets
+            let game = withWorld world
+            playIO window background fps game iorender (reduxListen gameRedux) (reduxUpdate gameRedux)
+
+-- pandamonium :: IO ()
+-- pandamonium = do assets <- loadAssets
+--           let game = withStages assets (cycle [stage2, stage1])
+--           playIO window background fps game iorender (reduxListen gameRedux) (reduxUpdate gameRedux)
