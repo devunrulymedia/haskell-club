@@ -4,7 +4,7 @@ import Control.Lens
 import Pandamonium.Entities.Panda.Panda
 import Pandamonium.Entities.Panda.MovementStateMachine
 import Graphics.Gloss.Data.Vector
-import Pandamonium.Shapes.Movables
+import Common.Shapes.Movables
 import Pandamonium.Systems.Controller
 
 hv :: Float

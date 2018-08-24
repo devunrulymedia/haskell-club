@@ -18,7 +18,7 @@ import Thrust.Entities.Block
 import Thrust.Entities.Thruster
 
 import Thrust.Game.GameEvent
-import Thrust.Shapes.Shape
+import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
 

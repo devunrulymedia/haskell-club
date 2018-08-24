@@ -3,12 +3,12 @@ module Thrust.World.CreateWorld where
 import Graphics.Gloss (white, yellow)
 import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
+import Common.Shapes.Shape
 import Thrust.Entities.Block
 import Thrust.Entities.Thruster
 
 import Thrust.World.Assets
 import Thrust.Systems.Controller
-import Thrust.Shapes.Shape
 import Thrust.World.World
 
 walls :: [Block]

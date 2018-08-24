@@ -25,23 +25,21 @@ library
                      , Thrust.World.Assets
                      , Thrust.World.CreateWorld
                      , Thrust.Game.Game
-                     -- exposed for test
-                     , Thrust.Shapes.Shape
                      , Pandamonium.World.Assets
                      , Pandamonium.World.CreateWorld
                      , Pandamonium.Game.Game
                      , Pandamonium.World.Stages.Stage1
                      , Pandamonium.World.Stages.Stage2
                      -- exposed for test
-                     , Pandamonium.Shapes.Shape
+                     , Common.Shapes.Shape
 
-  other-modules:       Thrust.Game.Timer
+  other-modules:       Common.Shapes.Shapes
+                     , Common.Shapes.Collisions
+                     , Common.Shapes.Movables
+                     , Common.Shapes.Renderables
+                     , Thrust.Game.Timer
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
-                     , Thrust.Shapes.Shapes
-                     , Thrust.Shapes.Collisions
-                     , Thrust.Shapes.Movables
-                     , Thrust.Shapes.Renderables
                      , Thrust.Graphics.SpriteSheet
                      , Thrust.Entities.Block
                      , Thrust.Entities.Thruster
@@ -50,10 +48,6 @@ library
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Systems.Physics
-                     , Pandamonium.Shapes.Shapes
-                     , Pandamonium.Shapes.Collisions
-                     , Pandamonium.Shapes.Movables
-                     , Pandamonium.Shapes.Renderables
                      , Pandamonium.Graphics.SpriteSheet
                      , Pandamonium.Entities.Block
                      , Pandamonium.Entities.Panda

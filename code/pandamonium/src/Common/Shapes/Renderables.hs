@@ -1,6 +1,6 @@
-module Thrust.Shapes.Renderables where
+module Common.Shapes.Renderables where
 
-import Thrust.Shapes.Shapes
+import Common.Shapes.Shapes
 import Common.Renderable
 import Graphics.Gloss (translate, rectangleSolid, circleSolid, polygon)
 

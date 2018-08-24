@@ -25,11 +25,11 @@ background = black
 fps :: Int
 fps = 600
 
-main :: IO ()
-main = thrust
-
 -- main :: IO ()
--- main = pandamonium
+-- main = thrust
+
+main :: IO ()
+main = pandamonium
 
 
 thrust :: IO ()

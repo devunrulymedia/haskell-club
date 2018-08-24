@@ -1,4 +1,4 @@
-module Thrust.Shapes.Movables where
+module Common.Shapes.Movables where
 
 import Graphics.Gloss.Data.Vector
 

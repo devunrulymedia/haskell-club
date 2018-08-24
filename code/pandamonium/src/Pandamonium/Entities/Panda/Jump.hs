@@ -1,6 +1,6 @@
 module Pandamonium.Entities.Panda.Jump (ascend, jump) where
 
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Pandamonium.Entities.Panda.Panda
 import Pandamonium.Entities.Panda.Collisions
 import Pandamonium.Entities.Panda.MovementStateMachine

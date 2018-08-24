@@ -2,7 +2,7 @@ module Pandamonium.Systems.Physics where
 
 import Graphics.Gloss.Data.Vector
 import Common.Redux
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Pandamonium.Game.GameEvent
 
 gravity :: Float

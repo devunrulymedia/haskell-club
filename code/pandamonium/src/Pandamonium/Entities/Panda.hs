@@ -5,7 +5,7 @@ module Pandamonium.Entities.Panda (Panda, mkPanda, pandaRedux) where
 import Control.Lens
 import Control.Arrow
 import Control.Monad
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
 import Pandamonium.Systems.Controller

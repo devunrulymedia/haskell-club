@@ -9,7 +9,6 @@ import Pandamonium.Entities.Coin
 
 import Pandamonium.World.Assets
 import Pandamonium.Systems.Controller
-import Pandamonium.Shapes.Shape
 import Pandamonium.World.World
 import Pandamonium.World.Stage
 

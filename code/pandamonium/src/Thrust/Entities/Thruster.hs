@@ -5,7 +5,7 @@ module Thrust.Entities.Thruster where
 
 import Control.Lens
 import Control.Arrow
-import Thrust.Shapes.Shape
+import Common.Shapes.Shape
 import Common.Renderable
 import Thrust.Systems.Controller
 import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, Picture)

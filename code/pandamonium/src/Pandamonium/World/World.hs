@@ -20,7 +20,7 @@ import Pandamonium.Entities.Coin
 import Pandamonium.Systems.Physics
 
 import Pandamonium.Game.GameEvent
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
 

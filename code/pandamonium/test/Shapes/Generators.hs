@@ -3,7 +3,7 @@ module Shapes.Generators where
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Modifiers
 import Test.QuickCheck.Gen
-import Thrust.Shapes.Shape
+import Common.Shapes.Shape
 
 arbitraryRect :: Gen Shape
 arbitraryRect = do

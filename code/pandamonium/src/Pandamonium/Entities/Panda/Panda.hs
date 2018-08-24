@@ -3,7 +3,7 @@
 module Pandamonium.Entities.Panda.Panda where
 
 import Graphics.Gloss
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Pandamonium.Entities.Panda.MovementStateMachine
 import Control.Lens
 import Pandamonium.Systems.Controller

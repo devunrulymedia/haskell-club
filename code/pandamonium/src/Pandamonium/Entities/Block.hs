@@ -1,6 +1,6 @@
 module Pandamonium.Entities.Block where
 
-import Pandamonium.Shapes.Shape
+import Common.Shapes.Shape
 import Graphics.Gloss (Color, color)
 import Common.Renderable
 
