@@ -27,6 +27,15 @@ library
                      , Thrust.Game.Game
                      -- exposed for test
                      , Thrust.Shapes.Shape
+                     , Pandamonium.Renderable
+                     , Pandamonium.Redux
+                     , Pandamonium.World.Assets
+                     , Pandamonium.World.CreateWorld
+                     , Pandamonium.Game.Game
+                     , Pandamonium.World.Stages.Stage1
+                     , Pandamonium.World.Stages.Stage2
+                     -- exposed for test
+                     , Pandamonium.Shapes.Shape
 
   other-modules:       Thrust.Game.Timer
                      , Thrust.Game.GameEvent
@@ -39,6 +48,26 @@ library
                      , Thrust.Entities.Block
                      , Thrust.Entities.Thruster
                      , Thrust.World.World
+                     , Pandamonium.Game.Timer
+                     , Pandamonium.Game.GameEvent
+                     , Pandamonium.Systems.Controller
+                     , Pandamonium.Systems.Physics
+                     , Pandamonium.Shapes.Shapes
+                     , Pandamonium.Shapes.Collisions
+                     , Pandamonium.Shapes.Movables
+                     , Pandamonium.Shapes.Renderables
+                     , Pandamonium.Graphics.SpriteSheet
+                     , Pandamonium.Entities.Block
+                     , Pandamonium.Entities.Panda
+                     , Pandamonium.Entities.Panda.Panda
+                     , Pandamonium.Entities.Panda.MovementStateMachine
+                     , Pandamonium.Entities.Panda.Collisions
+                     , Pandamonium.Entities.Panda.Jump
+                     , Pandamonium.Entities.Panda.Run
+                     , Pandamonium.Entities.Panda.Animation
+                     , Pandamonium.Entities.Coin
+                     , Pandamonium.World.World
+                     , Pandamonium.World.Stage
 
   build-depends:       base >= 4.7 && < 5
                      , gloss
