@@ -1,9 +1,9 @@
-module Shapes.Collisions where
+module Thrust.Shapes.Collisions where
 
 import Graphics.Gloss.Data.Vector
 import Data.Maybe
-import Shapes.Shapes (Shape (Polygon, Circle))
-import Shapes.Movables
+import Thrust.Shapes.Shapes (Shape (Polygon, Circle))
+import Thrust.Shapes.Movables
 import Control.Applicative
 
 -- to determine which vector is longer without bothering wih the expensive sqrt

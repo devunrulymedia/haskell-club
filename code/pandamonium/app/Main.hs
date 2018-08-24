@@ -4,11 +4,11 @@ module Main(
 
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
-import Renderable
-import Redux
-import World.Assets
-import World.CreateWorld
-import Game.Game
+import Thrust.Renderable
+import Thrust.Redux
+import Thrust.World.Assets
+import Thrust.World.CreateWorld
+import Thrust.Game.Game
 
 window :: Display
 window = FullScreen

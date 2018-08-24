@@ -1,4 +1,4 @@
-module Renderable where
+module Thrust.Renderable where
 
 import Graphics.Gloss
 

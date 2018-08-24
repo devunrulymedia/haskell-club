@@ -1,8 +1,8 @@
-module Entities.Block where
+module Thrust.Entities.Block where
 
-import Shapes.Shape
+import Thrust.Shapes.Shape
 import Graphics.Gloss (Color, color)
-import Renderable
+import Thrust.Renderable
 
 data Block = Block Shape Color deriving (Show, Eq)
 

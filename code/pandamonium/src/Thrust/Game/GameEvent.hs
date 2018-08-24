@@ -1,4 +1,4 @@
-module Game.GameEvent where
+module Thrust.Game.GameEvent where
 
 import Graphics.Gloss
 

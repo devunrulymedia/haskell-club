@@ -1,7 +1,7 @@
-module World.Assets where
+module Thrust.World.Assets where
 
 import Graphics.Gloss
-import Graphics.SpriteSheet
+import Thrust.Graphics.SpriteSheet
 
 data Assets = Assets { ballSprite :: Picture, shipSprite :: Picture,  numberSprites :: [Picture] }
 

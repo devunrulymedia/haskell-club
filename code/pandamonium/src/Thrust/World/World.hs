@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module World.World where
+module Thrust.World.World where
 
 import Control.Lens
 import Control.Arrow
@@ -14,13 +14,13 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
-import Entities.Block
-import Entities.Thruster
+import Thrust.Entities.Block
+import Thrust.Entities.Thruster
 
-import Game.GameEvent
-import Shapes.Shape
-import Renderable
-import Redux
+import Thrust.Game.GameEvent
+import Thrust.Shapes.Shape
+import Thrust.Renderable
+import Thrust.Redux
 
 data World = World
   { _scenery :: [ Block ]

@@ -20,25 +20,25 @@ description:         Please see the README on Github at <https://github.com/gith
 library
   hs-source-dirs:      src
 
-  exposed-modules:     Renderable
-                     , Redux
-                     , World.Assets
-                     , World.CreateWorld
-                     , Game.Game
+  exposed-modules:     Thrust.Renderable
+                     , Thrust.Redux
+                     , Thrust.World.Assets
+                     , Thrust.World.CreateWorld
+                     , Thrust.Game.Game
                      -- exposed for test
-                     , Shapes.Shape
+                     , Thrust.Shapes.Shape
 
-  other-modules:       Game.Timer
-                     , Game.GameEvent
-                     , Systems.Controller
-                     , Shapes.Shapes
-                     , Shapes.Collisions
-                     , Shapes.Movables
-                     , Shapes.Renderables
-                     , Graphics.SpriteSheet
-                     , Entities.Block
-                     , Entities.Thruster
-                     , World.World
+  other-modules:       Thrust.Game.Timer
+                     , Thrust.Game.GameEvent
+                     , Thrust.Systems.Controller
+                     , Thrust.Shapes.Shapes
+                     , Thrust.Shapes.Collisions
+                     , Thrust.Shapes.Movables
+                     , Thrust.Shapes.Renderables
+                     , Thrust.Graphics.SpriteSheet
+                     , Thrust.Entities.Block
+                     , Thrust.Entities.Thruster
+                     , Thrust.World.World
 
   build-depends:       base >= 4.7 && < 5
                      , gloss
@@ -67,6 +67,7 @@ test-suite pandamonium-test
                      , Shapes.CollisionAssertions
                      , Shapes.Generators
                      , Shapes.RectangleCollisions
+                     , Shapes.PolygonCollisions
   build-depends:       base
                      , gloss
                      , HTF

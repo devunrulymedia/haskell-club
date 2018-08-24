@@ -1,13 +1,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Game.Game where
+module Thrust.Game.Game where
 
 import Control.Lens
-import World.World
-import Game.Timer
-import Game.GameEvent
-import Renderable
-import Redux
+import Thrust.World.World
+import Thrust.Game.Timer
+import Thrust.Game.GameEvent
+import Thrust.Renderable
+import Thrust.Redux
 import Graphics.Gloss ( blue, scale )
 import Graphics.Gloss.Interface.IO.Game
 

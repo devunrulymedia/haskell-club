@@ -1,4 +1,4 @@
-module Graphics.SpriteSheet (loadSpriteSheet) where
+module Thrust.Graphics.SpriteSheet (loadSpriteSheet) where
 
 import Graphics.Gloss
 import Codec.BMP

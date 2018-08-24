@@ -1,10 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Game.Timer where
+module Thrust.Game.Timer where
 
 import Control.Lens
-import Redux
-import Game.GameEvent
+import Thrust.Redux
+import Thrust.Game.GameEvent
 
 data Pending = Pending Float GameEvent
 

@@ -1,6 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 
-module Redux where
+module Thrust.Redux where
 
 -- adding a comment because why not?
 

@@ -1,15 +1,15 @@
-module World.CreateWorld where
+module Thrust.World.CreateWorld where
 
 import Graphics.Gloss (white, yellow)
 import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
-import Entities.Block
-import Entities.Thruster
+import Thrust.Entities.Block
+import Thrust.Entities.Thruster
 
-import World.Assets
-import Systems.Controller
-import Shapes.Shape
-import World.World
+import Thrust.World.Assets
+import Thrust.Systems.Controller
+import Thrust.Shapes.Shape
+import Thrust.World.World
 
 walls :: [Block]
 walls = [ Block (rectangleV (-310, 230) (620, 10)) white

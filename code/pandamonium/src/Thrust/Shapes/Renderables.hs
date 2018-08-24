@@ -1,7 +1,7 @@
-module Shapes.Renderables where
+module Thrust.Shapes.Renderables where
 
-import Shapes.Shapes
-import Renderable
+import Thrust.Shapes.Shapes
+import Thrust.Renderable
 import Graphics.Gloss (translate, rectangleSolid, circleSolid, polygon)
 
 instance Renderable Shape where

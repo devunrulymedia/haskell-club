@@ -1,8 +1,8 @@
-module Systems.Controller where
+module Thrust.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
-import Redux
-import Game.GameEvent
+import Thrust.Redux
+import Thrust.Game.GameEvent
 
 type ControlUpdater = Event -> ControlState -> Events GameEvent ControlState
 

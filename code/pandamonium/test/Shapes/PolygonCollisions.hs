@@ -7,7 +7,7 @@ import Data.Maybe
 import Shapes.Generators
 import Shapes.CollisionAssertions
 import Graphics.Gloss.Data.Vector
-import Shapes.Shape
+import Thrust.Shapes.Shape
 
 test_diagonally_separared_triangles_dont_collide =
   assertEqual Nothing $

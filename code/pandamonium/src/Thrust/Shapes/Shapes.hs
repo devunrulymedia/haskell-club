@@ -1,9 +1,9 @@
 {-# LANGUAGE Strict #-}
 
-module Shapes.Shapes where
+module Thrust.Shapes.Shapes where
 
 import Graphics.Gloss.Data.Vector
-import Shapes.Movables
+import Thrust.Shapes.Movables
 import Data.Maybe
 
 data Shape = Circle Vector Float

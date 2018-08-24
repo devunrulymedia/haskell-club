@@ -1,18 +1,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 
-module Entities.Thruster where
+module Thrust.Entities.Thruster where
 
 import Control.Lens
 import Control.Arrow
-import Shapes.Shape
-import Renderable
-import Systems.Controller
+import Thrust.Shapes.Shape
+import Thrust.Renderable
+import Thrust.Systems.Controller
 import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, Picture)
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
-import Game.GameEvent
-import Redux
+import Thrust.Game.GameEvent
+import Thrust.Redux
 
 spinSpeed :: Float
 spinSpeed = pi * 2
