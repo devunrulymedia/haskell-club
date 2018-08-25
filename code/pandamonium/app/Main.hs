@@ -16,6 +16,7 @@ import Pandamonium.World.Stages.Stage2
 import Thrust.World.Assets
 import Thrust.World.CreateWorld
 import Thrust.Game.Game
+import Balls.World.World
 
 window :: Display
 
@@ -33,6 +34,7 @@ main = getArgs >>= parseArgs
 parseArgs :: [String] -> IO ()
 parseArgs ["thrust"] = thrust
 parseArgs ["panda"] = pandamonium
+parseArgs ["balls"] = ballpit
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 playGame :: (IORenderable a) => a -> Redux a e -> IO ()
@@ -48,3 +50,7 @@ pandamonium :: IO ()
 pandamonium = do assets <- Pandamonium.World.Assets.loadAssets
                  let game = Pandamonium.Game.Game.withStages assets (cycle [stage2, stage1])
                  playGame game Pandamonium.Game.Game.gameRedux
+
+ballpit :: IO ()
+ballpit = do let world = Balls.World.World.world
+             playGame world ballsRedux

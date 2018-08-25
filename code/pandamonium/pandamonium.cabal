@@ -22,14 +22,17 @@ library
 
   exposed-modules:     Common.Renderable
                      , Common.Redux
+                     -- exposed thrust components
                      , Thrust.World.Assets
                      , Thrust.World.CreateWorld
                      , Thrust.Game.Game
+                     -- exposed pandamonium components
                      , Pandamonium.World.Assets
                      , Pandamonium.World.CreateWorld
                      , Pandamonium.Game.Game
                      , Pandamonium.World.Stages.Stage1
                      , Pandamonium.World.Stages.Stage2
+                     -- exposed balls components
                      , Balls.World.World
                      -- exposed for test
                      , Common.Shapes.Shape
