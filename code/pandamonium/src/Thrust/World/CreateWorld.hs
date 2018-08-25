@@ -4,9 +4,9 @@ import Graphics.Gloss (white, yellow)
 import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
 import Common.Shapes.Shape
-import Thrust.Entities.Block
-import Thrust.Entities.Thruster
+import Common.Entities.Block
 
+import Thrust.Entities.Thruster
 import Thrust.World.Assets
 import Thrust.Systems.Controller
 import Thrust.World.World

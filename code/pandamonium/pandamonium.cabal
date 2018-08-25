@@ -39,15 +39,14 @@ library
                      , Common.Shapes.Renderables
                      , Common.Timer
                      , Common.Graphics.SpriteSheet
+                     , Common.Entities.Block
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
-                     , Thrust.Entities.Block
                      , Thrust.Entities.Thruster
                      , Thrust.World.World
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Systems.Physics
-                     , Pandamonium.Entities.Block
                      , Pandamonium.Entities.Panda
                      , Pandamonium.Entities.Panda.Panda
                      , Pandamonium.Entities.Panda.MovementStateMachine

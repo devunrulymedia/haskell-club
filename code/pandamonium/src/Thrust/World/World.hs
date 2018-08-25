@@ -14,13 +14,13 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
-import Thrust.Entities.Block
-import Thrust.Entities.Thruster
-
-import Thrust.Game.GameEvent
-import Common.Shapes.Shape
-import Common.Renderable
 import Common.Redux
+import Common.Renderable
+import Common.Shapes.Shape
+import Common.Entities.Block
+
+import Thrust.Entities.Thruster
+import Thrust.Game.GameEvent
 
 data World = World
   { _scenery :: [ Block ]

@@ -3,10 +3,10 @@ module Pandamonium.World.CreateWorld where
 import Graphics.Gloss (white, yellow)
 import Graphics.Gloss.Interface.IO.Game (Key (Char))
 
-import Pandamonium.Entities.Block
+import Common.Entities.Block
+
 import Pandamonium.Entities.Panda
 import Pandamonium.Entities.Coin
-
 import Pandamonium.World.Assets
 import Pandamonium.Systems.Controller
 import Pandamonium.World.World

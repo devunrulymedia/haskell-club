@@ -1,6 +1,7 @@
-module Thrust.Entities.Block where
+module Common.Entities.Block where
 
 import Graphics.Gloss (Color, color)
+
 import Common.Shapes.Shape
 import Common.Renderable
 

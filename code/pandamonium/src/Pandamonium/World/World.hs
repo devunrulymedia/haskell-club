@@ -14,15 +14,15 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
-import Pandamonium.Entities.Block
-import Pandamonium.Entities.Panda
-import Pandamonium.Entities.Coin
-import Pandamonium.Systems.Physics
-
-import Pandamonium.Game.GameEvent
 import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
+import Common.Entities.Block
+
+import Pandamonium.Entities.Panda
+import Pandamonium.Entities.Coin
+import Pandamonium.Systems.Physics
+import Pandamonium.Game.GameEvent
 
 data World = World
   { _scenery :: [ Block ]

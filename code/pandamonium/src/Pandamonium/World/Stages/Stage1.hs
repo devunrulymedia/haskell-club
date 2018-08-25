@@ -1,9 +1,9 @@
 module Pandamonium.World.Stages.Stage1 where
 
-import Pandamonium.Entities.Block
+import Common.Entities.Block
+import Common.Shapes.Shape
 import Pandamonium.Entities.Coin
 import Pandamonium.World.Stage
-import Common.Shapes.Shape
 import Graphics.Gloss (white)
 
 walls = [ Block (rectangle (-710) 710 430 420) white
