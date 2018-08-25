@@ -22,9 +22,6 @@ instance Renderable World where
                  (render <$> world ^. walls) ++
                  (render <$> world ^. balls)
 
-instance IORenderable World where
-  iorender world = pure $ render world
-
 ballsRedux :: Redux World a
 ballsRedux = noOpRedux
 

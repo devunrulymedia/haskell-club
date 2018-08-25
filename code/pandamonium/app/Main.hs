@@ -37,7 +37,7 @@ parseArgs ["panda"] = pandamonium
 parseArgs ["balls"] = ballpit
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
-playGame :: (IORenderable a) => a -> Redux a e -> IO ()
+playGame :: (Renderable a) => a -> Redux a e -> IO ()
 playGame game redux = playIO window background fps game iorender (reduxListen redux) (reduxUpdate redux)
 
 thrust :: IO ()

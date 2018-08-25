@@ -36,5 +36,5 @@ gameRedux = compose
   , noOpRedux { listener = adjustZoom }
   ]
 
-instance IORenderable Game where
-  iorender game = scale (game ^. mag) (game ^. mag) <$> iorender (game ^. world)
+instance Renderable Game where
+  render game = scale (game ^. mag) (game ^. mag) $ render (game ^. world)

@@ -33,8 +33,8 @@ type Listener = Event -> World -> Events GameEvent World
 type Updater  = Float -> World -> Events GameEvent World
 type Reducer  = GameEvent -> World -> IOEvents GameEvent World
 
-instance IORenderable World where
-  iorender world = pure $ Pictures $
+instance Renderable World where
+  render world = Pictures $
                    (render <$> world ^. scenery) ++
                    [render $ world ^. thruster]
 
