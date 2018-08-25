@@ -23,6 +23,10 @@ reduceTimer event timer = reduceTimer' (timed event) where
   reduceTimer' (Just (DueIn delay action)) = return $ (pending %~ (DueAt (delay + (timer ^. elapsed)) action :) $ timer)
   reduceTimer' Nothing = return timer
 
+-- if this were a queue, we wouldn't need to iterate over all the events every cycle
+-- however, that iteration is cheap and we don't currently expect many timed events
+-- to be pending at any given time. If that changes, we should consider changing
+-- this data structure then.
 updateEvents :: (TimedEvent a) => Float -> [ DueAt a ] -> Events a [ DueAt a ]
 updateEvents _ [] = return []
 updateEvents elapsed (current@(DueAt dueAt event) : rest) = do
