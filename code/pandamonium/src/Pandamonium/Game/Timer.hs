@@ -4,38 +4,41 @@ module Pandamonium.Game.Timer where
 
 import Control.Lens
 import Common.Redux
-import Pandamonium.Game.GameEvent
 
-data Pending = Pending Float GameEvent
+data DueIn a = DueIn Float a
+data DueAt a = DueAt Float a
 
-data Timer = Timer
+class TimedEvent a where
+  timed :: a -> Maybe (DueIn a)
+
+data Timer a = Timer
   { _elapsed :: Float
-  , _pending :: [ Pending ]
+  , _pending :: [ DueAt a ]
   }
 
 makeLenses ''Timer
 
-reduceTimer :: GameEvent -> Timer -> IOEvents GameEvent Timer
-reduceTimer (TimedEvent delay event) (Timer elapsed pending)
-  = return $ Timer elapsed $ Pending (delay + elapsed) event : pending
-reduceTimer _ t = return t
+reduceTimer :: (TimedEvent a) => a -> Timer a -> IOEvents a (Timer a)
+reduceTimer event timer = reduceTimer' (timed event) where
+  reduceTimer' (Just (DueIn delay action)) = return $ (pending %~ (DueAt (delay + (timer ^. elapsed)) action :) $ timer)
+  reduceTimer' Nothing = return timer
 
-updateEvents :: Float -> [ Pending ] -> Events GameEvent [ Pending ]
+updateEvents :: (TimedEvent a) => Float -> [ DueAt a ] -> Events a [ DueAt a ]
 updateEvents _ [] = return []
-updateEvents elapsed (current@(Pending dueOn event) : rest) = do
+updateEvents elapsed (current@(DueAt dueAt event) : rest) = do
   rest' <- updateEvents elapsed rest
-  if dueOn <= elapsed
+  if dueAt <= elapsed
   then do fireEvent event
           return rest'
   else return (current : rest')
 
-updateTimer :: Float -> Timer -> Events GameEvent Timer
+updateTimer :: (TimedEvent a) => Float -> (Timer a) -> Events a (Timer a)
 updateTimer step (Timer elapsed pending) = do
   let elapsed' = step + elapsed
   pending' <- updateEvents elapsed' pending
   return $ Timer elapsed' pending'
 
-timerRedux :: Redux Timer GameEvent
+timerRedux :: (TimedEvent a) => Redux (Timer a) a
 timerRedux = Redux
   { reducer =  reduceTimer
   , updater =  updateTimer

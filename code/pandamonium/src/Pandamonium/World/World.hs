@@ -61,7 +61,7 @@ handleCollisions w = do
 pickupCoin :: Panda -> Coin -> Events GameEvent ()
 pickupCoin pd coin@(Coin name loc) = if (shape pd !!! shape coin)
   then do fireEvent $ CoinPickedUp name
-          fireEvent $ TimedEvent 5 (RespawnCoin name loc)
+          fireEvent $ Trigger 5 (RespawnCoin name loc)
           return ()
   else return ()
 
@@ -100,19 +100,6 @@ quit :: Reducer
 quit Quit w = do liftIO exitSuccess; return w
 quit _ w    = return w
 
-
-changeBlockColour :: GameEvent -> World -> IOEvents GameEvent World
-changeBlockColour (ChangeScenery) w = do
-  tell $ singleton (TimedEvent 1 ChangeScenery)
-  return $ scenery %~ (tint <$>) $ w where
-    tint :: Block -> Block
-    tint (Block shape color) = case rgbaOfColor color of
-      (1,1,1,1)   -> Block shape (makeColor 0 1 1 1)
-      (0,1,1,1)   -> Block shape (makeColor 1 0.5 1 1)
-      (1,0.5,1,1) -> Block shape (makeColor 1 1 0.3 1)
-      otherwise   -> Block shape (makeColor 1 1 1 1)
-changeBlockColour _ w = return w
-
 checkForCompletion :: World -> Events GameEvent World
 checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
@@ -124,7 +111,6 @@ listenWorld e w = return w
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              >>= changeBlockColour e
               <&> removeCollectedCoins e
               <&> scoreCoin e
               <&> respawnCoins e

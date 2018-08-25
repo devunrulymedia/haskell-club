@@ -16,7 +16,7 @@ import Graphics.Gloss.Interface.IO.Game
 
 data Game = Game
   { _world :: World
-  , _timer :: Timer
+  , _timer :: Timer GameEvent
   , _mag :: Float
   , _stages :: [ Stage ]
   , _assets :: Assets
@@ -27,7 +27,7 @@ makeLenses ''Game
 withStages :: Assets -> [ Stage ] -> Game
 withStages stuff (first : rest) = Game
   { _world = createWorld stuff first
-  , _timer = Timer 0 [ Pending 1 ChangeScenery ]
+  , _timer = Timer 0 []
   , _mag = 2
   , _stages = rest
   , _assets = stuff
@@ -43,7 +43,7 @@ nextStage game = let (next : rest) = game ^. stages
                      stuff = game ^. assets
                   in stages .~ rest
                    $ world .~ createWorld stuff next
-                   $ timer .~ Timer 0 [ Pending 1 ChangeScenery ]
+                   $ timer .~ Timer 0 []
                    $ game
 
 listenForClear :: GameEvent -> Game -> IOEvents GameEvent Game
