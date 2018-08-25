@@ -2,6 +2,8 @@ module Main(
   main
 ) where
 
+import System.Environment
+
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Common.Renderable
@@ -25,12 +27,13 @@ background = black
 fps :: Int
 fps = 600
 
--- main :: IO ()
--- main = thrust
-
 main :: IO ()
-main = pandamonium
+main = getArgs >>= parseArgs
 
+parseArgs :: [String] -> IO ()
+parseArgs ["thrust"] = thrust
+parseArgs ["panda"] = pandamonium
+parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 thrust :: IO ()
 thrust = do assets <- Thrust.World.Assets.loadAssets

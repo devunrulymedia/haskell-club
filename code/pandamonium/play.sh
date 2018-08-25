@@ -3,4 +3,4 @@
 set -eio pipefail
 
 stack test
-stack exec pandamonium-exe
+stack exec pandamonium-exe $1
