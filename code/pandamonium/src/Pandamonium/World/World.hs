@@ -4,7 +4,6 @@ module Pandamonium.World.World where
 
 import Control.Lens
 import Control.Arrow
-import System.Exit
 import Control.Monad.Writer
 import Data.DList
 
@@ -85,36 +84,16 @@ scoreCoin :: GameEvent -> World -> World
 scoreCoin (CoinPickedUp _) world = score +~ 5 $ world
 scoreCoin _ world = world
 
-exitOnEscape :: Event -> World -> IO World
-exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
-  then do exitSuccess
-          return w
-  else return w
-exitOnEscape _ w = return w
-
-listenForQuit :: Listener
-listenForQuit (EventKey (Char 'q') _ _ _ ) w = do fireEvent Quit; return w
-listenForQuit _ w = return w
-
-quit :: Reducer
-quit Quit w = do liftIO exitSuccess; return w
-quit _ w    = return w
-
 checkForCompletion :: World -> Events GameEvent World
 checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
   otherwise -> return w
-
-listenWorld :: Listener
-listenWorld e w = return w
-              >>= listenForQuit e
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> removeCollectedCoins e
               <&> scoreCoin e
               <&> respawnCoins e
-              >>= quit e
 
 updateWorld :: Updater
 updateWorld t w = return w
@@ -125,7 +104,7 @@ updateWorld t w = return w
 topLevelRedux :: Redux World GameEvent
 topLevelRedux = Redux
   { reducer  = reduceWorld
-  , listener = listenWorld
+  , listener = noOp
   , updater  = updateWorld
   }
 

@@ -11,7 +11,6 @@ data GameEvent = ResetCollisions
                | RespawnCoin String Vector
                | ChangeScenery
                | Cleared
-               | Quit
 
 instance TimedEvent GameEvent where
   timed (Trigger t a) = Just $ DueIn t a
