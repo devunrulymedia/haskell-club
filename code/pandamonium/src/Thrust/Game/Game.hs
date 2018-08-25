@@ -4,7 +4,6 @@ module Thrust.Game.Game where
 
 import Control.Lens
 import Thrust.World.World
-import Thrust.Game.Timer
 import Thrust.Game.GameEvent
 import Common.Renderable
 import Common.Redux

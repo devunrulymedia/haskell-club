@@ -1,7 +1,7 @@
 module Pandamonium.Game.GameEvent where
 
 import Graphics.Gloss
-import Pandamonium.Game.Timer
+import Common.Timer
 
 data GameEvent = ResetCollisions
                | PandaCollision Vector

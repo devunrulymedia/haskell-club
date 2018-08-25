@@ -7,7 +7,7 @@ import Pandamonium.World.World
 import Pandamonium.World.Stage
 import Pandamonium.World.Assets
 import Pandamonium.World.CreateWorld
-import Pandamonium.Game.Timer
+import Common.Timer
 import Pandamonium.Game.GameEvent
 import Common.Renderable
 import Common.Redux

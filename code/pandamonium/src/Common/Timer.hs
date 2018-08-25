@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Pandamonium.Game.Timer where
+module Common.Timer where
 
 import Control.Lens
 import Common.Redux
