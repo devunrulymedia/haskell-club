@@ -1,7 +1,7 @@
 module Pandamonium.World.Assets where
 
 import Graphics.Gloss
-import Pandamonium.Graphics.SpriteSheet
+import Common.Graphics.SpriteSheet
 
 data Assets = Assets { pandas :: [Picture], numberSprites :: [Picture] }
 

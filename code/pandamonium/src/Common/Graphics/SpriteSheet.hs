@@ -1,4 +1,4 @@
-module Pandamonium.Graphics.SpriteSheet (loadSpriteSheet) where
+module Common.Graphics.SpriteSheet (loadSpriteSheet) where
 
 import Graphics.Gloss
 import Codec.BMP

@@ -38,16 +38,15 @@ library
                      , Common.Shapes.Movables
                      , Common.Shapes.Renderables
                      , Common.Timer
+                     , Common.Graphics.SpriteSheet
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
-                     , Thrust.Graphics.SpriteSheet
                      , Thrust.Entities.Block
                      , Thrust.Entities.Thruster
                      , Thrust.World.World
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Systems.Physics
-                     , Pandamonium.Graphics.SpriteSheet
                      , Pandamonium.Entities.Block
                      , Pandamonium.Entities.Panda
                      , Pandamonium.Entities.Panda.Panda

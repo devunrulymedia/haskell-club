@@ -1,7 +1,7 @@
 module Thrust.World.Assets where
 
 import Graphics.Gloss
-import Thrust.Graphics.SpriteSheet
+import Common.Graphics.SpriteSheet
 
 data Assets = Assets { ballSprite :: Picture, shipSprite :: Picture,  numberSprites :: [Picture] }
 
