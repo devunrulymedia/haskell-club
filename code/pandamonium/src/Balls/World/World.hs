@@ -3,7 +3,7 @@
 module Balls.World.World where
 
 import Control.Lens
-import Graphics.Gloss ( Picture (Pictures), white )
+import Graphics.Gloss ( Picture (Pictures), white, red )
 import Common.Renderable
 import Common.Redux
 import Common.Shapes.Shape
@@ -29,6 +29,8 @@ world :: World
 world = World
  { _walls = [ Block (rectangleV (-400, -400) (800, 20)) white
             , Block (rectangleV (-400, -400) (20, 800)) white
+            , Block (rectangleV (380, -400) (20, 800)) white
+            , Block (rectangleV (-400, 400) (800, 20)) white
             ]
- , _balls = []
+ , _balls = [ Ball { _mass = 1, _pos = (0, 0), _radius = 20, _vel = (0, 0), _col = red}]
  }

@@ -11,15 +11,15 @@ import Common.Shapes.Shape
 data Ball = Ball
  { _mass :: Float
  , _radius :: Float
- , _position :: Vector
- , _velocity :: Vector
+ , _pos :: Vector
+ , _vel :: Vector
  , _col :: Color
 }
 
 makeLenses ''Ball
 
 instance Shaped Ball where
-  shape ball = circle (ball ^. position) (ball ^. radius)
+  shape ball = circle (ball ^. pos) (ball ^. radius)
 
 instance Renderable Ball where
   render ball = color (ball ^. col) $ render (shape ball)
