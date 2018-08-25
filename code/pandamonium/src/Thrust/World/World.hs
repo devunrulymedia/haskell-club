@@ -4,7 +4,6 @@ module Thrust.World.World where
 
 import Control.Lens
 import Control.Arrow
-import System.Exit
 import Control.Monad.Writer
 import Data.DList
 
@@ -65,29 +64,6 @@ bounce el a b = case (shape b !!> shape a) of
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = thruster %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
-exitOnEscape :: Event -> World -> IO World
-exitOnEscape (EventKey key _ _ _) w = if key == Char 'q'
-  then do exitSuccess
-          return w
-  else return w
-exitOnEscape _ w = return w
-
-listenForQuit :: Listener
-listenForQuit (EventKey (Char 'q') _ _ _ ) w = do fireEvent Quit; return w
-listenForQuit _ w = return w
-
-listenWorld :: Listener
-listenWorld e w = return w
-              >>= listenForQuit e
-
-quit :: Reducer
-quit Quit w = do liftIO exitSuccess; return w
-quit _ w    = return w
-
-reduceWorld :: Reducer
-reduceWorld e w = return w
-              >>= quit e
-
 updateWorld :: Updater
 updateWorld t w = return w
               <&> thruster %~ update t
@@ -96,8 +72,8 @@ updateWorld t w = return w
 
 topLevelRedux :: Redux World GameEvent
 topLevelRedux = Redux
-  { reducer  = reduceWorld
-  , listener = listenWorld
+  { reducer  = noOp
+  , listener = noOp
   , updater  = updateWorld
   }
 
