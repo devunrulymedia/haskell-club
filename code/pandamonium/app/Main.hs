@@ -8,6 +8,7 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Common.Renderable
 import Common.Redux
+import Common.Exit
 import Pandamonium.World.Assets
 import Pandamonium.World.CreateWorld
 import Pandamonium.Game.Game
@@ -38,7 +39,7 @@ parseArgs ["balls"] = ballpit
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 playGame :: (Renderable a) => a -> Redux a e -> IO ()
-playGame game redux = playIO window background fps game iorender (reduxListen redux) (reduxUpdate redux)
+playGame game redux = playIO window background fps game iorender (exitable redux) (reduxUpdate redux)
 
 thrust :: IO ()
 thrust = do assets <- Thrust.World.Assets.loadAssets
