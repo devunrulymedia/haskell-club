@@ -35,13 +35,16 @@ parseArgs ["thrust"] = thrust
 parseArgs ["panda"] = pandamonium
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
+playGame :: (IORenderable a) => a -> Redux a e -> IO ()
+playGame game redux = playIO window background fps game iorender (reduxListen redux) (reduxUpdate redux)
+
 thrust :: IO ()
 thrust = do assets <- Thrust.World.Assets.loadAssets
             let world = Thrust.World.CreateWorld.createWorld assets
             let game = Thrust.Game.Game.withWorld world
-            playIO window background fps game iorender (reduxListen Thrust.Game.Game.gameRedux) (reduxUpdate Thrust.Game.Game.gameRedux)
+            playGame game Thrust.Game.Game.gameRedux
 
 pandamonium :: IO ()
 pandamonium = do assets <- Pandamonium.World.Assets.loadAssets
                  let game = Pandamonium.Game.Game.withStages assets (cycle [stage2, stage1])
-                 playIO window background fps game iorender (reduxListen Pandamonium.Game.Game.gameRedux) (reduxUpdate Pandamonium.Game.Game.gameRedux)
+                 playGame game Pandamonium.Game.Game.gameRedux

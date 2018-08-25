@@ -30,6 +30,7 @@ library
                      , Pandamonium.Game.Game
                      , Pandamonium.World.Stages.Stage1
                      , Pandamonium.World.Stages.Stage2
+                     , Balls.World.World
                      -- exposed for test
                      , Common.Shapes.Shape
 
@@ -40,10 +41,12 @@ library
                      , Common.Timer
                      , Common.Graphics.SpriteSheet
                      , Common.Entities.Block
+                     -- thrust modules
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
                      , Thrust.Entities.Thruster
                      , Thrust.World.World
+                     -- pandamonium modules
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Systems.Physics
@@ -57,6 +60,9 @@ library
                      , Pandamonium.Entities.Coin
                      , Pandamonium.World.World
                      , Pandamonium.World.Stage
+                     -- ball modules
+                     , Balls.Entities.Ball
+
 
   build-depends:       base >= 4.7 && < 5
                      , gloss
