@@ -1,9 +1,8 @@
-module Pandamonium.Systems.Physics where
+module Common.Physics.Physics where
 
 import Graphics.Gloss.Data.Vector
 import Common.Redux
 import Common.Shapes.Shape
-import Pandamonium.Game.GameEvent
 
 gravity :: Float
 gravity = 1800

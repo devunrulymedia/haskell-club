@@ -45,6 +45,7 @@ library
                      , Common.Timer
                      , Common.Graphics.SpriteSheet
                      , Common.Entities.Block
+                     , Common.Physics.Physics
                      -- thrust modules
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
@@ -53,7 +54,6 @@ library
                      -- pandamonium modules
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
-                     , Pandamonium.Systems.Physics
                      , Pandamonium.Systems.Bouncy
                      , Pandamonium.Entities.Panda
                      , Pandamonium.Entities.Panda.Panda

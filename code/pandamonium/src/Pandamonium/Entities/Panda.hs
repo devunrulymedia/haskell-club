@@ -8,8 +8,8 @@ import Control.Monad
 import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
+import Common.Physics.Physics
 import Pandamonium.Systems.Controller
-import Pandamonium.Systems.Physics
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
