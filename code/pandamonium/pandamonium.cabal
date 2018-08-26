@@ -44,6 +44,8 @@ library
                      , Common.Shapes.Renderables
                      , Common.Timer
                      , Common.Graphics.SpriteSheet
+                     , Common.Entities.Entity
+                     , Common.Entities.TypeClasses.Shapes
                      , Common.Entities.Block
                      , Common.Physics.Physics
                      -- thrust modules
