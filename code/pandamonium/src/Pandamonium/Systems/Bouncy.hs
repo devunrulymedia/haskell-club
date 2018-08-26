@@ -5,7 +5,7 @@ import Common.Redux
 import Common.Shapes.Shape
 import Pandamonium.Game.GameEvent
 
-bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
+bounce :: (Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
   Nothing -> return a
   (Just pushout) -> do
