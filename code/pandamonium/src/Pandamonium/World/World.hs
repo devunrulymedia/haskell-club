@@ -21,6 +21,7 @@ import Common.Entities.Block
 import Pandamonium.Entities.Panda
 import Pandamonium.Entities.Coin
 import Pandamonium.Systems.Physics
+import Pandamonium.Systems.Bouncy
 import Pandamonium.Game.GameEvent
 
 data World = World
