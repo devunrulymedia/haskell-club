@@ -27,10 +27,14 @@ ballsRedux = noOpRedux
 
 world :: World
 world = World
- { _walls = [ Block (rectangleV (-400, -400) (800, 20)) white
-            , Block (rectangleV (-400, -400) (20, 800)) white
-            , Block (rectangleV (380, -400) (20, 800)) white
-            , Block (rectangleV (-400, 400) (800, 20)) white
+ { _walls = [ Block (rectangleV (-600, 400) (1200, 20)) white
+            , Block (rectangleV (-600, 100) (20, 300)) white
+            , Block (rectangleV (580, 100) (20, 300)) white
+            , Block (polygon [(-600, 100), (-580, 100), (-180, -300), (-200, -300)]) white
+            , Block (rectangleV (-200, -600) (20, 300)) white
+            , Block (rectangleV (-200, -600) (400, 20)) white
+            , Block (rectangleV (180, -600) (20, 300)) white
+            , Block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)]) white
             ]
  , _balls = [ Ball { _mass = 1, _pos = (0, 0), _radius = 20, _vel = (0, 0), _col = red}]
  }
