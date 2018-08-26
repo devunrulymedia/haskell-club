@@ -17,6 +17,7 @@ import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
 import Common.Entities.Entity
+import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
 
 import Pandamonium.Entities.EntityTypes
@@ -29,7 +30,7 @@ type Ent = Entity EntityType Integer
 
 data World = World
   { _scenery :: [ Block ]
-  , _panda :: Panda
+  , _panda :: Ent Panda
   , _coins :: [ Coin ]
   , _score :: Int
   , _numbers :: [ Picture ]
@@ -69,7 +70,7 @@ pickupCoin pd coin@(Coin name loc) = if (shape pd !!! shape coin)
   else return ()
 
 checkForPickups :: World -> Events GameEvent World
-checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
+checkForPickups w = do traverse (pickupCoin $ w ^. panda . edata) (w ^. coins)
                        return w
 
 removeCollectedCoins :: GameEvent -> World -> World
@@ -114,6 +115,6 @@ topLevelRedux = Redux
 
 worldRedux :: Redux World GameEvent
 worldRedux = compose
-  [ connect pandaRedux panda
+  [ connect pandaRedux (panda . edata)
   , topLevelRedux
   ]
