@@ -16,12 +16,16 @@ import Graphics.Gloss.Interface.IO.Game
 import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
+import Common.Entities.Entity
 import Common.Entities.Block
 
+import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Panda
 import Pandamonium.Entities.Coin
 import Pandamonium.Systems.Bouncy
 import Pandamonium.Game.GameEvent
+
+type Ent = Entity EntityType Integer
 
 data World = World
   { _scenery :: [ Block ]

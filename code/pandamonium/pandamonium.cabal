@@ -57,6 +57,7 @@ library
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Systems.Bouncy
+                     , Pandamonium.Entities.EntityTypes
                      , Pandamonium.Entities.Panda
                      , Pandamonium.Entities.Panda.Panda
                      , Pandamonium.Entities.Panda.MovementStateMachine
