@@ -29,9 +29,9 @@ import Pandamonium.Game.GameEvent
 type Ent = Entity EntityType Integer
 
 data World = World
-  { _scenery :: [ Block ]
+  { _scenery :: [ Ent Block ]
   , _panda :: Ent Panda
-  , _coins :: [ Coin ]
+  , _coins :: [ Ent Coin ]
   , _score :: Int
   , _numbers :: [ Picture ]
   }
@@ -70,19 +70,22 @@ pickupCoin pd coin@(Coin name loc) = if (shape pd !!! shape coin)
   else return ()
 
 checkForPickups :: World -> Events GameEvent World
-checkForPickups w = do traverse (pickupCoin $ w ^. panda . edata) (w ^. coins)
+checkForPickups w = do traverse (pickupCoin $ w ^. panda . edata) ((view edata) <$> w ^. coins)
                        return w
 
 removeCollectedCoins :: GameEvent -> World -> World
 removeCollectedCoins (CoinPickedUp name) world = coins %~ (reject $ sameName name) $ world where
-  sameName :: String -> Coin -> Bool
-  sameName name (Coin name' _) = name == name'
+  name' :: Coin -> String
+  name' (Coin n _) = n
+  sameName :: String -> Ent Coin -> Bool
+  sameName name coin = name == name' (coin ^. edata)
   reject :: (a -> Bool) -> [a] -> [a]
   reject test = filter (\x -> not $ test x)
 removeCollectedCoins _ world = world
 
+-- this is definitely not the way to go about things:
 respawnCoins :: GameEvent -> World -> World
-respawnCoins (RespawnCoin name loc) world = coins %~ (Coin name loc :) $ world
+respawnCoins (RespawnCoin name loc) world = coins %~ (Entity ECoin 1 (Coin name loc) :) $ world
 respawnCoins _ world = world
 
 scoreCoin :: GameEvent -> World -> World
