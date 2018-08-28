@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Common.Physics.Bounce where
+module Common.Physics.Collisions where
 
 import Graphics.Gloss.Data.Vector
 import Control.Lens
@@ -18,7 +18,7 @@ bounce_against_static el a b = case (shape b !!> shape a) of
   Nothing -> return a
   (Just pushout) -> do
     fireEvent (collisionEvent (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) offset)
-    fireEvent (collisionEvent (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) (negate offset))
+    fireEvent (collisionEvent (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) (0, 0))
     return (move offset (applyImpulse reflected_vel a)) where
       vel           = velocity a
       unit_push     = normalizeV pushout

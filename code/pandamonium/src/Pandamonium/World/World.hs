@@ -19,7 +19,7 @@ import Common.Redux
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
-import Common.Physics.Bounce
+import Common.Physics.Collisions
 
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Panda

@@ -4,7 +4,7 @@ module Pandamonium.Game.GameEvent where
 
 import Graphics.Gloss
 import Common.Timer
-import Common.Physics.Bounce
+import Common.Physics.Collisions
 import Pandamonium.Entities.EntityTypes
 
 data GameEvent = ResetCollisions

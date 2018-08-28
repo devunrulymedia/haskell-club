@@ -48,7 +48,7 @@ library
                      , Common.Entities.TypeClasses.Shapes
                      , Common.Entities.Block
                      , Common.Physics.Physics
-                     , Common.Physics.Bounce
+                     , Common.Physics.Collisions
                      -- thrust modules
                      , Thrust.Game.GameEvent
                      , Thrust.Systems.Controller
