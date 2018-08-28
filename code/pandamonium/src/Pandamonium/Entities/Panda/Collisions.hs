@@ -2,6 +2,7 @@ module Pandamonium.Entities.Panda.Collisions where
 
 import Graphics.Gloss.Data.Vector
 import Pandamonium.Entities.Panda.MovementStateMachine
+import Pandamonium.Entities.EntityTypes
 import Pandamonium.Game.GameEvent
 import Pandamonium.Systems.Controller
 
@@ -17,5 +18,5 @@ processCollisions (x, y) ms
 
 handleCollisions :: GameEvent -> MovementState -> MovementState
 handleCollisions ResetCollisions = resetCollisions
-handleCollisions (PandaCollision nv) = processCollisions nv
+handleCollisions (Collision EPanda _ _ _ nv) = processCollisions nv
 handleCollisions _ = id

@@ -9,7 +9,6 @@ import Pandamonium.Systems.GenericBouncy
 
 data GameEvent = ResetCollisions
                | Collision EntityType Integer EntityType Integer Vector
-               | PandaCollision Vector
                | JumpPressed
                | Trigger Float GameEvent
                | CoinPickedUp String

@@ -56,7 +56,6 @@ library
                      -- pandamonium modules
                      , Pandamonium.Game.GameEvent
                      , Pandamonium.Systems.Controller
-                     , Pandamonium.Systems.Bouncy
                      , Pandamonium.Systems.GenericBouncy
                      , Pandamonium.Entities.EntityTypes
                      , Pandamonium.Entities.Panda
