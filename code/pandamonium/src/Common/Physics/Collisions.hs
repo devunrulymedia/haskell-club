@@ -13,6 +13,12 @@ import Common.Shapes.Shape
 class CollisionEvent t i e where
   collisionEvent :: t -> i -> t -> i -> Vector -> e
 
+touch :: (Shaped a, Shaped b, CollisionEvent t i e) => Entity t i a -> Entity t i b -> Events e ()
+touch a b = case (shape a !!> shape b) of
+  Nothing -> return ()
+  (Just pushout) -> do fireEvent (collisionEvent (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) (negate pushout))
+                       fireEvent (collisionEvent (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) pushout)
+
 bounce_against_static :: (Moving a, Shaped a, Shaped b, CollisionEvent t i e) => Float -> Entity t i a -> Entity t i b -> Events e (Entity t i a)
 bounce_against_static el a b = case (shape b !!> shape a) of
   Nothing -> return a
