@@ -55,7 +55,14 @@ connect redux lens = Redux
   , listener = lensing lens (listener redux)
   }
 
-compose :: [Redux w e] -> Redux w e
+onAll :: Traversable t => Redux a e -> Redux (t a) e
+onAll redux = Redux
+  { reducer = \e -> traverse (reducer redux e)
+  , updater = \t -> traverse (updater redux t)
+  , listener = \e -> traverse (listener redux e)
+  }
+
+compose :: [ Redux w e ] -> Redux w e
 compose redii = Redux
   { reducer  = compose' (reducer <$> redii)
   , updater  = compose' (updater <$> redii)

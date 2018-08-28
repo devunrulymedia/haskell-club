@@ -26,8 +26,6 @@ import Pandamonium.Entities.Panda
 import Pandamonium.Entities.Coin
 import Pandamonium.Game.GameEvent
 
-type Ent = Entity EntityType Integer
-
 data World = World
   { _scenery :: [ Ent Block ]
   , _panda :: Ent Panda
@@ -106,5 +104,6 @@ topLevelRedux = Redux
 worldRedux :: Redux World GameEvent
 worldRedux = compose
   [ connect pandaRedux (panda . edata)
+  , connect (onAll coinRedux) coins
   , topLevelRedux
   ]
