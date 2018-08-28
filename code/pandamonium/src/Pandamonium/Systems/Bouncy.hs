@@ -1,9 +1,11 @@
 module Pandamonium.Systems.Bouncy where
 
 import Graphics.Gloss.Data.Vector
+
 import Common.Redux
 import Common.Shapes.Shape
 import Pandamonium.Game.GameEvent
+
 
 bounce :: (Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
 bounce el a b = case (shape b !!> shape a) of
