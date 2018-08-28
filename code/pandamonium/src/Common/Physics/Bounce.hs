@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pandamonium.Systems.GenericBouncy where
+module Common.Physics.Bounce where
 
 import Graphics.Gloss.Data.Vector
 import Control.Lens
@@ -13,8 +13,8 @@ import Common.Shapes.Shape
 class CollisionEvent t i e where
   collisionEvent :: t -> i -> t -> i -> Vector -> e
 
-genbounce :: (Moving a, Shaped a, Shaped b, CollisionEvent t i e) => Float -> Entity t i a -> Entity t i b -> Events e (Entity t i a)
-genbounce el a b = case (shape b !!> shape a) of
+bounce_against_static :: (Moving a, Shaped a, Shaped b, CollisionEvent t i e) => Float -> Entity t i a -> Entity t i b -> Events e (Entity t i a)
+bounce_against_static el a b = case (shape b !!> shape a) of
   Nothing -> return a
   (Just pushout) -> do
     fireEvent (collisionEvent (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) offset)

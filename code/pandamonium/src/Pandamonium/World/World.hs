@@ -19,11 +19,11 @@ import Common.Redux
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
+import Common.Physics.Bounce
 
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Panda
 import Pandamonium.Entities.Coin
-import Pandamonium.Systems.GenericBouncy
 import Pandamonium.Game.GameEvent
 
 type Ent = Entity EntityType Integer
@@ -60,7 +60,7 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = do
   tell $ singleton ResetCollisions
-  panda %%~ (flip $ foldM $ genbounce 0) (w ^. scenery) $ w
+  panda %%~ (flip $ foldM $ bounce_against_static 0) (w ^. scenery) $ w
 
 pickupCoin :: Panda -> Coin -> Events GameEvent ()
 pickupCoin pd coin@(Coin name loc) = if (shape pd !!! shape coin)
