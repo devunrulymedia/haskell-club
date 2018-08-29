@@ -45,6 +45,7 @@ library
                      , Common.Timer
                      , Common.Graphics.SpriteSheet
                      , Common.Entities.Entity
+                     , Common.Entities.Destroyer
                      , Common.Entities.TypeClasses.Shapes
                      , Common.Entities.Block
                      , Common.Physics.Physics

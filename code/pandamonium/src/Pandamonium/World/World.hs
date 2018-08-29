@@ -19,6 +19,7 @@ import Common.Redux
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
+import Common.Entities.Destroyer
 import Common.Physics.Collisions
 
 import Pandamonium.Entities.EntityTypes
@@ -66,14 +67,6 @@ checkForPickups :: World -> Events GameEvent World
 checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
                        return w
 
-removeCollectedCoins :: GameEvent -> World -> World
-removeCollectedCoins (Collision ECoin coinId _ _ _) world = coins %~ (reject $ sameId coinId) $ world where
-  sameId :: Integer -> Ent Coin -> Bool
-  sameId coinId coin = coinId == coin ^. eid
-  reject :: (a -> Bool) -> [a] -> [a]
-  reject test = filter (\x -> not $ test x)
-removeCollectedCoins _ world = world
-
 scoreCoin :: GameEvent -> World -> World
 scoreCoin (Collision ECoin _ _ _ _) world = score +~ 5 $ world
 scoreCoin _ world = world
@@ -89,7 +82,6 @@ checkForCompletion w = case w ^. coins of
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              <&> removeCollectedCoins e
               <&> scoreCoin e
               <&> respawnCoin e
 
@@ -110,5 +102,6 @@ worldRedux :: Redux World GameEvent
 worldRedux = compose
   [ connect pandaRedux (panda . edata)
   , connect (onAll coinRedux) coins
+  , connect destroyer coins
   , topLevelRedux
   ]
