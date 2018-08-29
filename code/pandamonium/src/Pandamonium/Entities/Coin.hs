@@ -11,13 +11,13 @@ import Common.Renderable
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Game.GameEvent
 
-data Coin = Coin String Vector
+data Coin = Coin Vector
 
 position :: Coin -> Vector
-position (Coin _ pos) = pos
+position (Coin pos) = pos
 
 instance Shaped Coin where
-  shape (Coin _ centre) = circle centre 8
+  shape (Coin centre) = circle centre 8
 
 instance Renderable Coin where
   render coin = color yellow $ render $ shape coin

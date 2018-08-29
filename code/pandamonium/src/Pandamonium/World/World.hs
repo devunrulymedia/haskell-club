@@ -79,7 +79,7 @@ scoreCoin (Collision ECoin _ _ _ _) world = score +~ 5 $ world
 scoreCoin _ world = world
 
 respawnCoin :: GameEvent -> World -> World
-respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin "" pos) :) $ world
+respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin pos) :) $ world
 respawnCoin _ world = world
 
 checkForCompletion :: World -> Events GameEvent World

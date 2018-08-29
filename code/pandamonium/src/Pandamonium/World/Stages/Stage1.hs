@@ -22,11 +22,11 @@ walls = [ Entity EBlock 0 $ Block (rectangle (-710) 710 430 420) white
         , Entity EBlock 10 $ Block (rectangle 200 210 (-120) 120) white
         ]
 
-coins = [ Entity ECoin 11 $ Coin "coin1" (-170, -70)
-        , Entity ECoin 12 $ Coin "coin2" (170, -70)
-        , Entity ECoin 13 $ Coin "coin3" (-170, 160)
-        , Entity ECoin 14 $ Coin "coin4" (170, 160)
-        , Entity ECoin 15 $ Coin "coin5" (0, 30)
+coins = [ Entity ECoin 11 $ Coin (-170, -70)
+        , Entity ECoin 12 $ Coin (170, -70)
+        , Entity ECoin 13 $ Coin (-170, 160)
+        , Entity ECoin 14 $ Coin (170, 160)
+        , Entity ECoin 15 $ Coin (0, 30)
         ]
 
 stage1 :: Stage
