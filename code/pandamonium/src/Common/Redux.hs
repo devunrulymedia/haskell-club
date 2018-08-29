@@ -28,11 +28,8 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-fireEvent :: e -> Events e ()
+fireEvent :: Monad m => e -> WriterT (DList e) m ()
 fireEvent event = tell $ singleton event
-
-fireEvent2 :: e -> IOEvents e ()
-fireEvent2 event = tell $ singleton event
 
 handleRemainingEvents :: Redux w e -> w -> DList e -> IO w
 handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
