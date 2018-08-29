@@ -11,6 +11,7 @@ data GameEvent = ResetCollisions
                | Collision EntityType Integer EntityType Integer Vector
                | JumpPressed
                | Trigger Float GameEvent
+               | RespawnCoin Integer Vector
                | ChangeScenery
                | Cleared
 

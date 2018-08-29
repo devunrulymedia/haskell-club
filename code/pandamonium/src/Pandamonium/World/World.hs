@@ -78,6 +78,10 @@ scoreCoin :: GameEvent -> World -> World
 scoreCoin (Collision ECoin _ _ _ _) world = score +~ 5 $ world
 scoreCoin _ world = world
 
+respawnCoin :: GameEvent -> World -> World
+respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin "" pos) :) $ world
+respawnCoin _ world = world
+
 checkForCompletion :: World -> Events GameEvent World
 checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
@@ -87,6 +91,7 @@ reduceWorld :: Reducer
 reduceWorld e w = return w
               <&> removeCollectedCoins e
               <&> scoreCoin e
+              <&> respawnCoin e
 
 updateWorld :: Updater
 updateWorld t w = return w
