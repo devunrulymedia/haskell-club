@@ -27,6 +27,7 @@ coins = [ Entity ECoin 11 $ Coin (-170, -70)
         , Entity ECoin 13 $ Coin (-170, 160)
         , Entity ECoin 14 $ Coin (170, 160)
         , Entity ECoin 15 $ Coin (0, 30)
+        , Entity ECoin 16 $ Coin (0, -400)
         ]
 
 stage1 :: Stage

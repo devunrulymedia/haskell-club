@@ -23,7 +23,9 @@ instance Renderable World where
                  (render <$> world ^. balls)
 
 ballsRedux :: Redux World
-ballsRedux = noOpRedux
+ballsRedux = compose
+  [ connect (onAll ballRedux) balls  
+  ]
 
 world :: World
 world = World
