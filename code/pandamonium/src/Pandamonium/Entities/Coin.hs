@@ -7,8 +7,10 @@ import Data.Dynamic
 import Common.Redux2
 import Common.Timer
 import Common.Entities.Entity
+import Common.Physics.Collisions
 import Common.Shapes.Shape
 import Common.Renderable
+import Common.Entities.Destroyer
 
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Game.GameEvent
@@ -24,7 +26,7 @@ instance Shaped Coin where
 instance Renderable Coin where
   render coin = color yellow $ render $ shape coin
 
-triggerRespawn :: GameEvent -> Ent Coin -> IOEvents (Ent Coin)
+triggerRespawn :: Collision EntityType Integer -> Ent Coin -> IOEvents (Ent Coin)
 triggerRespawn (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
   then do fireEvent (Destroy coinId)
           awaitEvent 5 (RespawnCoin coinId (position (entity ^. edata)))
