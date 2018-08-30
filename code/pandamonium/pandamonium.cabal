@@ -22,6 +22,7 @@ library
 
   exposed-modules:     Common.Renderable
                      , Common.Redux
+                     , Common.Redux2
                      , Common.Exit
                      -- exposed thrust components
                      , Thrust.World.Assets
