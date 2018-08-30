@@ -31,7 +31,6 @@ data World = World
   { _scenery :: [ Ent Block ]
   , _panda :: Ent Panda
   , _coins :: [ Ent Coin ]
-  , _numbers :: [ Picture ]
   }
 
 makeLenses ''World
@@ -45,13 +44,6 @@ instance Renderable World where
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
                    [render $ world ^. panda]
-
-drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
-drawNumber x y 0 nums = []
-drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
-                            currentDigit = translate (fromIntegral x) (fromIntegral y) (nums !! digit)
-                            remainingDigits = drawNumber (x - 16) y nextColumn nums
-                         in currentDigit : remainingDigits
 
 handleCollisions :: World -> Events GameEvent World
 handleCollisions w = do
