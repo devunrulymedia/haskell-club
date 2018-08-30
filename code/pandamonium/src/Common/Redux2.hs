@@ -66,11 +66,12 @@ onAll redux = Redux
   , listener = \e -> traverse (listener redux e)
   }
 
+composeHandler :: Monad m => [a -> b -> m b] -> a -> b -> m b
+composeHandler fs a b = foldM (\x f -> f a x) b fs
+
 compose :: [ Redux w ] -> Redux w
 compose redii = Redux
-  { reducer  = compose' (reducer <$> redii)
-  , updater  = compose' (updater <$> redii)
-  , listener = compose' (listener <$> redii)
-  } where
-    compose' :: Monad m => [a -> b -> m b] -> a -> b -> m b
-    compose' fs a b = foldM (\x f -> f a x) b fs
+  { reducer  = composeHandler (reducer <$> redii)
+  , updater  = composeHandler (updater <$> redii)
+  , listener = composeHandler (listener <$> redii)
+  } 
