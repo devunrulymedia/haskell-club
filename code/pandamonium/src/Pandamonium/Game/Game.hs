@@ -3,6 +3,7 @@
 module Pandamonium.Game.Game where
 
 import Control.Lens
+import Pandamonium.Game.Score
 import Pandamonium.World.World
 import Pandamonium.World.Stage
 import Pandamonium.World.Assets
@@ -17,6 +18,7 @@ import Graphics.Gloss.Interface.IO.Game
 data Game = Game
   { _world :: World
   , _timer :: Timer GameEvent
+  , _score :: Score
   , _mag :: Float
   , _stages :: [ Stage ]
   , _assets :: Assets
@@ -28,6 +30,7 @@ withStages :: Assets -> [ Stage ] -> Game
 withStages stuff (first : rest) = Game
   { _world = createWorld stuff first
   , _timer = Timer 0 []
+  , _score = Score 0 (650, 400) (numberSprites stuff)
   , _mag = 2
   , _stages = rest
   , _assets = stuff
@@ -54,8 +57,13 @@ gameRedux :: Redux Game GameEvent
 gameRedux = compose
   [ connect timerRedux timer
   , connect worldRedux world
+  , connect scoreRedux score
   , noOpRedux { reducer = listenForClear, listener = adjustZoom }
   ]
 
 instance Renderable Game where
-  render game = scale (game ^. mag) (game ^. mag) $ render (game ^. world)
+  render game = scale (game ^. mag) (game ^. mag)
+              $ Pictures
+                [ render (game ^. world)
+                , render (game ^. score)
+                ]

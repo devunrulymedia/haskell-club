@@ -18,5 +18,5 @@ processCollisions (x, y) ms
 
 handleCollisions :: GameEvent -> MovementState -> MovementState
 handleCollisions ResetCollisions = resetCollisions
-handleCollisions (Collision EPanda _ _ _ nv) = processCollisions nv
+handleCollisions (Collision EPanda _ EBlock _ nv) = processCollisions nv
 handleCollisions _ = id

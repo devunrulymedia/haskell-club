@@ -57,6 +57,7 @@ library
                      , Thrust.World.World
                      -- pandamonium modules
                      , Pandamonium.Game.GameEvent
+                     , Pandamonium.Game.Score
                      , Pandamonium.Systems.Controller
                      , Pandamonium.Entities.EntityTypes
                      , Pandamonium.Entities.Panda

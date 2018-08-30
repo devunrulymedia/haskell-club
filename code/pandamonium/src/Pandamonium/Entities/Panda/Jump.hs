@@ -1,10 +1,11 @@
-module Pandamonium.Entities.Panda.Jump (ascend, jump) where
+module Pandamonium.Entities.Panda.Jump (ascend, jump, triggerJump) where
 
 import Common.Shapes.Shape
 import Pandamonium.Entities.Panda.Panda
 import Pandamonium.Entities.Panda.Collisions
 import Pandamonium.Entities.Panda.MovementStateMachine
 import Pandamonium.Systems.Controller
+import Pandamonium.Game.GameEvent
 import Control.Lens
 import Graphics.Gloss.Data.Vector
 
@@ -22,6 +23,10 @@ walljump_power = 350
 
 extra_lift_duration :: Float
 extra_lift_duration = 0.2
+
+triggerJump :: GameEvent -> Panda -> Panda
+triggerJump (JumpPressed) = jump
+triggerJump _ = id
 
 jump :: Panda -> Panda
 jump pd = case (pd ^. state, pd ^. vel) of

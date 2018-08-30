@@ -14,6 +14,7 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Pandamonium.Game.GameEvent
+import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Panda.Jump
 import Pandamonium.Entities.Panda.Run
 import Pandamonium.Entities.Panda.Collisions
@@ -23,9 +24,9 @@ import Pandamonium.Entities.Panda.Animation
 instance Shaped Panda where
   shape pd = let (x, y) = pd ^. pos in rectangle (x-48) (x+48) (y-36) (y+36)
 
-pandaHandle :: GameEvent -> Panda -> Panda
-pandaHandle (JumpPressed) = jump
-pandaHandle _ = id
+scoreCoin :: GameEvent -> Panda -> IOEvents GameEvent Panda
+scoreCoin (Collision EPanda _ ECoin _ _) panda = do fireEvent (PointsScored 5); return panda
+scoreCoin _ panda = return panda
 
 updatePanda :: Float -> Panda -> Events GameEvent Panda
 updatePanda t pd = return pd
@@ -39,7 +40,8 @@ updatePanda t pd = return pd
 reducePanda :: GameEvent -> Panda -> IOEvents GameEvent Panda
 reducePanda e pd = return pd
                <&> state %~ handleCollisions e
-               <&> pandaHandle e
+               <&> triggerJump e
+               >>= scoreCoin e
 
 listenPanda :: Event -> Panda -> Events GameEvent Panda
 listenPanda e pd = return pd

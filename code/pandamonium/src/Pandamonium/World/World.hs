@@ -31,7 +31,6 @@ data World = World
   { _scenery :: [ Ent Block ]
   , _panda :: Ent Panda
   , _coins :: [ Ent Coin ]
-  , _score :: Int
   , _numbers :: [ Picture ]
   }
 
@@ -45,7 +44,6 @@ instance Renderable World where
   render world = Pictures $
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
-                   (drawNumber 200 200 (world ^. score) (world ^. numbers)) ++
                    [render $ world ^. panda]
 
 drawNumber :: Int -> Int -> Int -> [ Picture ] -> [ Picture ]
@@ -67,10 +65,6 @@ checkForPickups :: World -> Events GameEvent World
 checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
                        return w
 
-scoreCoin :: GameEvent -> World -> World
-scoreCoin (Collision ECoin _ _ _ _) world = score +~ 5 $ world
-scoreCoin _ world = world
-
 respawnCoin :: GameEvent -> World -> World
 respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin pos) :) $ world
 respawnCoin _ world = world
@@ -82,7 +76,6 @@ checkForCompletion w = case w ^. coins of
 
 reduceWorld :: Reducer
 reduceWorld e w = return w
-              <&> scoreCoin e
               <&> respawnCoin e
 
 updateWorld :: Updater

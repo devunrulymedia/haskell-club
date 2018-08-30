@@ -10,6 +10,7 @@ import Pandamonium.Entities.EntityTypes
 
 data GameEvent = ResetCollisions
                | Collision EntityType Integer EntityType Integer Vector
+               | PointsScored Int
                | JumpPressed
                | Trigger Float GameEvent
                | RespawnCoin Integer Vector

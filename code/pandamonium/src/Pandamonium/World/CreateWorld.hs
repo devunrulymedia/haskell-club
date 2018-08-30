@@ -19,6 +19,5 @@ createWorld assets (Stage ws cs spawn) = World
   { _scenery = ws
   , _panda = Entity EPanda 999 (mkPanda (pandas assets) spawn (withKeys (Char 'z') (Char 'x') (Char '/')))
   , _coins = cs
-  , _score = 0
   , _numbers = numberSprites assets
   }
