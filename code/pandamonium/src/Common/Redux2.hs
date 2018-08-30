@@ -2,8 +2,6 @@
 
 module Common.Redux2 where
 
--- adding a comment because why not?
-
 import Data.Dynamic
 import Graphics.Gloss.Interface.IO.Game
 import Control.Monad.Writer

@@ -103,8 +103,10 @@ test-suite pandamonium-test
                      , Shapes.Generators
                      , Shapes.RectangleCollisions
                      , Shapes.PolygonCollisions
+                     , Redux.ReduxTest
   build-depends:       base
                      , gloss
+                     , lens
                      , HTF
                      , HUnit
                      , QuickCheck
