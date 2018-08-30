@@ -12,7 +12,7 @@ import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, P
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Thrust.Game.GameEvent
-import Common.Redux
+import Common.Redux2
 
 spinSpeed :: Float
 spinSpeed = pi * 2
@@ -51,7 +51,7 @@ instance Moving Thruster where
   velocity th = th ^. vel
   applyImpulse da th = vel %~ (+da) $ th
 
-collectEvents :: Event -> Thruster -> Events GameEvent Thruster
+collectEvents :: Event -> Thruster -> Events Thruster
 collectEvents event th = controller %%~ updateController event $ th
 
 spin :: Float -> Thruster -> Thruster
@@ -75,21 +75,21 @@ update t = spin t . thrust t
 accelerate :: Float -> Thruster -> Thruster
 accelerate t thruster = vel %~ (+ mulSV t (thruster ^. accel)) $ thruster
 
-updateThruster :: Float -> Thruster -> Events GameEvent Thruster
+updateThruster :: Float -> Thruster -> Events Thruster
 updateThruster t th = return th
                  <&> update t
                  <&> accelerate t
 
-reduceThruster :: GameEvent -> Thruster -> IOEvents GameEvent Thruster
+reduceThruster :: GameEvent -> Thruster -> IOEvents Thruster
 reduceThruster e th = return th
 
-listenThruster :: Event -> Thruster -> Events GameEvent Thruster
+listenThruster :: Event -> Thruster -> Events Thruster
 listenThruster e th = return th
                  >>= collectEvents e
 
-thrusterRedux :: Redux Thruster GameEvent
+thrusterRedux :: Redux Thruster
 thrusterRedux = Redux
-  { reducer  = reduceThruster
+  { reducer  = concrify reduceThruster
   , updater  = updateThruster
   , listener = listenThruster
   }

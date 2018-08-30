@@ -1,7 +1,6 @@
 module Common.Physics.Physics where
 
 import Graphics.Gloss.Data.Vector
-import Common.Redux
 import Common.Shapes.Shape
 
 gravity :: Float

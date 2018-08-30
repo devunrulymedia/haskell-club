@@ -13,7 +13,7 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
-import Common.Redux
+import Common.Redux2
 import Common.Renderable
 import Common.Shapes.Shape
 import Common.Entities.Block
@@ -28,9 +28,9 @@ data World = World
 
 makeLenses ''World
 
-type Listener = Event -> World -> Events GameEvent World
-type Updater  = Float -> World -> Events GameEvent World
-type Reducer  = GameEvent -> World -> IOEvents GameEvent World
+type Listener = Event -> World -> Events World
+type Updater  = Float -> World -> Events World
+type Reducer  = GameEvent -> World -> IOEvents World
 
 instance Renderable World where
   render world = Pictures $
@@ -49,7 +49,7 @@ integrate t w = thruster %~ accelerate t
                 $ thruster %~ applyVelocity t
                 $ w
 
-bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events GameEvent a
+bounce :: (Movable a, Moving a, Shaped a, Shaped b) => Float -> a -> b -> Events a
 bounce el a b = case (shape b !!> shape a) of
   Nothing -> return a
   (Just pushout) -> do
@@ -61,7 +61,7 @@ bounce el a b = case (shape b !!> shape a) of
       normal_proj   = (1 + el) * (vel `dotV` unit_push)
       reflected_vel = negate $ mulSV normal_proj unit_push
 
-handleCollisions :: World -> Events GameEvent World
+handleCollisions :: World -> Events World
 handleCollisions w = thruster %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
 updateWorld :: Updater
@@ -70,14 +70,14 @@ updateWorld t w = return w
               <&> integrate t
               >>= handleCollisions
 
-topLevelRedux :: Redux World GameEvent
+topLevelRedux :: Redux World
 topLevelRedux = Redux
   { reducer  = noOp
   , listener = noOp
   , updater  = updateWorld
   }
 
-worldRedux :: Redux World GameEvent
+worldRedux :: Redux World
 worldRedux = compose
   [ connect thrusterRedux thruster
   , topLevelRedux

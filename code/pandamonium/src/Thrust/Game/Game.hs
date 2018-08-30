@@ -6,7 +6,7 @@ import Control.Lens
 import Thrust.World.World
 import Thrust.Game.GameEvent
 import Common.Renderable
-import Common.Redux
+import Common.Redux2
 import Graphics.Gloss ( blue, scale )
 import Graphics.Gloss.Interface.IO.Game
 
@@ -23,14 +23,14 @@ withWorld world = Game
   , _mag = 2
   }
 
-adjustZoom :: Event -> Game -> Events GameEvent Game
+adjustZoom :: Event -> Game -> Events Game
 adjustZoom (EventKey (Char '+') Down _ _) = return . (mag *~ 1.1)
 adjustZoom (EventKey (Char '-') Down _ _) = return . (mag //~ 1.1)
 adjustZoom _ = return
 
 
 
-gameRedux :: Redux Game GameEvent
+gameRedux :: Redux Game
 gameRedux = compose
   [ connect worldRedux world
   , noOpRedux { listener = adjustZoom }

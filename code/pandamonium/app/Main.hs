@@ -33,7 +33,7 @@ main :: IO ()
 main = getArgs >>= parseArgs
 
 parseArgs :: [String] -> IO ()
--- parseArgs ["thrust"] = thrust
+parseArgs ["thrust"] = thrust
 parseArgs ["panda"] = pandamonium
 parseArgs ["balls"] = ballpit
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
@@ -42,11 +42,11 @@ playGame :: (Renderable a) => a -> Redux a -> IO ()
 playGame game redux = playIO window background fps game iorender (exitable redux) (reduxUpdate redux)
 
 
--- thrust :: IO ()
--- thrust = do assets <- Thrust.World.Assets.loadAssets
---             let world = Thrust.World.CreateWorld.createWorld assets
---             let game = Thrust.Game.Game.withWorld world
---             playGame game Thrust.Game.Game.gameRedux
+thrust :: IO ()
+thrust = do assets <- Thrust.World.Assets.loadAssets
+            let world = Thrust.World.CreateWorld.createWorld assets
+            let game = Thrust.Game.Game.withWorld world
+            playGame game Thrust.Game.Game.gameRedux
 
 pandamonium :: IO ()
 pandamonium = do assets <- Pandamonium.World.Assets.loadAssets

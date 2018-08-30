@@ -1,10 +1,10 @@
 module Thrust.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
-import Common.Redux
+import Common.Redux2
 import Thrust.Game.GameEvent
 
-type ControlUpdater = Event -> ControlState -> Events GameEvent ControlState
+type ControlUpdater = Event -> ControlState -> Events ControlState
 
 type LeftPressed = Bool
 type RightPressed = Bool
@@ -28,7 +28,7 @@ updateControlState leftKey rightKey thrustKey = update where
 withKeys :: Key -> Key -> Key -> Controller
 withKeys leftKey rightKey thrustKey = Controller (ControlState False False False) (updateControlState leftKey rightKey thrustKey)
 
-updateController :: Event -> Controller -> Events GameEvent Controller
+updateController :: Event -> Controller -> Events Controller
 updateController event (Controller state update) = do
   state' <- (update event state)
   return $ Controller state' update
