@@ -5,7 +5,7 @@ module Common.Entities.Destroyer where
 import Control.Lens
 import Data.Dynamic
 
-import Common.Redux2
+import Common.Redux
 import Common.Entities.Entity
 
 data Destroy i = Destroy i

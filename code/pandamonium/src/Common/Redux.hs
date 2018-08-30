@@ -1,6 +1,6 @@
 {-# LANGUAGE RankNTypes #-}
 
-module Common.Redux2 where
+module Common.Redux where
 
 import Data.Dynamic
 import Graphics.Gloss.Interface.IO.Game
@@ -74,4 +74,4 @@ compose redii = Redux
   { reducer  = composeHandler (reducer <$> redii)
   , updater  = composeHandler (updater <$> redii)
   , listener = composeHandler (listener <$> redii)
-  } 
+  }

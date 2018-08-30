@@ -11,7 +11,7 @@ import Pandamonium.World.CreateWorld
 import Common.Timer
 import Pandamonium.Game.GameEvent
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Graphics.Gloss (scale)
 import Graphics.Gloss.Interface.IO.Game
 

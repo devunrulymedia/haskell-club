@@ -15,7 +15,7 @@ import Graphics.Gloss.Interface.IO.Game
 
 import Common.Shapes.Shape
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block

@@ -6,7 +6,7 @@ import Control.Lens
 import Graphics.Gloss.Interface.IO.Game (Event (EventKey), Key (Char))
 import Graphics.Gloss (Vector, Color, color, yellow)
 
-import Common.Redux2
+import Common.Redux
 import Common.Renderable
 import Common.Shapes.Shape
 

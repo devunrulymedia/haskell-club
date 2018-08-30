@@ -4,7 +4,7 @@ import Graphics.Gloss (Color, Vector, color, yellow)
 import Control.Lens
 import Data.Dynamic
 
-import Common.Redux2
+import Common.Redux
 import Common.Timer
 import Common.Entities.Entity
 import Common.Physics.Collisions

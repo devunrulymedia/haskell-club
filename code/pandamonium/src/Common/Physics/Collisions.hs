@@ -6,7 +6,7 @@ import Graphics.Gloss.Data.Vector
 import Control.Lens
 import Data.Dynamic
 
-import Common.Redux2
+import Common.Redux
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Shapes.Shape

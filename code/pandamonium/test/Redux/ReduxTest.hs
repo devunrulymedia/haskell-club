@@ -6,7 +6,7 @@ module Redux.ReduxTest (htf_thisModulesTests) where
 import Control.Lens
 import Test.Framework
 
-import Common.Redux2
+import Common.Redux
 import Graphics.Gloss.Interface.IO.Game
 
 data TestThing = TestThing
@@ -44,11 +44,13 @@ testRedux = Redux
 test_update_via_redux = do
   let initialTestThing = TestThing 0 [] [] []
   updated <- reduxUpdate testRedux 3 initialTestThing
+
   assertEqual (updated ^. timePassed) 3
   assertEqual (updated ^. timeEvents) [3]
 
 test_listen_via_redux = do
   let initialTestThing = TestThing 0 [] [] []
   updated <- reduxListen testRedux (EventMotion (0, 0)) initialTestThing
+
   assertEqual (updated ^. systemEvents) [ EventMotion (0, 0) ]
   assertEqual (updated ^. loggedEvents) [ "EventMotion (0.0,0.0)" ]

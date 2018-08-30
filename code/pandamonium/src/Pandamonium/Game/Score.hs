@@ -1,7 +1,7 @@
 module Pandamonium.Game.Score where
 
 import Graphics.Gloss
-import Common.Redux2
+import Common.Redux
 import Common.Renderable
 
 import Pandamonium.Game.GameEvent

@@ -5,7 +5,7 @@ module Balls.World.World where
 import Control.Lens
 import Graphics.Gloss ( Picture (Pictures), white, red )
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Common.Shapes.Shape
 import Common.Entities.Block
 import Balls.Entities.Ball
@@ -24,7 +24,7 @@ instance Renderable World where
 
 ballsRedux :: Redux World
 ballsRedux = compose
-  [ connect (onAll ballRedux) balls  
+  [ connect (onAll ballRedux) balls
   ]
 
 world :: World

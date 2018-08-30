@@ -6,7 +6,7 @@ import Control.Lens
 import Thrust.World.World
 import Thrust.Game.GameEvent
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Graphics.Gloss ( blue, scale )
 import Graphics.Gloss.Interface.IO.Game
 

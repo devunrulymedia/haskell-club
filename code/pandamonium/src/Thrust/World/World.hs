@@ -13,7 +13,7 @@ import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
 import Graphics.Gloss.Interface.IO.Game
 
-import Common.Redux2
+import Common.Redux
 import Common.Renderable
 import Common.Shapes.Shape
 import Common.Entities.Block

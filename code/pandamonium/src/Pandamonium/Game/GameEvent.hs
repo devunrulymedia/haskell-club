@@ -2,11 +2,7 @@
 
 module Pandamonium.Game.GameEvent where
 
-import Graphics.Gloss
-import Common.Timer
-import Common.Entities.Destroyer
-import Common.Physics.Collisions
-import Pandamonium.Entities.EntityTypes
+import Graphics.Gloss.Data.Vector
 
 data GameEvent = ResetCollisions
                | PointsScored Int

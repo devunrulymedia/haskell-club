@@ -7,7 +7,7 @@ import System.Environment
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Common.Exit
 import Pandamonium.World.Assets
 import Pandamonium.World.CreateWorld

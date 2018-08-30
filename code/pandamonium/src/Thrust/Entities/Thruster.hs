@@ -12,7 +12,7 @@ import Graphics.Gloss (color, yellow, green, translate, rotate, Color, Vector, P
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 import Thrust.Game.GameEvent
-import Common.Redux2
+import Common.Redux
 
 spinSpeed :: Float
 spinSpeed = pi * 2

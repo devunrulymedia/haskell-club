@@ -21,7 +21,7 @@ library
   hs-source-dirs:      src
 
   exposed-modules:     Common.Renderable
-                     , Common.Redux2
+                     , Common.Redux
                      , Common.Exit
                      -- exposed thrust components
                      , Thrust.World.Assets

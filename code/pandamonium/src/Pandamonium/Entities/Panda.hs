@@ -7,7 +7,7 @@ import Control.Arrow
 import Control.Monad
 import Common.Shapes.Shape
 import Common.Renderable
-import Common.Redux2
+import Common.Redux
 import Common.Physics.Physics
 import Common.Physics.Collisions
 import Pandamonium.Systems.Controller

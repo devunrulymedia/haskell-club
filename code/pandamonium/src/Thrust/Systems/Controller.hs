@@ -1,7 +1,7 @@
 module Thrust.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
-import Common.Redux2
+import Common.Redux
 import Thrust.Game.GameEvent
 
 type ControlUpdater = Event -> ControlState -> Events ControlState

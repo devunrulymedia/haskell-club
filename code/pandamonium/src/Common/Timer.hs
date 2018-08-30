@@ -7,7 +7,7 @@ import Data.Dynamic
 import Data.DList
 import Control.Monad.Writer
 
-import Common.Redux2
+import Common.Redux
 
 data Await = Await Float Dynamic
 data Pending = Pending Float Dynamic
