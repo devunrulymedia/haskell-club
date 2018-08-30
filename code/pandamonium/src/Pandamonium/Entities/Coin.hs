@@ -2,8 +2,10 @@ module Pandamonium.Entities.Coin where
 
 import Graphics.Gloss (Color, Vector, color, yellow)
 import Control.Lens
+import Data.Dynamic
 
-import Common.Redux
+import Common.Redux2
+import Common.Timer
 import Common.Entities.Entity
 import Common.Shapes.Shape
 import Common.Renderable
@@ -22,18 +24,18 @@ instance Shaped Coin where
 instance Renderable Coin where
   render coin = color yellow $ render $ shape coin
 
-triggerRespawn :: GameEvent -> Ent Coin -> IOEvents GameEvent (Ent Coin)
+triggerRespawn :: GameEvent -> Ent Coin -> IOEvents (Ent Coin)
 triggerRespawn (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
   then do fireEvent (Destroy coinId)
-          fireEvent (Trigger 5 (RespawnCoin coinId (position (entity ^. edata))))
+          awaitEvent 5 (RespawnCoin coinId (position (entity ^. edata)))
           return entity
   else return entity
 triggerRespawn _ entity = return entity
 
 
-coinRedux :: Redux (Ent Coin) GameEvent
+coinRedux :: Redux (Ent Coin)
 coinRedux = Redux
-  { reducer = triggerRespawn
+  { reducer = concrify triggerRespawn
   , updater = noOp
   , listener = noOp
   }

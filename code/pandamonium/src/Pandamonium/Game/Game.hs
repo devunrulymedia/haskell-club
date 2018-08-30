@@ -11,13 +11,13 @@ import Pandamonium.World.CreateWorld
 import Common.Timer
 import Pandamonium.Game.GameEvent
 import Common.Renderable
-import Common.Redux
+import Common.Redux2
 import Graphics.Gloss (scale)
 import Graphics.Gloss.Interface.IO.Game
 
 data Game = Game
   { _world :: World
-  , _timer :: Timer GameEvent
+  , _timer :: Timer
   , _score :: Score
   , _mag :: Float
   , _stages :: [ Stage ]
@@ -36,7 +36,7 @@ withStages stuff (first : rest) = Game
   , _assets = stuff
   }
 
-adjustZoom :: Event -> Game -> Events GameEvent Game
+adjustZoom :: Event -> Game -> Events Game
 adjustZoom (EventKey (Char '+') Down _ _) = return . (mag *~ 1.1)
 adjustZoom (EventKey (Char '-') Down _ _) = return . (mag //~ 1.1)
 adjustZoom _ = return
@@ -49,16 +49,16 @@ nextStage game = let (next : rest) = game ^. stages
                    $ timer .~ Timer 0 []
                    $ game
 
-listenForClear :: GameEvent -> Game -> IOEvents GameEvent Game
+listenForClear :: GameEvent -> Game -> IOEvents Game
 listenForClear Cleared game = return $ nextStage game
 listenForClear _ game = return game
 
-gameRedux :: Redux Game GameEvent
+gameRedux :: Redux Game
 gameRedux = compose
   [ connect timerRedux timer
   , connect worldRedux world
   , connect scoreRedux score
-  , noOpRedux { reducer = listenForClear, listener = adjustZoom }
+  , noOpRedux { reducer = concrify listenForClear, listener = adjustZoom }
   ]
 
 instance Renderable Game where

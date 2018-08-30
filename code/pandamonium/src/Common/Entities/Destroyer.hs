@@ -3,22 +3,20 @@
 module Common.Entities.Destroyer where
 
 import Control.Lens
+import Data.Dynamic
 
-import Common.Redux
+import Common.Redux2
 import Common.Entities.Entity
 
-class Destroys i e where
-  destroys :: e -> Maybe i
+data DestroyEvent i = DestroyEvent i
 
-destroyEntities :: (Eq i, Destroys i e) => e -> [ Entity t i a] -> IOEvents e [ Entity t i a ]
-destroyEntities e xs = case (destroys e) of
-  (Nothing) -> return xs
-  (Just i)  -> return $ filter survivesPurge xs where
+destroyEntities :: Eq i => DestroyEvent i -> [ Entity t i a] -> IOEvents [ Entity t i a ]
+destroyEntities (DestroyEvent i) xs = return $ filter survivesPurge xs where
     survivesPurge entity = entity ^. eid /= i
 
-destroyer :: (Eq i, Destroys i e) => Redux [ Entity t i a ] e
+destroyer :: (Typeable i, Eq i) => Redux [ Entity t i a ]
 destroyer = Redux
-  { reducer = destroyEntities
+  { reducer = concrify destroyEntities
   , updater = noOp
   , listener = noOp
   }

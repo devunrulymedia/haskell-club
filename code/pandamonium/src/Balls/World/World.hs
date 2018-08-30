@@ -5,7 +5,7 @@ module Balls.World.World where
 import Control.Lens
 import Graphics.Gloss ( Picture (Pictures), white, red )
 import Common.Renderable
-import Common.Redux
+import Common.Redux2
 import Common.Shapes.Shape
 import Common.Entities.Block
 import Balls.Entities.Ball
@@ -22,7 +22,7 @@ instance Renderable World where
                  (render <$> world ^. walls) ++
                  (render <$> world ^. balls)
 
-ballsRedux :: Redux World a
+ballsRedux :: Redux World
 ballsRedux = noOpRedux
 
 world :: World

@@ -29,8 +29,13 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-fireEvent :: Monad m => Dynamic -> WriterT (DList Dynamic) m ()
-fireEvent event = tell $ singleton event
+concrify :: (Typeable a, Monad m) => (a -> b -> m b) -> Dynamic -> b -> m b
+concrify f = \e w -> case (fromDynamic e) of
+  Just x -> f x w
+  Nothing -> return w
+
+fireEvent :: (Typeable a, Monad m) => a -> WriterT (DList Dynamic) m ()
+fireEvent event = tell $ singleton (toDyn event)
 
 handleRemainingEvents :: Redux w -> w -> DList Dynamic -> IO w
 handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
@@ -46,7 +51,7 @@ reduxUpdate :: Redux w -> Float -> w -> IO w
 reduxUpdate r t w = case runWriter $ updater r t w of
   (world, events) -> handleRemainingEvents r world events
 
-lensing :: Functor f => Lens b b a a -> (i -> a -> f a) -> i -> b -> f b
+lensing :: Functor f => Lens b b a a -> (i -> a -> f a) -> i  -> b -> f b
 lensing lens f = \e -> lens %%~ (f e)
 
 connect :: Redux a -> Lens b b a a -> Redux b

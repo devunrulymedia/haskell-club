@@ -3,48 +3,50 @@
 module Common.Timer where
 
 import Control.Lens
-import Common.Redux
+import Data.Dynamic
+import Data.DList
+import Control.Monad.Writer
 
-data DueIn a = DueIn Float a
-data DueAt a = DueAt Float a
+import Common.Redux2
 
-class TimedEvent a where
-  timed :: a -> Maybe (DueIn a)
+data Await = Await Float Dynamic
+data Pending = Pending Float Dynamic
 
-data Timer a = Timer
+data Timer = Timer
   { _elapsed :: Float
-  , _pending :: [ DueAt a ]
+  , _pending :: [ Pending ]
   }
 
 makeLenses ''Timer
 
-reduceTimer :: (TimedEvent a) => a -> Timer a -> IOEvents a (Timer a)
-reduceTimer event timer = reduceTimer' (timed event) where
-  reduceTimer' (Just (DueIn delay action)) = return $ (pending %~ (DueAt (delay + (timer ^. elapsed)) action :) $ timer)
-  reduceTimer' Nothing = return timer
+awaitEvent :: (Typeable a, Monad m) => Float -> a -> WriterT (DList Dynamic) m ()
+awaitEvent delay event = fireEvent (Await delay (toDyn event))
+
+reduceTimer :: Await -> Timer -> IOEvents Timer
+reduceTimer (Await delay action) timer = return $ (pending %~ (Pending (delay + (timer ^. elapsed)) action :) $ timer)
 
 -- if this were a queue, we wouldn't need to iterate over all the events every cycle
 -- however, that iteration is cheap and we don't currently expect many timed events
 -- to be pending at any given time. If that changes, we should consider changing
 -- this data structure then.
-updateEvents :: (TimedEvent a) => Float -> [ DueAt a ] -> Events a [ DueAt a ]
+updateEvents :: Float -> [ Pending ] -> Events [ Pending ]
 updateEvents _ [] = return []
-updateEvents elapsed (current@(DueAt dueAt event) : rest) = do
+updateEvents elapsed (current@(Pending dueAt event) : rest) = do
   rest' <- updateEvents elapsed rest
   if dueAt <= elapsed
   then do fireEvent event
           return rest'
   else return (current : rest')
 
-updateTimer :: (TimedEvent a) => Float -> (Timer a) -> Events a (Timer a)
+updateTimer :: Float -> Timer -> Events Timer
 updateTimer step (Timer elapsed pending) = do
   let elapsed' = step + elapsed
   pending' <- updateEvents elapsed' pending
   return $ Timer elapsed' pending'
 
-timerRedux :: (TimedEvent a) => Redux (Timer a) a
+timerRedux :: Redux Timer
 timerRedux = Redux
-  { reducer =  reduceTimer
+  { reducer =  concrify reduceTimer
   , updater =  updateTimer
   , listener = noOp
   }

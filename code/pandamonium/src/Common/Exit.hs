@@ -2,9 +2,9 @@ module Common.Exit where
 
 import System.Exit
 import Graphics.Gloss.Interface.IO.Game
-import Common.Redux
+import Common.Redux2
 
-exitable :: Redux w e -> Event -> w -> IO w
+exitable :: Redux w -> Event -> w -> IO w
 exitable redux event world = do checkForExit event
                                 reduxListen redux event world
 

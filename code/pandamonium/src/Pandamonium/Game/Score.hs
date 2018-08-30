@@ -1,7 +1,7 @@
 module Pandamonium.Game.Score where
 
 import Graphics.Gloss
-import Common.Redux
+import Common.Redux2
 import Common.Renderable
 
 import Pandamonium.Game.GameEvent
@@ -18,9 +18,9 @@ drawNumber x y n nums = let (nextColumn, digit) = quotRem n 10
 instance Renderable Score where
   render (Score score (x, y) chars) = Pictures $ drawNumber x y score chars
 
-increaseScore :: GameEvent -> Score -> IOEvents GameEvent Score
+increaseScore :: GameEvent -> Score -> IOEvents Score
 increaseScore (PointsScored x) (Score score pos chars) = return $ Score (score + x) pos chars
 increaseScore _ score = return score
 
-scoreRedux :: Redux Score GameEvent
-scoreRedux = noOpRedux { reducer = increaseScore }
+scoreRedux :: Redux Score
+scoreRedux = noOpRedux { reducer = concrify increaseScore }

@@ -15,7 +15,7 @@ import Graphics.Gloss.Interface.IO.Game
 
 import Common.Shapes.Shape
 import Common.Renderable
-import Common.Redux
+import Common.Redux2
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
@@ -35,9 +35,9 @@ data World = World
 
 makeLenses ''World
 
-type Listener = Event -> World -> Events GameEvent World
-type Updater  = Float -> World -> Events GameEvent World
-type Reducer  = GameEvent -> World -> IOEvents GameEvent World
+type Listener = Event -> World -> Events World
+type Updater  = Float -> World -> Events World
+type Reducer  = GameEvent -> World -> IOEvents World
 
 instance Renderable World where
   render world = Pictures $
@@ -45,15 +45,15 @@ instance Renderable World where
                    (render <$> world ^. coins) ++
                    [render $ world ^. panda]
 
-handleCollisions :: World -> Events GameEvent World
+handleCollisions :: World -> Events World
 handleCollisions w = do
-  tell $ singleton ResetCollisions
+  fireEvent ResetCollisions
   panda %%~ (flip $ foldM $ bounce_against_static 0) (w ^. scenery) $ w
 
-pickupCoin :: Ent Panda -> Ent Coin -> Events GameEvent ()
+pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
 
-checkForPickups :: World -> Events GameEvent World
+checkForPickups :: World -> Events World
 checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
                        return w
 
@@ -61,7 +61,7 @@ respawnCoin :: GameEvent -> World -> World
 respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin pos) :) $ world
 respawnCoin _ world = world
 
-checkForCompletion :: World -> Events GameEvent World
+checkForCompletion :: World -> Events World
 checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
   otherwise -> return w
@@ -76,14 +76,14 @@ updateWorld t w = return w
               >>= handleCollisions
               >>= checkForCompletion
 
-topLevelRedux :: Redux World GameEvent
+topLevelRedux :: Redux World
 topLevelRedux = Redux
-  { reducer  = reduceWorld
+  { reducer  = concrify reduceWorld
   , listener = noOp
   , updater  = updateWorld
   }
 
-worldRedux :: Redux World GameEvent
+worldRedux :: Redux World
 worldRedux = compose
   [ connect pandaRedux (panda . edata)
   , connect (onAll coinRedux) coins

@@ -3,10 +3,10 @@
 module Pandamonium.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
-import Common.Redux
+import Common.Redux2
 import Pandamonium.Game.GameEvent
 
-type ControlUpdater = Event -> ControlState -> Events GameEvent ControlState
+type ControlUpdater = Event -> ControlState -> Events ControlState
 
 type LeftPressed = Bool
 type RightPressed = Bool
@@ -56,7 +56,7 @@ toJoypad (Controller (ControlState l r j) _) = Joypad
     direction False True = JRight
     direction _ _ = JNeutral
 
-updateController :: Event -> Controller -> Events GameEvent Controller
+updateController :: Event -> Controller -> Events Controller
 updateController event (Controller state update) = do
   state' <- (update event state)
   return $ Controller state' update
