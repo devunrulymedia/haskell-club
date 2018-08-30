@@ -58,7 +58,7 @@ gameRedux = compose
   [ connect timerRedux timer
   , connect worldRedux world
   , connect scoreRedux score
-  , noOpRedux { reducer = concrify listenForClear, listener = adjustZoom }
+  , noOpRedux { reducer = focus listenForClear, listener = adjustZoom }
   ]
 
 instance Renderable Game where

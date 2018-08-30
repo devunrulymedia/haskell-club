@@ -23,4 +23,4 @@ increaseScore (PointsScored x) (Score score pos chars) = return $ Score (score +
 increaseScore _ score = return score
 
 scoreRedux :: Redux Score
-scoreRedux = noOpRedux { reducer = concrify increaseScore }
+scoreRedux = noOpRedux { reducer = focus increaseScore }

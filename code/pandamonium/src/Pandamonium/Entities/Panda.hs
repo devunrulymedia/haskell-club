@@ -54,7 +54,7 @@ listenPanda e pd = return pd
 
 pandaRedux :: Redux Panda
 pandaRedux = Redux
-  { reducer  = composeHandler [ concrify reducePanda, concrify otherThing ]
+  { reducer  = composeHandler [ focus reducePanda, focus otherThing ]
   , updater  = updatePanda
   , listener = listenPanda
   }

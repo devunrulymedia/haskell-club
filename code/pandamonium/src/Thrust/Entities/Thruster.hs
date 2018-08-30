@@ -89,7 +89,7 @@ listenThruster e th = return th
 
 thrusterRedux :: Redux Thruster
 thrusterRedux = Redux
-  { reducer  = concrify reduceThruster
+  { reducer  = focus reduceThruster
   , updater  = updateThruster
   , listener = listenThruster
   }

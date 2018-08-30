@@ -42,5 +42,5 @@ ballRedux :: Redux Ball
 ballRedux = Redux
   { updater = noOp
   , listener = zag
-  , reducer = concrify enhue
+  , reducer = focus enhue
   }

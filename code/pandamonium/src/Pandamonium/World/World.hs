@@ -78,7 +78,7 @@ updateWorld t w = return w
 
 topLevelRedux :: Redux World
 topLevelRedux = Redux
-  { reducer  = concrify reduceWorld
+  { reducer  = focus reduceWorld
   , listener = noOp
   , updater  = updateWorld
   }

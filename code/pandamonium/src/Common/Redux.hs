@@ -27,8 +27,8 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-concrify :: (Typeable a, Monad m) => (a -> b -> m b) -> Dynamic -> b -> m b
-concrify f = \e w -> case (fromDynamic e) of
+focus :: (Typeable a, Monad m) => (a -> b -> m b) -> Dynamic -> b -> m b
+focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 

@@ -16,7 +16,7 @@ destroyEntities (Destroy i) xs = return $ filter survivesPurge xs where
 
 destroyer :: (Typeable i, Eq i) => Redux [ Entity t i a ]
 destroyer = Redux
-  { reducer = concrify destroyEntities
+  { reducer = focus destroyEntities
   , updater = noOp
   , listener = noOp
   }

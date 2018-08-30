@@ -37,7 +37,7 @@ triggerRespawn _ entity = return entity
 
 coinRedux :: Redux (Ent Coin)
 coinRedux = Redux
-  { reducer = concrify triggerRespawn
+  { reducer = focus triggerRespawn
   , updater = noOp
   , listener = noOp
   }
