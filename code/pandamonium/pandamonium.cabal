@@ -46,6 +46,7 @@ library
                      , Common.Graphics.SpriteSheet
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
+                     , Common.Entities.Spawner
                      , Common.Entities.TypeClasses.Shapes
                      , Common.Entities.Block
                      , Common.Physics.Physics
