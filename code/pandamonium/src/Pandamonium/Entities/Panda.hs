@@ -10,6 +10,7 @@ import Common.Renderable
 import Common.Redux
 import Common.Physics.Physics
 import Common.Physics.Collisions
+import Common.Entities.Entity
 import Pandamonium.Systems.Controller
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
@@ -52,9 +53,12 @@ listenPanda :: Event -> Panda -> Events Panda
 listenPanda e pd = return pd
                >>= controller %%~ updateController e
 
-pandaRedux :: Redux Panda
-pandaRedux = Redux
+pandataRedux :: Redux Panda
+pandataRedux = Redux
   { reducer  = composeHandler [ focus reducePanda, focus otherThing ]
   , updater  = updatePanda
   , listener = listenPanda
   }
+
+pandaRedux :: Redux (Ent Panda)
+pandaRedux = connect pandataRedux edata

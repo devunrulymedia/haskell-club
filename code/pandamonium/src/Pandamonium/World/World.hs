@@ -29,7 +29,7 @@ import Pandamonium.Game.GameEvent
 
 data World = World
   { _scenery :: [ Ent Block ]
-  , _panda :: Ent Panda
+  , _panda :: [ Ent Panda ]
   , _coins :: [ Ent Coin ]
   }
 
@@ -43,18 +43,33 @@ instance Renderable World where
   render world = Pictures $
                    (render <$> world ^. scenery) ++
                    (render <$> world ^. coins) ++
-                   [render $ world ^. panda]
+                   (render <$> world ^. panda)
 
 handleCollisions :: World -> Events World
 handleCollisions w = do
   fireEvent ResetCollisions
-  panda %%~ (flip $ foldM $ bounce_against_static 0) (w ^. scenery) $ w
+  movedPandas <- hc2 (w ^. panda) (w ^. scenery)
+  return (panda .~ movedPandas $ w)
+
+hc2 :: [ Ent Panda ] -> [ Ent Block ] -> Events [ Ent Panda ]
+hc2 [] _ = return []
+hc2 (p:ps) bs = do firstPanda <- hc p bs
+                   restPandas <- hc2 ps bs
+                   return (firstPanda : restPandas)
+
+hc :: Ent Panda -> [ Ent Block ] -> Events (Ent Panda)
+hc p [] = return p
+hc p (b:bs) = do newPanda <- bounce_against_static 0 p b
+                 hc newPanda bs
+
+handleCollision :: Ent Panda -> Ent Block -> Events (Ent Panda)
+handleCollision p b = bounce_against_static 0 p b
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
 
 checkForPickups :: World -> Events World
-checkForPickups w = do traverse (pickupCoin $ w ^. panda) (w ^. coins)
+checkForPickups w = do sequence (pure pickupCoin <*> w ^. panda <*> w ^. coins)
                        return w
 
 respawnCoin :: GameEvent -> World -> World
@@ -85,8 +100,9 @@ topLevelRedux = Redux
 
 worldRedux :: Redux World
 worldRedux = compose
-  [ connect pandaRedux (panda . edata)
-  , connect (onAll coinRedux) coins
-  , connect destroyer coins
-  , topLevelRedux
+  [
+  connect (onAll pandaRedux) panda,
+  connect (onAll coinRedux) coins,
+  connect destroyer coins,
+  topLevelRedux
   ]
