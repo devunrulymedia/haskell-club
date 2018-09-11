@@ -12,6 +12,7 @@ import Common.Entities.TypeClasses.Shapes
 import Common.Shapes.Shape
 
 data Collision t i = Collision t i t i Vector
+data Bounce = Bounce Vector Vector
 
 touch :: (Shaped a, Shaped b, Typeable t, Typeable i) => Entity t i a -> Entity t i b -> Events ()
 touch a b = case (shape a !!> shape b) of
@@ -26,6 +27,20 @@ bounce_against_static el a b = case (shape b !!> shape a) of
     fireEvent (Collision (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) offset)
     fireEvent (Collision (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) (0, 0))
     return (move offset (applyImpulse reflected_vel a)) where
+      vel           = velocity a
+      unit_push     = normalizeV pushout
+      offset        = mulSV (1 + el) pushout
+      normal_proj   = (1 + el) * (vel `dotV` unit_push)
+      reflected_vel = negate $ mulSV normal_proj unit_push
+
+bounce_against_static2 :: (Moving a, Shaped a, Shaped b, Typeable t, Typeable i) => Float -> Entity t i a -> Entity t i b -> Events ()
+bounce_against_static2 el a b = case (shape b !!> shape a) of
+  Nothing -> return ()
+  (Just pushout) -> do
+    fireEvent (Collision (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) offset)
+    fireEvent (Collision (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) (0, 0))
+    fireEvent (Bounce offset reflected_vel)
+    return () where
       vel           = velocity a
       unit_push     = normalizeV pushout
       offset        = mulSV (1 + el) pushout

@@ -44,10 +44,15 @@ reducePanda e pd = return pd
                <&> state %~ handleCollisions e
                <&> triggerJump e
 
-otherThing :: Collision EntityType Integer -> Panda -> IOEvents Panda
-otherThing c pd = return pd
-              <&> state %~ processCollisions c
-              >>= scoreCoin c
+collisionEvents :: Collision EntityType Integer -> Panda -> IOEvents Panda
+collisionEvents c pd = return pd
+                   <&> state %~ processCollisions c
+                   >>= scoreCoin c
+
+bounceEvents :: Bounce -> Panda -> IOEvents Panda
+bounceEvents (Bounce offset impulse) panda = return panda
+                                         <&> move offset
+                                         <&> applyImpulse impulse
 
 listenPanda :: Event -> Panda -> Events Panda
 listenPanda e pd = return pd
@@ -55,7 +60,7 @@ listenPanda e pd = return pd
 
 pandataRedux :: Redux Panda
 pandataRedux = Redux
-  { reducer  = composeHandler [ focus reducePanda, focus otherThing ]
+  { reducer  = composeHandler [ focus reducePanda, focus collisionEvents, focus bounceEvents ]
   , updater  = updatePanda
   , listener = listenPanda
   }
