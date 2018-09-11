@@ -62,9 +62,6 @@ hc p [] = return p
 hc p (b:bs) = do newPanda <- bounce_against_static 0 p b
                  hc newPanda bs
 
-handleCollision :: Ent Panda -> Ent Block -> Events (Ent Panda)
-handleCollision p b = bounce_against_static 0 p b
-
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
 
