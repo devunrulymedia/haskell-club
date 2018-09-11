@@ -45,22 +45,13 @@ instance Renderable World where
                    (render <$> world ^. coins) ++
                    (render <$> world ^. panda)
 
-handleCollisions :: World -> Events World
+peek :: Monad m => (a -> m b) -> a -> m a
+peek f a = do f a; return a
+
+handleCollisions :: World -> Events ()
 handleCollisions w = do
-  fireEvent ResetCollisions
-  movedPandas <- hc2 (w ^. panda) (w ^. scenery)
-  return (panda .~ movedPandas $ w)
-
-hc2 :: [ Ent Panda ] -> [ Ent Block ] -> Events [ Ent Panda ]
-hc2 [] _ = return []
-hc2 (p:ps) bs = do firstPanda <- hc p bs
-                   restPandas <- hc2 ps bs
-                   return (firstPanda : restPandas)
-
-hc :: Ent Panda -> [ Ent Block ] -> Events (Ent Panda)
-hc p [] = return p
-hc p (b:bs) = do newPanda <- bounce_against_static 0 p b
-                 hc newPanda bs
+  sequence ((pure $ bounce_against_static2 0) <*> (w ^. panda) <*> (w ^. scenery))
+  return ()
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
@@ -85,7 +76,7 @@ reduceWorld e w = return w
 updateWorld :: Updater
 updateWorld t w = return w
               >>= checkForPickups
-              >>= handleCollisions
+              >>= peek handleCollisions
               >>= checkForCompletion
 
 topLevelRedux :: Redux World

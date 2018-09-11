@@ -29,7 +29,7 @@ instance Renderable Coin where
 triggerRespawn :: Collision EntityType Integer -> Ent Coin -> IOEvents (Ent Coin)
 triggerRespawn (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
   then do fireEvent (Destroy coinId)
-          awaitEvent 5 (RespawnCoin coinId (position (entity ^. edata)))
+          awaitEvent 1 (RespawnCoin coinId (position (entity ^. edata)))
           return entity
   else return entity
 triggerRespawn _ entity = return entity
