@@ -2,17 +2,19 @@
 
 module Common.Redux where
 
-import Data.Dynamic
+import Data.Dynamic (Typeable)
+import Data.ConstrainedDynamic
 import Graphics.Gloss.Interface.IO.Game
 import Control.Monad.Writer
 import Control.Lens
 import Data.DList
 
-type Events w = Writer (DList Dynamic) w
-type IOEvents w = WriterT (DList Dynamic) IO w
+type ShowDyn = ConstrainedDynamic Show
+type Events w = Writer (DList ShowDyn) w
+type IOEvents w = WriterT (DList ShowDyn) IO w
 
 data Redux w = Redux
-  { reducer :: Dynamic -> w -> IOEvents w
+  { reducer :: ShowDyn -> w -> IOEvents w
   , updater ::  Float -> w -> Events w
   , listener :: Event -> w -> Events w
   }
@@ -27,15 +29,15 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-focus :: (Typeable a, Monad m) => (a -> b -> m b) -> Dynamic -> b -> m b
+focus :: (Typeable a, Show a, Monad m) => (a -> b -> m b) -> ShowDyn -> b -> m b
 focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 
-fireEvent :: (Typeable a, Monad m) => a -> WriterT (DList Dynamic) m ()
+fireEvent :: (Typeable a, Show a, Monad m) => a -> WriterT (DList ShowDyn) m ()
 fireEvent event = tell $ singleton (toDyn event)
 
-handleRemainingEvents :: Redux w -> w -> DList Dynamic -> IO w
+handleRemainingEvents :: Redux w -> w -> DList ShowDyn -> IO w
 handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
                                  case events of
                                    Nil -> return world

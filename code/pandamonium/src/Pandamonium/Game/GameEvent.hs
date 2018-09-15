@@ -10,3 +10,4 @@ data GameEvent = ResetCollisions
                | RespawnCoin Integer Vector
                | ChangeScenery
                | Cleared
+               deriving Show

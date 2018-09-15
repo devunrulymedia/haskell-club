@@ -11,16 +11,18 @@ import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Shapes.Shape
 
-data Collision t i = Collision t i t i Vector
-data Bounce = Bounce Vector Vector
+data Collision t i = Collision t i t i Vector deriving Show
+data Bounce = Bounce Vector Vector deriving Show
 
-touch :: (Shaped a, Shaped b, Typeable t, Typeable i) => Entity t i a -> Entity t i b -> Events ()
+touch :: (Shaped a, Shaped b, Typeable t, Typeable i, Show t, Show i) 
+  => Entity t i a -> Entity t i b -> Events ()
 touch a b = case (shape a !!> shape b) of
   Nothing -> return ()
   (Just pushout) -> do fireEvent (Collision (a ^. etype) (a ^. eid) (b ^. etype) (b ^. eid) (negate pushout))
                        fireEvent (Collision (b ^. etype) (b ^. eid) (a ^. etype) (a ^. eid) pushout)
 
-bounce_against_static :: (Moving a, Shaped a, Shaped b, Typeable t, Typeable i) => Float -> Entity t i a -> Entity t i b -> Events (Entity t i a)
+bounce_against_static :: (Moving a, Shaped a, Shaped b, Typeable t, Typeable i, Show t, Show i)
+  => Float -> Entity t i a -> Entity t i b -> Events (Entity t i a)
 bounce_against_static el a b = case (shape b !!> shape a) of
   Nothing -> return a
   (Just pushout) -> do
@@ -33,7 +35,8 @@ bounce_against_static el a b = case (shape b !!> shape a) of
       normal_proj   = (1 + el) * (vel `dotV` unit_push)
       reflected_vel = negate $ mulSV normal_proj unit_push
 
-bounce_against_static2 :: (Moving a, Shaped a, Shaped b, Typeable t, Typeable i) => Float -> Entity t i a -> Entity t i b -> Events ()
+bounce_against_static2 :: (Moving a, Shaped a, Shaped b, Typeable t, Typeable i, Show t, Show i)
+  => Float -> Entity t i a -> Entity t i b -> Events ()
 bounce_against_static2 el a b = case (shape b !!> shape a) of
   Nothing -> return ()
   (Just pushout) -> do
