@@ -37,12 +37,12 @@ library
                      , Balls.World.World
                      -- exposed for test
                      , Common.Shapes.Shape
+                     , Common.Timer
 
   other-modules:       Common.Shapes.Shapes
                      , Common.Shapes.Collisions
                      , Common.Shapes.Movables
                      , Common.Shapes.Renderables
-                     , Common.Timer
                      , Common.Graphics.SpriteSheet
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
@@ -105,6 +105,7 @@ test-suite pandamonium-test
                      , Shapes.RectangleCollisions
                      , Shapes.PolygonCollisions
                      , Redux.ReduxTest
+                     , Redux.TimerTest
   build-depends:       base
                      , gloss
                      , lens

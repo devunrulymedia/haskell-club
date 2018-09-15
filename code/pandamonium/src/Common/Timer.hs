@@ -35,7 +35,7 @@ updateEvents _ [] = return []
 updateEvents elapsed (current@(Pending dueAt event) : rest) = do
   rest' <- updateEvents elapsed rest
   if dueAt <= elapsed
-  then do fireEvent event
+  then do refireEvent event
           return rest'
   else return (current : rest')
 
