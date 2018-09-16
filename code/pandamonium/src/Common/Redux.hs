@@ -37,10 +37,10 @@ focus f = \e w -> case (fromDynamic e) of
   Nothing -> return w
 
 fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList DynEvent) m ()
-fireEvent event = tell $ singleton (toDyn event)
+fireEvent event = fireDynEvent (toDyn event)
 
-refireEvent :: (Monad m) => DynEvent -> WriterT (DList DynEvent) m ()
-refireEvent event = tell $ singleton event
+fireDynEvent :: (Monad m) => DynEvent -> WriterT (DList DynEvent) m ()
+fireDynEvent event = tell $ singleton event
 
 handleRemainingEvents :: Redux w -> w -> DList DynEvent -> IO w
 handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
