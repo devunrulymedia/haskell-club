@@ -11,8 +11,8 @@ import Control.Monad.Writer
 
 import Common.Redux
 
-data Await = Await Float ShowDyn deriving (Show, ReduxEvent)
-data Pending = Pending Float ShowDyn deriving (Show, ReduxEvent)
+data Await = Await Float DynEvent deriving (Show, ReduxEvent)
+data Pending = Pending Float DynEvent deriving (Show, ReduxEvent)
 
 data Timer = Timer
   { _elapsed :: Float
@@ -21,7 +21,7 @@ data Timer = Timer
 
 makeLenses ''Timer
 
-awaitEvent :: (ReduxEvent a, Monad m) => Float -> a -> WriterT (DList ShowDyn) m ()
+awaitEvent :: (ReduxEvent a, Monad m) => Float -> a -> WriterT (DList DynEvent) m ()
 awaitEvent delay event = fireEvent (Await delay (toDyn event))
 
 reduceTimer :: Await -> Timer -> IOEvents Timer

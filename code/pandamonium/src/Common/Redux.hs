@@ -11,12 +11,12 @@ import Data.DList
 
 class (Typeable a, Show a) => ReduxEvent a
 
-type ShowDyn = ConstrainedDynamic ReduxEvent
-type Events w = Writer (DList ShowDyn) w
-type IOEvents w = WriterT (DList ShowDyn) IO w
+type DynEvent = ConstrainedDynamic ReduxEvent
+type Events w = Writer (DList DynEvent) w
+type IOEvents w = WriterT (DList DynEvent) IO w
 
 data Redux w = Redux
-  { reducer :: ShowDyn -> w -> IOEvents w
+  { reducer :: DynEvent -> w -> IOEvents w
   , updater ::  Float -> w -> Events w
   , listener :: Event -> w -> Events w
   }
@@ -31,18 +31,18 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-focus :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> ShowDyn -> b -> m b
+focus :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> DynEvent -> b -> m b
 focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 
-fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList ShowDyn) m ()
+fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList DynEvent) m ()
 fireEvent event = tell $ singleton (toDyn event)
 
-refireEvent :: (Monad m) => ShowDyn -> WriterT (DList ShowDyn) m ()
+refireEvent :: (Monad m) => DynEvent -> WriterT (DList DynEvent) m ()
 refireEvent event = tell $ singleton event
 
-handleRemainingEvents :: Redux w -> w -> DList ShowDyn -> IO w
+handleRemainingEvents :: Redux w -> w -> DList DynEvent -> IO w
 handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ reducer r) w e
                                  case events of
                                    Nil -> return world
