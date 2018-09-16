@@ -5,6 +5,7 @@ module Redux.TimerTest (htf_thisModulesTests) where
 
 import Control.Lens
 import Test.Framework
+import Data.Dynamic
 
 import Common.Redux
 import Common.Timer
@@ -17,6 +18,8 @@ data TestThing = TestThing
   }
 
 makeLenses ''TestThing
+
+instance (Typeable a, Show a) => ReduxEvent [ a ]
 
 updateTime :: Float -> TestThing -> Events TestThing
 updateTime t w = case w ^. toEnqueue of

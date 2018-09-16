@@ -6,8 +6,12 @@ module Redux.ReduxTest (htf_thisModulesTests) where
 import Control.Lens
 import Test.Framework
 
+import Data.Dynamic
 import Common.Redux
 import Graphics.Gloss.Interface.IO.Game
+
+instance (Typeable a, Show a) => ReduxEvent [ a ]
+instance ReduxEvent Float
 
 data TestThing = TestThing
   { _timePassed :: Float

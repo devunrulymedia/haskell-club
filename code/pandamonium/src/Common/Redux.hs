@@ -9,7 +9,9 @@ import Control.Monad.Writer
 import Control.Lens
 import Data.DList
 
-type ShowDyn = ConstrainedDynamic Show
+class (Typeable a, Show a) => ReduxEvent a
+
+type ShowDyn = ConstrainedDynamic ReduxEvent
 type Events w = Writer (DList ShowDyn) w
 type IOEvents w = WriterT (DList ShowDyn) IO w
 
@@ -29,12 +31,12 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-focus :: (Typeable a, Show a, Monad m) => (a -> b -> m b) -> ShowDyn -> b -> m b
+focus :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> ShowDyn -> b -> m b
 focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 
-fireEvent :: (Typeable a, Show a, Monad m) => a -> WriterT (DList ShowDyn) m ()
+fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList ShowDyn) m ()
 fireEvent event = tell $ singleton (toDyn event)
 
 refireEvent :: (Monad m) => ShowDyn -> WriterT (DList ShowDyn) m ()

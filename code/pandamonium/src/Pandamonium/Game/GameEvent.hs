@@ -1,8 +1,10 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Pandamonium.Game.GameEvent where
 
 import Graphics.Gloss.Data.Vector
+import Common.Redux
 
 data GameEvent = ResetCollisions
                | PointsScored Int
@@ -10,4 +12,4 @@ data GameEvent = ResetCollisions
                | RespawnCoin Integer Vector
                | ChangeScenery
                | Cleared
-               deriving Show
+               deriving (Show, ReduxEvent)

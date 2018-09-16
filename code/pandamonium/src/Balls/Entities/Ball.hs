@@ -27,6 +27,8 @@ instance Shaped Ball where
 instance Renderable Ball where
   render ball = color (ball ^. col) $ render (shape ball)
 
+instance ReduxEvent Color
+
 zag :: Event -> Ball -> Events Ball
 zag (EventKey (Char 'z') true _ _) ball = return $ pos %~ (\x -> x - (10, 0)) $ ball
 zag (EventKey (Char 'x') true _ _) ball = return $ pos %~ (+ (10, 0)) $ ball

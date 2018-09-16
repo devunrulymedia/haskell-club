@@ -1,4 +1,5 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Common.Entities.Destroyer where
 
@@ -8,7 +9,7 @@ import Data.Dynamic
 import Common.Redux
 import Common.Entities.Entity
 
-data Destroy i = Destroy i deriving Show
+data Destroy i = Destroy i deriving (Show, ReduxEvent)
 
 destroyEntities :: Eq i => Destroy i -> [ Entity t i a] -> IOEvents [ Entity t i a ]
 destroyEntities (Destroy i) xs = return $ filter survivesPurge xs where
