@@ -29,7 +29,7 @@ makeLenses ''Game
 withStages :: Assets -> [ Stage ] -> Game
 withStages stuff (first : rest) = Game
   { _world = createWorld stuff first
-  , _timer = Timer 0 []
+  , _timer = newTimer
   , _score = Score 0 (650, 400) (numberSprites stuff)
   , _mag = 2
   , _stages = rest
@@ -46,7 +46,7 @@ nextStage game = let (next : rest) = game ^. stages
                      stuff = game ^. assets
                   in stages .~ rest
                    $ world .~ createWorld stuff next
-                   $ timer .~ Timer 0 []
+                   $ timer .~ newTimer
                    $ game
 
 listenForClear :: GameEvent -> Game -> IOEvents Game

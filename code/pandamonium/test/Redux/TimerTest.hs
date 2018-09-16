@@ -44,19 +44,15 @@ testRedux = compose
   ]
 
 test_timer_works = do
-  let initialTestThing = TestThing (Just (3, "event")) (Timer 0 []) []
+  let initialTestThing = TestThing (Just (3, "event")) newTimer []
   atTimeZero <- reduxUpdate testRedux 0 initialTestThing
 
   assertEqual [] (atTimeZero ^. fired)
-  assertEqual 1 (length (atTimeZero ^. timer . pending))
-  assertEqual Nothing (atTimeZero ^. toEnqueue)
 
   atTimeTwo <- reduxUpdate testRedux 2 atTimeZero
 
-  assertEqual 1 (length (atTimeTwo ^. timer . pending))
   assertEqual [] (atTimeTwo ^. fired)
 
   atTimeFour <- reduxUpdate testRedux 2 atTimeTwo
 
-  assertEqual 0 (length (atTimeFour ^. timer . pending))
   assertEqual ["event"] (atTimeFour ^. fired)

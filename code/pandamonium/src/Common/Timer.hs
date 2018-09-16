@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Common.Timer where
+module Common.Timer (awaitEvent, timerRedux, Timer, newTimer) where
 
 import Control.Lens
 import Data.Dynamic (Typeable)
@@ -18,6 +18,8 @@ data Timer = Timer
   { _elapsed :: Float
   , _pending :: [ Pending ]
   }
+
+newTimer = Timer 0 []
 
 makeLenses ''Timer
 
