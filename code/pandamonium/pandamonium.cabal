@@ -39,7 +39,8 @@ library
                      , Common.Shapes.Shape
                      , Common.Timer
 
-  other-modules:       Common.Shapes.Shapes
+  other-modules:       Common.Relationship
+                     , Common.Shapes.Shapes
                      , Common.Shapes.Collisions
                      , Common.Shapes.Movables
                      , Common.Shapes.Renderables
