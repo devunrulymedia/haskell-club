@@ -41,9 +41,9 @@ updatePanda t pd = return pd
 
 reducePanda :: DynEvent -> Panda -> IOEvents Panda
 reducePanda e pd = return pd
-               <&> (focusN triggerJump) e
-               <&> state %~ (focusN handleCollisions) e
-               <&> state %~ (focusN processCollisions) e
+               <&> (focus triggerJump) e
+               <&> state %~ (focus handleCollisions) e
+               <&> state %~ (focus processCollisions) e
                >>= (focusM scoreCoin) e
 
 listenPanda :: Event -> Panda -> Events Panda

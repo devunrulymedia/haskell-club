@@ -36,8 +36,8 @@ focusM f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 
-focusN :: (ReduxEvent a) => (a -> b -> b) -> DynEvent -> b -> b
-focusN f = \e w -> case (fromDynamic e) of
+focus :: (ReduxEvent a) => (a -> b -> b) -> DynEvent -> b -> b
+focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> w
 
