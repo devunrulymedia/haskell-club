@@ -39,20 +39,12 @@ updatePanda t pd = return pd
                <&> gravitate t
                <&> integrate t
 
-reducePanda :: GameEvent -> Panda -> IOEvents Panda
+reducePanda :: DynEvent -> Panda -> IOEvents Panda
 reducePanda e pd = return pd
-               <&> state %~ handleCollisions e
-               <&> triggerJump e
-
-collisionEvents :: Collision EntityType Integer -> Panda -> IOEvents Panda
-collisionEvents c pd = return pd
-                   <&> state %~ processCollisions c
-                   >>= scoreCoin c
-
-bounceEvents :: Bounce -> Panda -> IOEvents Panda
-bounceEvents (Bounce offset impulse) panda = return panda
-                                         <&> move offset
-                                         <&> applyImpulse impulse
+               <&> (focusN triggerJump) e
+               <&> state %~ (focusN handleCollisions) e
+               <&> state %~ (focusN processCollisions) e
+               >>= (focus scoreCoin) e
 
 listenPanda :: Event -> Panda -> Events Panda
 listenPanda e pd = return pd
@@ -60,7 +52,7 @@ listenPanda e pd = return pd
 
 pandataRedux :: Redux Panda
 pandataRedux = Redux
-  { reducer  = composeHandler [ focus reducePanda, focus collisionEvents, focus bounceEvents ]
+  { reducer  = reducePanda
   , updater  = updatePanda
   , listener = listenPanda
   }

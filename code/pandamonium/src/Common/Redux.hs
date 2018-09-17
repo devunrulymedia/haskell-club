@@ -36,6 +36,11 @@ focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 
+focusN :: (ReduxEvent a) => (a -> b -> b) -> DynEvent -> b -> b
+focusN f = \e w -> case (fromDynamic e) of
+  Just x -> f x w
+  Nothing -> w
+
 fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList DynEvent) m ()
 fireEvent event = fireDynEvent (toDyn event)
 

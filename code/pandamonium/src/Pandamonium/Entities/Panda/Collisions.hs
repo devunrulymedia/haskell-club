@@ -7,9 +7,6 @@ import Pandamonium.Entities.EntityTypes
 import Pandamonium.Game.GameEvent
 import Pandamonium.Systems.Controller
 
-resetCollisions :: MovementState -> MovementState
-resetCollisions _ = Airborne
-
 processCollisions :: Collision EntityType Integer -> MovementState -> MovementState
 processCollisions (Collision EPanda _ EBlock _ (x, y)) ms
   | y > 0 = Grounded
@@ -18,6 +15,5 @@ processCollisions (Collision EPanda _ EBlock _ (x, y)) ms
   | otherwise = ms
 processCollisions _ ms = ms
 
-handleCollisions :: GameEvent -> MovementState -> MovementState
-handleCollisions ResetCollisions = resetCollisions
-handleCollisions _ = id
+handleCollisions :: ResetCollisions -> MovementState -> MovementState
+handleCollisions ResetCollisions _ = Airborne

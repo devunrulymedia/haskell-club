@@ -12,8 +12,8 @@ import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Shapes.Shape
 
+data ResetCollisions = ResetCollisions deriving (Show, ReduxEvent)
 data Collision t i = Collision t i t i Vector deriving (Show, ReduxEvent)
-data Bounce = Bounce Vector Vector deriving (Show, ReduxEvent)
 
 touch :: (Shaped a, Shaped b, Typeable t, Show t, Typeable i, Show i)
   => Entity t i a -> Entity t i b -> Events ()
