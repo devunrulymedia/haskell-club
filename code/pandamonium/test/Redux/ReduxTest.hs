@@ -42,7 +42,7 @@ testRedux :: Redux TestThing
 testRedux = Redux
   { updater = updateTime
   , listener = listenEvent
-  , reducer = composeHandler [focus reduceNumber, focus reduceString]
+  , reducer = composeHandler [focusM reduceNumber, focusM reduceString]
   }
 
 test_update_via_redux = do

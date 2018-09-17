@@ -34,7 +34,7 @@ ttRedux :: Redux TestThing
 ttRedux = Redux
   { updater = updateTime
   , listener = noOp
-  , reducer = focus reduceString
+  , reducer = focusM reduceString
   }
 
 testRedux :: Redux TestThing
