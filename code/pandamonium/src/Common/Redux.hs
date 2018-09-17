@@ -31,8 +31,8 @@ noOpRedux = Redux
   , listener = noOp
   }
 
-focus :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> DynEvent -> b -> m b
-focus f = \e w -> case (fromDynamic e) of
+focusM :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> DynEvent -> b -> m b
+focusM f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> return w
 

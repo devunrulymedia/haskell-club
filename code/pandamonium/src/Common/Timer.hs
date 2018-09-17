@@ -50,7 +50,7 @@ updateTimer step (Timer elapsed pending) = do
 
 timerRedux :: Redux Timer
 timerRedux = Redux
-  { reducer =  focus reduceTimer
+  { reducer =  focusM reduceTimer
   , updater =  updateTimer
   , listener = noOp
   }

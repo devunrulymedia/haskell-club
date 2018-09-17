@@ -44,7 +44,7 @@ reducePanda e pd = return pd
                <&> (focusN triggerJump) e
                <&> state %~ (focusN handleCollisions) e
                <&> state %~ (focusN processCollisions) e
-               >>= (focus scoreCoin) e
+               >>= (focusM scoreCoin) e
 
 listenPanda :: Event -> Panda -> Events Panda
 listenPanda e pd = return pd
