@@ -49,9 +49,12 @@ instance Renderable World where
 peek :: Monad m => (a -> m b) -> a -> m a
 peek f a = do f a; return a
 
+poke :: Monad m => m b -> a -> m a
+poke m a = do m; return a
+
 handleCollisions :: Float -> World -> Events World
 handleCollisions = relationship (onPairs singleCollision) panda scenery where
-  singleCollision t p b = bounce_against_static' 0 p b
+  singleCollision t p b = bounce_against_static 0 p b
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
@@ -75,6 +78,7 @@ reduceWorld e w = return w
 
 updateWorld :: Updater
 updateWorld t w = return w
+              >>= poke (fireEvent ResetCollisions)
               >>= checkForPickups
               >>= handleCollisions t
               >>= checkForCompletion
