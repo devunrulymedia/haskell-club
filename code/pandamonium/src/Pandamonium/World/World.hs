@@ -16,6 +16,7 @@ import Graphics.Gloss.Interface.IO.Game
 import Common.Shapes.Shape
 import Common.Renderable
 import Common.Redux
+import Common.Relationship
 import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
@@ -48,10 +49,9 @@ instance Renderable World where
 peek :: Monad m => (a -> m b) -> a -> m a
 peek f a = do f a; return a
 
-handleCollisions :: World -> Events ()
-handleCollisions w = do
-  sequence ((pure $ bounce_against_static2 0) <*> (w ^. panda) <*> (w ^. scenery))
-  return ()
+handleCollisions :: Float -> World -> Events World
+handleCollisions = relationship (onPairs singleCollision) panda scenery where
+  singleCollision t p b = bounce_against_static' 0 p b
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
@@ -76,7 +76,7 @@ reduceWorld e w = return w
 updateWorld :: Updater
 updateWorld t w = return w
               >>= checkForPickups
-              >>= peek handleCollisions
+              >>= handleCollisions t
               >>= checkForCompletion
 
 topLevelRedux :: Redux World

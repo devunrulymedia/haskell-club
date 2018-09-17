@@ -36,6 +36,14 @@ bounce_against_static el a b = case (shape b !!> shape a) of
       normal_proj   = (1 + el) * (vel `dotV` unit_push)
       reflected_vel = negate $ mulSV normal_proj unit_push
 
+-- a reformulation which returns the tuple of the modified a and b
+-- (of course, since b is static, it's unmodified)
+bounce_against_static' :: (Moving a, Shaped a, Shaped b, Typeable t, Show t, Typeable i, Show i)
+  => Float -> Entity t i a -> Entity t i b -> Events (Entity t i a, Entity t i b)
+bounce_against_static' el a b = do
+  a' <- bounce_against_static el a b
+  return (a', b)
+
 bounce_against_static2 :: (Moving a, Shaped a, Shaped b, Typeable t, Show t, Typeable i, Show i)
   => Float -> Entity t i a -> Entity t i b -> Events ()
 bounce_against_static2 el a b = case (shape b !!> shape a) of
