@@ -75,6 +75,7 @@ library
                      , Pandamonium.World.Stage
                      -- ball modules
                      , Balls.Entities.Ball
+                     , Balls.Entities.EntityTypes
 
 
   build-depends:       base >= 4.7 && < 5

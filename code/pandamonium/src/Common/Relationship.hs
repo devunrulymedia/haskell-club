@@ -28,6 +28,7 @@ onPairs f i (a:as) bs = do (a', bs') <- onList f i a bs
                            return (a':as', bs'')
 
 againstSelf :: (i -> a -> a -> Events (a, a)) -> i -> [a] -> Events [a]
+againstSelf f i [] = return []
 againstSelf f i (a:as) = do (a', as') <- onList f i a as
-                            as'' <- againstSelf f i as
+                            as'' <- againstSelf f i as'
                             return (a':as'')

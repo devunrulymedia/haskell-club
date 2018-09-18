@@ -55,14 +55,19 @@ bounce a b = case (shape b !!> shape a) of
       relMassA = mass a / totalMass
       relMassB = mass b / totalMass
 
-      pushoutA = mulSV relMassB pushout
-      pushoutB = mulSV relMassA (negate pushout)
+      pushoutA = mulSV (relMassB * totalElasticity) pushout
+      pushoutB = mulSV (relMassA * totalElasticity) (negate pushout)
 
       zeroMomentumFrame = mulSV relMassA (velocity a) + mulSV relMassB (velocity b)
       relVelA = velocity a - zeroMomentumFrame
       relVelB = velocity b - zeroMomentumFrame
-      velChangeA = mulSV (1 + totalElasticity) (negate relVelA)
-      velChangeB = mulSV (1 + totalElasticity) (negate relVelB)
+
+      unit_push = normalizeV pushout
+      normal_proj_a = (1 + totalElasticity) * (relVelA `dotV` unit_push)
+      normal_proj_b = (1 + totalElasticity) * (relVelB `dotV` unit_push)
+
+      velChangeA = negate $ mulSV normal_proj_a unit_push
+      velChangeB = negate $ mulSV normal_proj_b unit_push
 
       newA = move pushoutA $ applyImpulse velChangeA $ a
       newB = move pushoutB $ applyImpulse velChangeB $ b
