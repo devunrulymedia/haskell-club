@@ -36,6 +36,7 @@ instance Moving Ball where
 
 instance Physics Ball where
   mass ball = ball ^. ballMass
+  elasticity ball = 1
 
 instance ReduxEvent Color
 

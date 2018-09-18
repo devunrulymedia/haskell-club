@@ -5,6 +5,7 @@ import Common.Shapes.Shape
 
 class (Shaped a, Moving a) => Physics a where
   mass :: a -> Float
+  elasticity :: a -> Float
 
 gravity :: Float
 gravity = 1800
