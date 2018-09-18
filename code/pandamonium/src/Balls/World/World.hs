@@ -38,5 +38,5 @@ world = World
             , Block (rectangleV (180, -600) (20, 300)) white
             , Block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)]) white
             ]
- , _balls = [ Ball { _mass = 1, _pos = (0, 0), _radius = 20, _vel = (0, 0), _col = red}]
+ , _balls = [ Ball { _ballMass = 1, _pos = (0, 0), _radius = 20, _vel = (0, 0), _col = red}]
  }

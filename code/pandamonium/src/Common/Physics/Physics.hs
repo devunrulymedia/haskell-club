@@ -3,6 +3,9 @@ module Common.Physics.Physics where
 import Graphics.Gloss.Data.Vector
 import Common.Shapes.Shape
 
+class (Shaped a, Moving a) => Physics a where
+  mass :: a -> Float
+
 gravity :: Float
 gravity = 1800
 

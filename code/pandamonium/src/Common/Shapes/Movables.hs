@@ -8,5 +8,6 @@ class Movable a where
 class Movable a => Moving a where
   velocity :: a -> Vector
   applyImpulse :: Vector -> a -> a
-  applyVelocity :: Float -> a -> a
-  applyVelocity t a = move (mulSV t (velocity a)) a
+
+applyVelocity :: Moving a => Float -> a -> a
+applyVelocity t a = move (mulSV t (velocity a)) a

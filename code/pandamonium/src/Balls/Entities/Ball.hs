@@ -9,10 +9,10 @@ import Graphics.Gloss (Vector, Color, color, yellow)
 import Common.Redux
 import Common.Renderable
 import Common.Shapes.Shape
-
+import Common.Physics.Physics
 
 data Ball = Ball
- { _mass :: Float
+ { _ballMass :: Float
  , _radius :: Float
  , _pos :: Vector
  , _vel :: Vector
@@ -26,6 +26,16 @@ instance Shaped Ball where
 
 instance Renderable Ball where
   render ball = color (ball ^. col) $ render (shape ball)
+
+instance Movable Ball where
+  move vec ball = pos +~ vec $ ball
+
+instance Moving Ball where
+  velocity ball = ball ^. vel
+  applyImpulse vec ball = vel +~ vec $ ball
+
+instance Physics Ball where
+  mass ball = ball ^. ballMass
 
 instance ReduxEvent Color
 
