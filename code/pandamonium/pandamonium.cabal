@@ -49,6 +49,7 @@ library
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner
                      , Common.Entities.TypeClasses.Shapes
+                     , Common.Entities.TypeClasses.Physics
                      , Common.Entities.Block
                      , Common.Physics.Physics
                      , Common.Physics.Collisions
