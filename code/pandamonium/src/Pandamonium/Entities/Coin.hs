@@ -27,18 +27,17 @@ instance Shaped Coin where
 instance Renderable Coin where
   render coin = color yellow $ render $ shape coin
 
-triggerRespawn :: Collision EntityType Integer -> Ent Coin -> IOEvents (Ent Coin)
-triggerRespawn (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
+pickup :: Collision EntityType Integer -> Ent Coin -> IOEvents (Ent Coin)
+pickup (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
   then do fireEvent (Destroy coinId)
-          awaitEvent 5 (makeSpawn (entity ^. edata))
+          spawnIn 5 (entity ^. edata)
           return entity
   else return entity
-triggerRespawn _ entity = return entity
-
+pickup _ entity = return entity
 
 coinRedux :: Redux (Ent Coin)
 coinRedux = Redux
-  { reducer = focusM triggerRespawn
+  { reducer = focusM pickup
   , updater = noOp
   , listener = noOp
   }
