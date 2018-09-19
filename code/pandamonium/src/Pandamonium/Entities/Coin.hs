@@ -11,6 +11,7 @@ import Common.Physics.Collisions
 import Common.Shapes.Shape
 import Common.Renderable
 import Common.Entities.Destroyer
+import Common.Entities.Spawner
 
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Game.GameEvent
@@ -29,7 +30,7 @@ instance Renderable Coin where
 triggerRespawn :: Collision EntityType Integer -> Ent Coin -> IOEvents (Ent Coin)
 triggerRespawn (Collision ECoin coinId _ _ _) entity = if coinId == entity ^. eid
   then do fireEvent (Destroy coinId)
-          awaitEvent 5 (RespawnCoin coinId (position (entity ^. edata)))
+          awaitEvent 5 (makeSpawn (entity ^. edata))
           return entity
   else return entity
 triggerRespawn _ entity = return entity

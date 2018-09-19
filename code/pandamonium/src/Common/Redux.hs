@@ -9,7 +9,7 @@ import Control.Monad.Writer
 import Control.Lens
 import Data.DList
 
-class (Typeable a, Show a) => ReduxEvent a
+class (Typeable a) => ReduxEvent a
 
 type DynEvent = ConstrainedDynamic ReduxEvent
 type Events w = Writer (DList DynEvent) w

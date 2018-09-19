@@ -21,6 +21,7 @@ import Common.Entities.Entity
 import Common.Entities.TypeClasses.Shapes
 import Common.Entities.Block
 import Common.Entities.Destroyer
+import Common.Entities.Spawner
 import Common.Physics.Collisions
 
 import Pandamonium.Entities.EntityTypes
@@ -32,6 +33,7 @@ data World = World
   { _scenery :: [ Ent Block ]
   , _panda :: [ Ent Panda ]
   , _coins :: [ Ent Coin ]
+  , _entityindex :: Integer
   }
 
 makeLenses ''World
@@ -72,9 +74,12 @@ checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
   otherwise -> return w
 
-reduceWorld :: Reducer
+spawnCoin :: Spawn -> [ Ent Coin ] -> Integer -> IOEvents ([Ent Coin], Integer)
+spawnCoin event coins i = return $ spawn ECoin (coins, i) event
+
+reduceWorld :: Spawn -> World -> IOEvents World
 reduceWorld e w = return w
-              <&> respawnCoin e
+              >>= relationship spawnCoin coins entityindex e
 
 updateWorld :: Updater
 updateWorld t w = return w
@@ -85,7 +90,7 @@ updateWorld t w = return w
 
 topLevelRedux :: Redux World
 topLevelRedux = Redux
-  { reducer  = focusM reduceWorld
+  { reducer  = composeHandler [ focusM reduceWorld ]
   , listener = noOp
   , updater  = updateWorld
   }
