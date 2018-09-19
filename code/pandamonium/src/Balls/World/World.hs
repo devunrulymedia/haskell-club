@@ -3,7 +3,7 @@
 module Balls.World.World where
 
 import Control.Lens
-import Graphics.Gloss ( Picture (Pictures), white, red, blue )
+import Graphics.Gloss ( Picture (Pictures), white, red, blue, yellow, green )
 import Common.Renderable
 import Common.Redux
 import Common.Relationship
@@ -61,5 +61,7 @@ world = World
             ]
  , _balls = [ Entity 8 EBall $ Ball { _ballMass = 1, _pos = (0, 0), _radius = 30, _vel = (0, 0), _col = red }
             , Entity 9 EBall $ Ball { _ballMass = 2, _pos = (10, 75), _radius = 40, _vel = (0, 600), _col = blue }
+            , Entity 10 EBall $ Ball { _ballMass = 4, _pos = (100, 25), _radius = 60, _vel = (300, 0), _col = green }
+            , Entity 11 EBall $ Ball { _ballMass = 1, _pos = (-200, 25), _radius = 25, _vel = (-400, 0), _col = yellow }
             ]
  }
