@@ -75,7 +75,7 @@ checkForCompletion w = case w ^. coins of
   otherwise -> return w
 
 spawnCoin :: Spawn -> [ Ent Coin ] -> Integer -> IOEvents ([Ent Coin], Integer)
-spawnCoin event coins i = return $ spawn ECoin (coins, i) event
+spawnCoin event coins i = return $ spawn ECoin event coins i 
 
 reduceWorld :: Spawn -> World -> IOEvents World
 reduceWorld e w = return w

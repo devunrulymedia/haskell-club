@@ -19,8 +19,8 @@ spawnNow a = fireEvent (Spawn (toDyn a))
 spawnIn :: (Typeable a, Monad m) => Float -> a -> EventsT m ()
 spawnIn t a = awaitEvent t (Spawn (toDyn a))
 
-spawn :: (Enum i, Typeable d) => t -> ([ Entity t i d ], i) -> Spawn -> ([ Entity t i d ], i)
-spawn typ (entities, index) (Spawn e) = case (fromDynamic e) of
+spawn :: (Enum i, Typeable d) => t -> Spawn -> [ Entity t i d ] -> i -> ([ Entity t i d ], i)
+spawn typ (Spawn e) entities index = case (fromDynamic e) of
   Nothing    -> (entities, index)
   (Just obj) -> let nextIndex = succ index
                  in (Entity typ nextIndex obj : entities, nextIndex)
