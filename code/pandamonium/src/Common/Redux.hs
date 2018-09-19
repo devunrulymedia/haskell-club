@@ -12,8 +12,9 @@ import Data.DList
 class (Typeable a) => ReduxEvent a
 
 type DynEvent = ConstrainedDynamic ReduxEvent
-type Events w = Writer (DList DynEvent) w
-type IOEvents w = WriterT (DList DynEvent) IO w
+type EventsT m w = WriterT (DList DynEvent) m w
+type Events w = EventsT Identity w
+type IOEvents w = EventsT IO w
 
 data Redux w = Redux
   { reducer :: DynEvent -> w -> IOEvents w
@@ -41,10 +42,10 @@ focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> w
 
-fireEvent :: (ReduxEvent a, Monad m) => a -> WriterT (DList DynEvent) m ()
+fireEvent :: (ReduxEvent a, Monad m) => a -> EventsT m ()
 fireEvent event = fireDynEvent (toDyn event)
 
-fireDynEvent :: (Monad m) => DynEvent -> WriterT (DList DynEvent) m ()
+fireDynEvent :: (Monad m) => DynEvent -> EventsT m ()
 fireDynEvent event = tell $ singleton event
 
 handleRemainingEvents :: Redux w -> w -> DList DynEvent -> IO w

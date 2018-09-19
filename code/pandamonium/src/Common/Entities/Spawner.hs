@@ -13,10 +13,10 @@ import Common.Entities.Entity
 
 data Spawn = Spawn Dynamic deriving (ReduxEvent)
 
-spawnNow :: (Typeable a, Monad m) => a -> WriterT (DList DynEvent) m ()
+spawnNow :: (Typeable a, Monad m) => a -> EventsT m ()
 spawnNow a = fireEvent (Spawn (toDyn a))
 
-spawnIn :: (Typeable a, Monad m) => Float -> a -> WriterT (DList DynEvent) m ()
+spawnIn :: (Typeable a, Monad m) => Float -> a -> EventsT m ()
 spawnIn t a = awaitEvent t (Spawn (toDyn a))
 
 spawn :: (Enum i, Typeable d) => t -> ([ Entity t i d ], i) -> Spawn -> ([ Entity t i d ], i)

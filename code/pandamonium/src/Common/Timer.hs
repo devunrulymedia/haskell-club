@@ -23,7 +23,7 @@ newTimer = Timer 0 []
 
 makeLenses ''Timer
 
-awaitEvent :: (ReduxEvent a, Monad m) => Float -> a -> WriterT (DList DynEvent) m ()
+awaitEvent :: (ReduxEvent a, Monad m) => Float -> a -> EventsT m ()
 awaitEvent delay event = fireEvent (Await delay (toDyn event))
 
 reduceTimer :: Await -> Timer -> IOEvents Timer
