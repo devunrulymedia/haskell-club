@@ -55,7 +55,7 @@ poke :: Monad m => m b -> a -> m a
 poke m a = do m; return a
 
 handleCollisions :: Float -> World -> Events World
-handleCollisions = relationship (onPairs singleCollision) panda scenery where
+handleCollisions = relationshipM (onPairs singleCollision) panda scenery where
   singleCollision t p b = bounce_against_static 0 p b
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
@@ -65,21 +65,14 @@ checkForPickups :: World -> Events World
 checkForPickups w = do sequence (pure pickupCoin <*> w ^. panda <*> w ^. coins)
                        return w
 
-respawnCoin :: GameEvent -> World -> World
-respawnCoin (RespawnCoin coinId pos) world = coins %~ (Entity ECoin coinId (Coin pos) :) $ world
-respawnCoin _ world = world
-
 checkForCompletion :: World -> Events World
 checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
   otherwise -> return w
 
-spawnCoin :: Spawn -> [ Ent Coin ] -> Integer -> IOEvents ([Ent Coin], Integer)
-spawnCoin event coins i = return $ spawn ECoin event coins i 
-
 reduceWorld :: Spawn -> World -> IOEvents World
 reduceWorld e w = return w
-              >>= relationship spawnCoin coins entityindex e
+              <&> relationship (spawn ECoin) coins entityindex e
 
 updateWorld :: Updater
 updateWorld t w = return w

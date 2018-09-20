@@ -4,16 +4,26 @@ module Common.Relationship where
 
 import Control.Lens
 
-relationship :: Monad m
+relationshipM :: Monad m
              => (i -> a -> b -> m (a, b))
              -> Lens c c a a
              -> Lens c c b b
              -> i -> c -> m c
-relationship f lensA lensB i c = do
+relationshipM f lensA lensB i c = do
   let a = c ^. lensA
   let b = c ^. lensB
   (a', b') <- f i a b
   return $ lensA .~ a' $ lensB .~ b' $ c
+
+relationship :: (i -> a -> b -> (a, b))
+             -> Lens c c a a
+             -> Lens c c b b
+             -> i -> c -> c
+relationship f lensA lensB i c =
+  let a = c ^. lensA
+      b = c ^. lensB
+      (a', b') = f i a b
+   in lensA .~ a' $ lensB .~ b' $ c
 
 onList :: Monad m => (i -> a -> b -> m (a, b)) -> i -> a -> [b] -> m (a, [b])
 onList f i a [] = return (a, [])

@@ -22,7 +22,7 @@ data World = World
 makeLenses ''World
 
 collisions :: Float -> World -> Events World
-collisions = relationship (onPairs ball_wall_bounce) balls walls where
+collisions = relationshipM (onPairs ball_wall_bounce) balls walls where
   ball_wall_bounce t ball wall = bounce_against_static 1 ball wall
 
 collide :: Float -> Ent Ball -> Ent Ball -> Events (Ent Ball, Ent Ball)
