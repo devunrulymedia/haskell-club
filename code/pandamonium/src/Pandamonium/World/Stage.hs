@@ -6,4 +6,4 @@ import Common.Entities.Block
 import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Coin
 
-data Stage = Stage [ Ent Block ] [ Ent Coin ] Vector
+data Stage = Stage [ Block ] [ Coin ] Vector

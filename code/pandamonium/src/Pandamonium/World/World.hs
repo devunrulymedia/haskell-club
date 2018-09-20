@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Pandamonium.World.World where
 
@@ -8,6 +9,7 @@ import Control.Monad.Writer
 import Data.DList
 
 import Data.Maybe
+import Data.Dynamic
 import Graphics.Gloss
 import Graphics.Gloss.Data.Vector
 import Graphics.Gloss.Data.Color
@@ -70,9 +72,14 @@ checkForCompletion w = case w ^. coins of
   [] -> do fireEvent Cleared; return w
   otherwise -> return w
 
+spawnEntity :: Typeable a => EntityType -> Lens World World ([Ent a]) ([Ent a]) -> Spawn -> World -> World
+spawnEntity etype field = relationship (spawn etype) field entityindex
+
 reduceWorld :: Spawn -> World -> IOEvents World
 reduceWorld e w = return w
-              <&> relationship (spawn ECoin) coins entityindex e
+              <&> spawnEntity ECoin coins e
+              <&> spawnEntity EBlock scenery e
+              <&> spawnEntity EPanda panda e
 
 updateWorld :: Updater
 updateWorld t w = return w

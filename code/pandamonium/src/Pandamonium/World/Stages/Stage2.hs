@@ -10,18 +10,18 @@ import Pandamonium.Entities.EntityTypes
 import Pandamonium.Entities.Coin
 import Pandamonium.World.Stage
 
-walls = [ Entity EBlock 0 $ Block (rectangle (-710) 710 430 420) white
-        , Entity EBlock 1 $ Block (rectangle (-710) 710 (-420) (-430)) white
-        , Entity EBlock 2 $ Block (rectangle (-710) (-700) (-430) 430) white
-        , Entity EBlock 3 $ Block (rectangle 700 710 (-430) 430) white
+walls = [ Block (rectangle (-710) 710 430 420) white
+        , Block (rectangle (-710) 710 (-420) (-430)) white
+        , Block (rectangle (-710) (-700) (-430) 430) white
+        , Block (rectangle 700 710 (-430) 430) white
         ]
 
-coins = [ Entity ECoin 4 $ Coin (-200, -325)
-        , Entity ECoin 5 $ Coin (-100, -235)
-        , Entity ECoin 6 $ Coin (0, -200)
-        , Entity ECoin 7 $ Coin (100, -235)
-        , Entity ECoin 8 $ Coin (200, -325)
-        , Entity ECoin 9 $ Coin (0, -400)
+coins = [ Coin (-200, -325)
+        , Coin (-100, -235)
+        , Coin (0, -200)
+        , Coin (100, -235)
+        , Coin (200, -325)
+        , Coin (0, -400)
         ]
 
 stage2 :: Stage

@@ -28,11 +28,11 @@ makeLenses ''Game
 
 withStages :: Assets -> [ Stage ] -> Game
 withStages stuff (first : rest) = Game
-  { _world = createWorld stuff first
+  { _world = World [] [] [] 0
   , _timer = newTimer
   , _score = Score 0 (650, 400) (numberSprites stuff)
   , _mag = 2
-  , _stages = rest
+  , _stages = first : rest
   , _assets = stuff
   }
 
@@ -41,16 +41,13 @@ adjustZoom (EventKey (Char '+') Down _ _) = return . (mag *~ 1.1)
 adjustZoom (EventKey (Char '-') Down _ _) = return . (mag //~ 1.1)
 adjustZoom _ = return
 
-nextStage :: Game -> Game
-nextStage game = let (next : rest) = game ^. stages
-                     stuff = game ^. assets
-                  in stages .~ rest
-                   $ world .~ createWorld stuff next
-                   $ timer .~ newTimer
-                   $ game
+nextStage :: Game -> IOEvents Game
+nextStage game = do let (next : rest) = game ^. stages
+                     world' <- createWorld (game ^. assets) next
+                     return $ stages .~ rest $ world .~ world' $ timer .~ newTimer $ game
 
 listenForClear :: GameEvent -> Game -> IOEvents Game
-listenForClear Cleared game = return $ nextStage game
+listenForClear Cleared game = nextStage game
 listenForClear _ game = return game
 
 gameRedux :: Redux Game
