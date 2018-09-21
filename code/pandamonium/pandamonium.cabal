@@ -36,6 +36,7 @@ library
                      -- exposed balls components
                      , Balls.World.World
                      -- exposed for test
+                     , Common.Components
                      , Common.Shapes.Shape
                      , Common.Timer
 
@@ -109,6 +110,7 @@ test-suite pandamonium-test
                      , Shapes.PolygonCollisions
                      , Redux.ReduxTest
                      , Redux.TimerTest
+                     , Components.ComponentTest
   build-depends:       base
                      , gloss
                      , lens
