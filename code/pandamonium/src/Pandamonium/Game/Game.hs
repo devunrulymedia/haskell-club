@@ -43,8 +43,8 @@ adjustZoom _ = return
 
 nextStage :: Game -> IOEvents Game
 nextStage game = do let (next : rest) = game ^. stages
-                     world' <- createWorld (game ^. assets) next
-                     return $ stages .~ rest $ world .~ world' $ timer .~ newTimer $ game
+                    world' <- createWorld (game ^. assets) next
+                    return $ stages .~ rest $ world .~ world' $ timer .~ newTimer $ game
 
 listenForClear :: GameEvent -> Game -> IOEvents Game
 listenForClear Cleared game = nextStage game

@@ -19,8 +19,8 @@ import Pandamonium.World.Stage
 pandaAtLocation :: Assets -> Vector -> Panda
 pandaAtLocation assets loc = mkPanda (pandas assets) loc (withKeys (Char 'z') (Char 'x') (Char '/'))
 
-createWorld :: Assets -> Stage' -> IOEvents World
-createWorld assets (Stage' ws cs loc) = do
+createWorld :: Assets -> Stage -> IOEvents World
+createWorld assets (Stage ws cs loc) = do
   sequence (spawnNow <$> ws)
   sequence (spawnNow <$> cs)
   spawnNow (pandaAtLocation assets loc)
