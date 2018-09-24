@@ -13,7 +13,7 @@ draw :: Components -> Renderer -> Maybe Picture
 draw c (Renderer f) = f c
 
 instance Renderable Components where
-  render c = fromMaybe (Pictures []) (from c >>= draw c)
+  render c = fromMaybe Blank (from c >>= draw c)
 
 coloredShape :: Renderer
 coloredShape = Renderer (apply2 coloredShape') where
