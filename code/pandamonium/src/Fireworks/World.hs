@@ -9,6 +9,7 @@ import Common.Redux
 import Common.Renderable
 import Common.Components
 import Common.Components.Velocity
+import Common.Components.Acceleration
 import Common.Components.Renderer
 
 import Fireworks.Entities.Rocket
@@ -27,10 +28,11 @@ instance Renderable World where
 
 updateFireworks :: Float -> Components -> Events Components
 updateFireworks time world = return world
+                         <&> update applyAcceleration time
                          <&> update applyVelocity time
 
 entityRedux :: Redux Components
 entityRedux = noOpRedux { updater = updateFireworks}
 
 fireworksRedux :: Redux World
-fireworksRedux = connect (onAll entityRedux) entities 
+fireworksRedux = connect (onAll entityRedux) entities
