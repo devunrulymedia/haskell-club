@@ -35,6 +35,8 @@ library
                      , Pandamonium.World.Stages.Stage2
                      -- exposed balls components
                      , Balls.World.World
+                     -- exposed fireworks components
+                     , Fireworks.World
                      -- exposed for test
                      , Common.Components
                      , Common.Shapes.Shape
@@ -47,6 +49,8 @@ library
                      , Common.Shapes.Renderables
                      , Common.Graphics.SpriteSheet
                      , Common.Components.Renderer
+                     , Common.Components.Position
+                     , Common.Components.Velocity
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner
@@ -78,6 +82,8 @@ library
                      -- ball modules
                      , Balls.Entities.Ball
                      , Balls.Entities.EntityTypes
+                     -- fireworks
+                     , Fireworks.Entities.Rocket
 
 
   build-depends:       base >= 4.7 && < 5
