@@ -1,6 +1,6 @@
 module Common.Components.Renderer where
 
-import Graphics.Gloss (Picture (Pictures), Color, color)
+import Graphics.Gloss
 import Data.Maybe
 
 import Common.Components

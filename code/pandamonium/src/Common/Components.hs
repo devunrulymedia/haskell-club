@@ -1,4 +1,4 @@
-module Common.Components (Components, components, (<-+), from, apply1, apply2) where
+module Common.Components (Components, components, (<-+), from, apply1, apply2, apply3) where
 
 import Data.Dynamic
 
@@ -36,3 +36,6 @@ apply1 f c = pure f <*> from c
 
 apply2 :: (Typeable a, Typeable b) => (a -> b -> c) -> Components -> Maybe c
 apply2 f c = pure f <*> from c <*> from c
+
+apply3 :: (Typeable a, Typeable b, Typeable c) => (a -> b -> c -> d) -> Components -> Maybe d
+apply3 f c = pure f <*> from c <*> from c <*> from c
