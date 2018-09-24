@@ -1,4 +1,4 @@
-module Common.Components (components, (<-+), from) where
+module Common.Components (Components, components, (<-+), from, apply1, apply2) where
 
 import Data.Dynamic
 
@@ -30,3 +30,9 @@ from (Components xs) = from' xs where
   from' (x : xs) = case (fromDynamic x) of
     (Just a) -> Just a
     Nothing -> from' xs
+
+apply1 :: (Typeable a) => (a -> b) -> Components -> Maybe b
+apply1 f c = pure f <*> from c
+
+apply2 :: (Typeable a, Typeable b) => (a -> b -> c) -> Components -> Maybe c
+apply2 f c = pure f <*> from c <*> from c

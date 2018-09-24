@@ -46,6 +46,7 @@ library
                      , Common.Shapes.Movables
                      , Common.Shapes.Renderables
                      , Common.Graphics.SpriteSheet
+                     , Common.Components.Renderer
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner
