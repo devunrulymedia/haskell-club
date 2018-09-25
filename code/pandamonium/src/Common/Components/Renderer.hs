@@ -29,4 +29,7 @@ sprite = Renderer (apply2 sprite') where
   sprite' (Position x y) (Sprite s) = translate x y s
 
 composeRenderers :: [ Renderer ] -> Renderer
-composeRenderers renderers = Renderer (\e -> Just $ Pictures $ catMaybes $ (flip maybeDraw) e <$> renderers) 
+composeRenderers renderers = Renderer (\e -> Just $ Pictures $ catMaybes $ (flip maybeDraw) e <$> renderers)
+
+spritesAndShapes :: Renderer
+spritesAndShapes = composeRenderers [ coloredShape, sprite ]
