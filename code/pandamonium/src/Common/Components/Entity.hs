@@ -5,6 +5,8 @@ import Data.Maybe
 
 data Entity = Entity [ Dynamic ]
 
+data EntityId = EntityId Integer deriving Eq
+
 entity :: Entity
 entity = Entity []
 

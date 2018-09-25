@@ -7,6 +7,7 @@ import Graphics.Gloss (Picture (Pictures))
 
 import Common.Redux
 import Common.Renderable
+import Common.Timer
 import Common.Components.Entity
 import Common.Components.Position
 import Common.Components.Renderer
@@ -17,12 +18,13 @@ import Fireworks.Entities.Panda
 
 data World = World
   { _entities :: [ Entity ]
+  , _timer :: Timer
   }
 
 makeLenses ''World
 
 world :: Assets -> World
-world assets = World [ rocket, panda (assets ^. pandaSprite) ]
+world assets = World [ rocket, panda (assets ^. pandaSprite) ] newTimer
 
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
