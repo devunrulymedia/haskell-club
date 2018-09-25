@@ -23,7 +23,7 @@ world :: World
 world = World [ rocket ]
 
 instance Renderable World where
-  render world = Pictures $ render <$> (world ^. entities)
+  render world = Pictures $ draw coloredShape <$> (world ^. entities)
 
 updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world
