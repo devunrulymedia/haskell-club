@@ -7,10 +7,10 @@ import Common.Components.Renderer
 import Common.Components.Acceleration
 import Common.Components.Position
 import Common.Components.Velocity
-import Common.Components.Components
+import Common.Components.Entity
 
-rocket :: Components
-rocket = components
+rocket :: Entity
+rocket = entity
      <-+ circle (0, 0) 20
      <-+ yellow
      <-+ Position 0 (-500)

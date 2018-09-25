@@ -7,7 +7,7 @@ import Graphics.Gloss (Picture (Pictures))
 
 import Common.Redux
 import Common.Renderable
-import Common.Components.Components
+import Common.Components.Entity
 import Common.Components.Velocity
 import Common.Components.Acceleration
 import Common.Components.Renderer
@@ -15,7 +15,7 @@ import Common.Components.Renderer
 import Fireworks.Entities.Rocket
 
 data World = World
-  { _entities :: [ Components ]
+  { _entities :: [ Entity ]
   }
 
 makeLenses ''World
@@ -26,12 +26,12 @@ world = World [ rocket ]
 instance Renderable World where
   render world = Pictures $ render <$> (world ^. entities)
 
-updateFireworks :: Float -> Components -> Events Components
+updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world
                          <&> update applyAcceleration time
                          <&> update applyVelocity time
 
-entityRedux :: Redux Components
+entityRedux :: Redux Entity
 entityRedux = noOpRedux { updater = updateFireworks}
 
 fireworksRedux :: Redux World

@@ -38,7 +38,7 @@ library
                      -- exposed fireworks components
                      , Fireworks.World
                      -- exposed for test
-                     , Common.Components.Components
+                     , Common.Components.Entity
                      , Common.Shapes.Shape
                      , Common.Timer
 

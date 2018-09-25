@@ -1,17 +1,17 @@
-module Common.Components.Components where
+module Common.Components.Entity where
 
 import Data.Dynamic
 import Data.Maybe
 
-data Components = Components [ Dynamic ]
+data Entity = Entity [ Dynamic ]
 
-components :: Components
-components = Components []
+entity :: Entity
+entity = Entity []
 
 infixl 4 <-+
 
-(<-+) :: (Typeable a) => Components -> a -> Components
-(<-+) (Components xs) a = Components (replace xs a)
+(<-+) :: (Typeable a) => Entity -> a -> Entity
+(<-+) (Entity xs) a = Entity (replace xs a)
 
 replace :: Typeable a => [ Dynamic ] -> a -> [ Dynamic ]
 replace [] a = [toDyn a]
@@ -22,24 +22,24 @@ replace (x:xs) a = if typesMatch (fromDynamic x) a
     typesMatch (Just _) _ = True
     typesMatch Nothing  _ = False
 
-from :: (Typeable a) => Components -> Maybe a
-from (Components xs) = from' xs where
+from :: (Typeable a) => Entity -> Maybe a
+from (Entity xs) = from' xs where
   from' [] = Nothing
   from' (x : xs) = case (fromDynamic x) of
     (Just a) -> Just a
     Nothing -> from' xs
 
-apply1 :: (Typeable a) => (a -> b) -> Components -> Maybe b
+apply1 :: (Typeable a) => (a -> b) -> Entity -> Maybe b
 apply1 f c = pure f <*> from c
 
-apply2 :: (Typeable a, Typeable b) => (a -> b -> c) -> Components -> Maybe c
+apply2 :: (Typeable a, Typeable b) => (a -> b -> c) -> Entity -> Maybe c
 apply2 f c = pure f <*> from c <*> from c
 
-apply3 :: (Typeable a, Typeable b, Typeable c) => (a -> b -> c -> d) -> Components -> Maybe d
+apply3 :: (Typeable a, Typeable b, Typeable c) => (a -> b -> c -> d) -> Entity -> Maybe d
 apply3 f c = pure f <*> from c <*> from c <*> from c
 
 update :: (Typeable a, Typeable b, Typeable c)
-       => (Float -> a -> b -> c) -> Float -> Components -> Components
+       => (Float -> a -> b -> c) -> Float -> Entity -> Entity
 update f t c = fromMaybe c $ do
   a <- from c
   b <- from c
