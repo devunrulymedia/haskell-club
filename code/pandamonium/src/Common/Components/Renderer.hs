@@ -23,10 +23,14 @@ coloredShape = Renderer (apply3 coloredShape') where
 
 data Sprite = Sprite Picture
 
+data Zoom = Zoom Float
+
 sprite :: Renderer
-sprite = Renderer (apply2 sprite') where
-  sprite' :: Position -> Sprite -> Picture
-  sprite' (Position x y) (Sprite s) = translate x y s
+sprite = Renderer sprite' where
+  sprite' e = do (Position x y) <- from e
+                 (Sprite spr) <- from e
+                 let (Zoom s) = fromMaybe (Zoom 1) (from e)
+                 return $ translate x y $ scale s s $ spr
 
 composeRenderers :: [ Renderer ] -> Renderer
 composeRenderers renderers = Renderer (\e -> Just $ Pictures $ catMaybes $ (flip maybeDraw) e <$> renderers)

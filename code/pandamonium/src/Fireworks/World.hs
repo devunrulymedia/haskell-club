@@ -11,7 +11,9 @@ import Common.Components.Entity
 import Common.Components.Position
 import Common.Components.Renderer
 
+import Fireworks.Assets
 import Fireworks.Entities.Rocket
+import Fireworks.Entities.Panda
 
 data World = World
   { _entities :: [ Entity ]
@@ -19,11 +21,11 @@ data World = World
 
 makeLenses ''World
 
-world :: World
-world = World [ rocket ]
+world :: Assets -> World
+world assets = World [ rocket, panda (assets ^. pandaSprite) ]
 
 instance Renderable World where
-  render world = Pictures $ draw coloredShape <$> (world ^. entities)
+  render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
 
 updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world

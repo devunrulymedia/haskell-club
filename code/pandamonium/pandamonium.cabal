@@ -37,6 +37,7 @@ library
                      , Balls.World.World
                      -- exposed fireworks components
                      , Fireworks.World
+                     , Fireworks.Assets
                      -- exposed for test
                      , Common.Components.Entity
                      , Common.Shapes.Shape
@@ -83,6 +84,7 @@ library
                      , Balls.Entities.EntityTypes
                      -- fireworks
                      , Fireworks.Entities.Rocket
+                     , Fireworks.Entities.Panda
 
 
   build-depends:       base >= 4.7 && < 5
