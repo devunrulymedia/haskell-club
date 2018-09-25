@@ -8,8 +8,7 @@ import Graphics.Gloss (Picture (Pictures))
 import Common.Redux
 import Common.Renderable
 import Common.Components.Entity
-import Common.Components.Velocity
-import Common.Components.Acceleration
+import Common.Components.Position
 import Common.Components.Renderer
 
 import Fireworks.Entities.Rocket

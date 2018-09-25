@@ -4,9 +4,7 @@ import Graphics.Gloss (yellow)
 
 import Common.Shapes.Shape (circle)
 import Common.Components.Renderer
-import Common.Components.Acceleration
 import Common.Components.Position
-import Common.Components.Velocity
 import Common.Components.Entity
 
 rocket :: Entity

@@ -50,8 +50,6 @@ library
                      , Common.Graphics.SpriteSheet
                      , Common.Components.Renderer
                      , Common.Components.Position
-                     , Common.Components.Velocity
-                     , Common.Components.Acceleration
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner
@@ -118,7 +116,7 @@ test-suite pandamonium-test
                      , Shapes.PolygonCollisions
                      , Redux.ReduxTest
                      , Redux.TimerTest
-                     , Components.ComponentTest
+                     , Components.EntityTest
   build-depends:       base
                      , gloss
                      , lens
