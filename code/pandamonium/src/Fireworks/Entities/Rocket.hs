@@ -7,7 +7,7 @@ import Common.Components.Renderer
 import Common.Components.Acceleration
 import Common.Components.Position
 import Common.Components.Velocity
-import Common.Components
+import Common.Components.Components
 
 rocket :: Components
 rocket = components

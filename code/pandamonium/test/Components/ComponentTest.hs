@@ -3,7 +3,7 @@
 module Components.ComponentTest (htf_thisModulesTests) where
 
 import Test.Framework
-import Common.Components
+import Common.Components.Components
 
 test_components_can_be_retrieved = do
   let entity = components <-+ "Hello"

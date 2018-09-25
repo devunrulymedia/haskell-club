@@ -1,4 +1,4 @@
-module Common.Components where
+module Common.Components.Components where
 
 import Data.Dynamic
 import Data.Maybe

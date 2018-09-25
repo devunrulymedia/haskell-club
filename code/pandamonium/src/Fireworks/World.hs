@@ -7,7 +7,7 @@ import Graphics.Gloss (Picture (Pictures))
 
 import Common.Redux
 import Common.Renderable
-import Common.Components
+import Common.Components.Components
 import Common.Components.Velocity
 import Common.Components.Acceleration
 import Common.Components.Renderer

@@ -3,7 +3,7 @@ module Common.Components.Renderer where
 import Graphics.Gloss
 import Data.Maybe
 
-import Common.Components
+import Common.Components.Components
 import Common.Components.Position
 import Common.Renderable
 import Common.Shapes.Shape
