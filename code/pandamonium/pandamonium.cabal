@@ -52,6 +52,7 @@ library
                      , Common.Components.Renderer
                      , Common.Components.Position
                      , Common.Components.Lifecycle
+                     , Common.Components.Trigger
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner

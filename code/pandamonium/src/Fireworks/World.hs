@@ -13,6 +13,7 @@ import Common.Components.Entity
 import Common.Components.Lifecycle
 import Common.Components.Position
 import Common.Components.Renderer
+import Common.Components.Trigger
 
 import Fireworks.Assets
 import Fireworks.Entities.Rocket
@@ -27,7 +28,12 @@ data World = World
 makeLenses ''World
 
 world :: Assets -> World
-world assets = World [ rocket, panda (assets ^. pandaSprite) ] (Timer 0 [ Pending 3 (toDyn (Destroy (EntityId 3)))]) (EntityId 0)
+world assets = World
+  [ rocket
+  , delayedSpawn 3 (panda (assets ^. pandaSprite))
+  ]
+  newTimer
+  (EntityId 0)
 
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
@@ -43,6 +49,7 @@ entityRedux = noOpRedux { updater = updateFireworks }
 fireworksRedux :: Redux World
 fireworksRedux = compose
   [ connect (onAll entityRedux) entities
+  , connect (onAll triggerRedux) entities
   , lifecycle entities entityId
   , connect timerRedux timer
   ]

@@ -8,7 +8,6 @@ import Common.Components.Renderer
 
 panda :: Picture -> Entity
 panda sprite = entity
-           <-+ EntityId 3
            <-+ Position 400 0
            <-+ Sprite sprite
            <-+ Zoom 4
