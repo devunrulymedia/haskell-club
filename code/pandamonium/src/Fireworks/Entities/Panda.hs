@@ -3,7 +3,6 @@ module Fireworks.Entities.Panda where
 import Graphics.Gloss (Picture)
 
 import Common.Components.Entity
-import Common.Components.Destroyer
 import Common.Components.Position
 import Common.Components.Renderer
 

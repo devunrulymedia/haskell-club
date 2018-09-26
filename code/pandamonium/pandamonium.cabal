@@ -51,7 +51,7 @@ library
                      , Common.Graphics.SpriteSheet
                      , Common.Components.Renderer
                      , Common.Components.Position
-                     , Common.Components.Destroyer
+                     , Common.Components.Lifecycle
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner

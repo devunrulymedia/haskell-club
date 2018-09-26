@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE RankNTypes #-}
 
-module Common.Components.Destroyer where
+module Common.Components.Lifecycle where
 
 import Control.Lens (Lens)
 

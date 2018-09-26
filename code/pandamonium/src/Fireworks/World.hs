@@ -10,7 +10,7 @@ import Common.Redux
 import Common.Renderable
 import Common.Timer
 import Common.Components.Entity
-import Common.Components.Destroyer
+import Common.Components.Lifecycle
 import Common.Components.Position
 import Common.Components.Renderer
 
