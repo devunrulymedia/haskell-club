@@ -21,12 +21,13 @@ import Fireworks.Entities.Panda
 data World = World
   { _entities :: [ Entity ]
   , _timer :: Timer
+  , _entityId :: EntityId
   }
 
 makeLenses ''World
 
 world :: Assets -> World
-world assets = World [ rocket, panda (assets ^. pandaSprite) ] (Timer 0 [ Pending 3 (toDyn (Destroy (EntityId 3)))])
+world assets = World [ rocket, panda (assets ^. pandaSprite) ] (Timer 0 [ Pending 3 (toDyn (Destroy (EntityId 3)))]) (EntityId 0)
 
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
@@ -42,6 +43,6 @@ entityRedux = noOpRedux { updater = updateFireworks }
 fireworksRedux :: Redux World
 fireworksRedux = compose
   [ connect (onAll entityRedux) entities
-  , connect destroyer entities
+  , lifecycle entities entityId
   , connect timerRedux timer
   ]

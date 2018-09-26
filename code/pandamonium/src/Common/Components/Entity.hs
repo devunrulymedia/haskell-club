@@ -5,7 +5,11 @@ import Data.Maybe
 
 data Entity = Entity [ Dynamic ]
 
-data EntityId = EntityId Integer deriving Eq
+data EntityId = EntityId Int deriving Eq
+
+instance Enum EntityId where
+  toEnum = EntityId
+  fromEnum (EntityId entityId) = entityId
 
 entity :: Entity
 entity = Entity []
