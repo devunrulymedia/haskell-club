@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Common.Timer (awaitEvent, timerRedux, Timer, newTimer) where
+module Common.Timer where
 
 import Control.Lens
 import Data.Dynamic (Typeable)

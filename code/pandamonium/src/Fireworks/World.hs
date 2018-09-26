@@ -4,11 +4,13 @@ module Fireworks.World where
 
 import Control.Lens
 import Graphics.Gloss (Picture (Pictures))
+import Data.ConstrainedDynamic
 
 import Common.Redux
 import Common.Renderable
 import Common.Timer
 import Common.Components.Entity
+import Common.Components.Destroyer
 import Common.Components.Position
 import Common.Components.Renderer
 
@@ -24,7 +26,7 @@ data World = World
 makeLenses ''World
 
 world :: Assets -> World
-world assets = World [ rocket, panda (assets ^. pandaSprite) ] newTimer
+world assets = World [ rocket, panda (assets ^. pandaSprite) ] (Timer 0 [ Pending 3 (toDyn (Destroy (EntityId 3)))])
 
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
@@ -35,7 +37,11 @@ updateFireworks time world = return world
                          <&> update applyVelocity time
 
 entityRedux :: Redux Entity
-entityRedux = noOpRedux { updater = updateFireworks}
+entityRedux = noOpRedux { updater = updateFireworks }
 
 fireworksRedux :: Redux World
-fireworksRedux = connect (onAll entityRedux) entities
+fireworksRedux = compose
+  [ connect (onAll entityRedux) entities
+  , connect destroyer entities
+  , connect timerRedux timer
+  ]
