@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -F -pgmF htfpp #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Components.EntityTest (htf_thisModulesTests) where
 
@@ -34,3 +35,10 @@ test_multiple_components_can_be_retrieved_regarldess_of_order = do
 test_multiple_components_can_exist_on_same_entity = do
   let ent1 = entity <-+ "One" <-+ "Two" <-+ "Three"
   assertEqual (allFrom ent1) ["Three", "Two", "One"]
+
+test_consume_components = do
+  let ent1 = entity <-+ "One" <-+ "Two"
+  let (ent1', strings) = consumeAll ent1
+  assertEqual strings ["One", "Two"]
+  let anyString :: Maybe String = from ent1'
+  assertEqual anyString Nothing

@@ -1,5 +1,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Common.Components.Entity where
 
@@ -47,7 +48,17 @@ from (Entity xs) = from' xs where
     (Just a) -> Just a
     Nothing -> from' xs
 
-allFrom :: (Component a) => Entity -> [a] 
+consumeAll :: forall a . (Component a) => Entity -> (Entity, [a])
+consumeAll (Entity xs) =
+  let (xs', as) = consumeAll' xs ([], [])
+   in (Entity xs', as) where
+      consumeAll' :: [DynComp] -> ([DynComp], [a]) -> ([DynComp], [a])
+      consumeAll' [] (xs', as) = (xs', as)
+      consumeAll' (x:xs) (xs', as) = case (fromDynamic x) of
+        Nothing  -> consumeAll' xs (x:xs', as)
+        (Just a) -> consumeAll' xs (xs', a:as)
+
+allFrom :: (Component a) => Entity -> [a]
 allFrom (Entity xs) = allFrom' xs where
   allFrom' [] = []
   allFrom' (x : xs) = case (fromDynamic x) of
