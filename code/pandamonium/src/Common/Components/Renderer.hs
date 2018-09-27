@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Common.Components.Renderer where
 
 import Graphics.Gloss
@@ -7,6 +9,10 @@ import Common.Components.Entity
 import Common.Components.Position
 import Common.Renderable
 import Common.Shapes.Shape
+
+instance Component Color
+
+instance Component Shape
 
 data Renderer = Renderer (Entity -> Maybe Picture)
 
@@ -21,9 +27,9 @@ coloredShape = Renderer (apply3 coloredShape') where
   coloredShape' :: Color -> Position -> Shape -> Picture
   coloredShape' c (Position x y) s = color c $ translate x y $ render s
 
-data Sprite = Sprite Picture
+data Sprite = Sprite Picture deriving Component
 
-data Zoom = Zoom Float
+data Zoom = Zoom Float deriving Component
 
 sprite :: Renderer
 sprite = Renderer sprite' where

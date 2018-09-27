@@ -14,4 +14,3 @@ rocket = entity
      <-+ Position 0 (-500)
      <-+ Velocity 0 0
      <-+ Acceleration 0 200
-     <-+ coloredShape

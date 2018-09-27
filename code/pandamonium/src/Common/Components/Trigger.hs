@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Common.Components.Trigger where
 
 import Data.ConstrainedDynamic
@@ -7,7 +9,7 @@ import Common.Timer
 import Common.Components.Entity
 import Common.Components.Lifecycle
 
-data Trigger = Trigger DynEvent
+data Trigger = Trigger DynEvent deriving Component
 
 updateTrigger :: Float -> Entity -> Events Entity
 updateTrigger time entity = case (from entity) of

@@ -1,9 +1,15 @@
 {-# OPTIONS_GHC -F -pgmF htfpp #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Components.EntityTest (htf_thisModulesTests) where
 
 import Test.Framework
 import Common.Components.Entity
+
+instance Component [ Char ]
+instance Component Bool
+instance Component Int
 
 test_components_can_be_retrieved = do
   let ent = entity <-+ "Hello"
