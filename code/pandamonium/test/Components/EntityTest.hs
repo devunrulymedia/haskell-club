@@ -7,7 +7,8 @@ module Components.EntityTest (htf_thisModulesTests) where
 import Test.Framework
 import Common.Components.Entity
 
-instance Component [ Char ]
+instance Component [ Char ] where
+  uniqueComponent a = False
 instance Component Bool
 instance Component Int
 
@@ -29,3 +30,7 @@ test_multiple_components_can_be_retrieved_regarldess_of_order = do
   let ent2 = entity <-+ False <-+ "Goodbye"
   assertEqual (from ent2) (Just "Goodbye")
   assertEqual (from ent2) (Just False)
+
+test_multiple_components_can_exist_on_same_entity = do
+  let ent1 = entity <-+ "One" <-+ "Two" <-+ "Three"
+  assertEqual (allFrom ent1) ["Three", "Two", "One"]

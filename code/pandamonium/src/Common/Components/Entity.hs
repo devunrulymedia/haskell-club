@@ -27,7 +27,9 @@ entity = Entity []
 infixl 4 <-+
 
 (<-+) :: (Component a) => Entity -> a -> Entity
-(<-+) (Entity xs) a = Entity (replace xs a)
+(<-+) (Entity xs) a = if uniqueComponent a
+  then Entity (replace xs a)
+  else Entity (toDyn a : xs)
 
 replace :: Component a => [ DynComp ] -> a -> [ DynComp ]
 replace [] a = [toDyn a]
@@ -44,6 +46,13 @@ from (Entity xs) = from' xs where
   from' (x : xs) = case (fromDynamic x) of
     (Just a) -> Just a
     Nothing -> from' xs
+
+allFrom :: (Component a) => Entity -> [a] 
+allFrom (Entity xs) = allFrom' xs where
+  allFrom' [] = []
+  allFrom' (x : xs) = case (fromDynamic x) of
+    (Just a) -> a : allFrom' xs
+    Nothing  -> allFrom' xs
 
 apply1 :: (Component a) => (a -> b) -> Entity -> Maybe b
 apply1 f c = pure f <*> from c
