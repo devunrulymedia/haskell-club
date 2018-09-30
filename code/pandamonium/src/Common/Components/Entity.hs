@@ -74,9 +74,37 @@ apply2 f c = pure f <*> from c <*> from c
 apply3 :: (Component a, Component b, Component c) => (a -> b -> c -> d) -> Entity -> Maybe d
 apply3 f c = pure f <*> from c <*> from c <*> from c
 
-update :: (Component a, Component b, Component c)
-       => (Float -> a -> b -> c) -> Float -> Entity -> Entity
-update f t c = fromMaybe c $ do
+update1 :: (Component a, Component b)
+        => (Float -> a -> b) -> Float -> Entity -> Entity
+update1 f t c = fromMaybe c $ do
+  a <- from c
+  return $ c <-+ f t a
+
+
+update2 :: (Component a, Component b, Component c)
+        => (Float -> a -> b -> c) -> Float -> Entity -> Entity
+update2 f t c = fromMaybe c $ do
   a <- from c
   b <- from c
   return $ c <-+ f t a b
+
+applyM :: (Component a, Monad m)
+       => (Float -> a -> m ()) -> Float -> Entity -> m Entity
+applyM f t e = fromMaybe (return e) $ do
+  a <- from e
+  return $ (do f t a; return e)
+
+applyM2 :: (Component a, Component b, Monad m)
+        => (Float -> a -> b -> m ()) -> Float -> Entity -> m Entity
+applyM2 f t e = fromMaybe (return e) $ do
+  a <- from e
+  b <- from e
+  return $ (do f t a b; return e)
+
+applyM3 :: (Component a, Component b, Component c, Monad m)
+        => (Float -> a -> b -> c -> m ()) -> Float -> Entity -> m Entity
+applyM3 f t e = fromMaybe (return e) $ do
+  a <- from e
+  b <- from e
+  c <- from e
+  return $ (do f t a b c; return e)

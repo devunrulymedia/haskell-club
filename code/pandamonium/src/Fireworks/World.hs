@@ -40,8 +40,8 @@ instance Renderable World where
 
 updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world
-                         <&> update applyAcceleration time
-                         <&> update applyVelocity time
+                         <&> update2 applyAcceleration time
+                         <&> update2 applyVelocity time
 
 entityRedux :: Redux Entity
 entityRedux = noOpRedux { updater = updateFireworks }
@@ -50,6 +50,7 @@ fireworksRedux :: Redux World
 fireworksRedux = compose
   [ connect (onAll entityRedux) entities
   , connect (onAll triggerRedux) entities
+  , connect (onAll rocketRedux) entities
   , lifecycle entities entityId
   , connect timerRedux timer
   ]
