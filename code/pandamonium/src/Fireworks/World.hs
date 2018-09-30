@@ -3,7 +3,7 @@
 module Fireworks.World where
 
 import Control.Lens
-import Graphics.Gloss (Picture (Pictures))
+import Graphics.Gloss (Picture (Pictures), yellow, green)
 import Data.ConstrainedDynamic
 
 import Common.Redux
@@ -21,19 +21,13 @@ import Fireworks.Entities.Panda
 
 data World = World
   { _entities :: [ Entity ]
-  , _timer :: Timer
   , _entityId :: EntityId
   }
 
 makeLenses ''World
 
-world :: Assets -> World
-world assets = World
-  [ rocket
-  , delayedSpawn 3 (panda (assets ^. pandaSprite))
-  ]
-  newTimer
-  (EntityId 0)
+emptyWorld :: World
+emptyWorld = World [] (EntityId 0)
 
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
@@ -49,8 +43,6 @@ entityRedux = noOpRedux { updater = updateFireworks }
 fireworksRedux :: Redux World
 fireworksRedux = compose
   [ connect (onAll entityRedux) entities
-  , connect (onAll triggerRedux) entities
-  , connect (onAll rocketRedux) entities
+  , connect rocketRedux entities
   , lifecycle entities entityId
-  , connect timerRedux timer
   ]

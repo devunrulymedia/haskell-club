@@ -38,6 +38,7 @@ library
                      -- exposed fireworks components
                      , Fireworks.World
                      , Fireworks.Assets
+                     , Fireworks.Game
                      -- exposed for test
                      , Common.Components.Entity
                      , Common.Shapes.Shape

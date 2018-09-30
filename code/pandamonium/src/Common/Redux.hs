@@ -54,6 +54,10 @@ handleRemainingEvents r w e = do (world, events) <- runWriterT $ foldM (flip $ r
                                    Nil -> return world
                                    otherwise -> handleRemainingEvents r world events
 
+reduxDo :: Redux w -> w -> Events () -> IO w
+reduxDo r w a = case runWriter a of
+  ((), events) -> handleRemainingEvents r w events
+
 reduxListen :: Redux w -> Event -> w -> IO w
 reduxListen r e w = case runWriter $ listener r e w of
   (world, events) -> handleRemainingEvents r world events
@@ -72,11 +76,14 @@ connect redux lens = Redux
   , listener = lensing lens (listener redux)
   }
 
+onEach :: (Traversable t, Monad m) => (a -> b -> m b) -> a -> t b -> m (t b)
+onEach f a bs = traverse (f a) bs
+
 onAll :: Traversable t => Redux a -> Redux (t a)
 onAll redux = Redux
-  { reducer = \e -> traverse (reducer redux e)
-  , updater = \t -> traverse (updater redux t)
-  , listener = \e -> traverse (listener redux e)
+  { reducer = onEach (reducer redux)
+  , updater = onEach (updater redux)
+  , listener = onEach (listener redux)
   }
 
 composeHandler :: Monad m => [a -> b -> m b] -> a -> b -> m b

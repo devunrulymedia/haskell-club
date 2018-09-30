@@ -18,9 +18,14 @@ updateTrigger time entity = case (from entity) of
                                destroy entity
                                return entity
 
+fire :: (ReduxEvent a) => a -> Entity
+fire event = entity <-+ Trigger (toDyn event)
+
+delayedFire :: (ReduxEvent a) => Float -> a -> Entity
+delayedFire delay event = fire (Await delay (toDyn event))
+
 delayedSpawn :: Float -> Entity -> Entity
-delayedSpawn delay ent = entity
-                     <-+ Trigger (toDyn (Await delay (toDyn (Spawn ent))))
+delayedSpawn delay ent = delayedFire delay (Spawn ent)
 
 triggerRedux :: Redux Entity
 triggerRedux = noOpRedux { updater = updateTrigger }
