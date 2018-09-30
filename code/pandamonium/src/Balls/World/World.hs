@@ -29,8 +29,8 @@ collide :: Float -> Ent Ball -> Ent Ball -> Events (Ent Ball, Ent Ball)
 collide t = bounce
 
 balls_bouncing :: Float -> World -> Events World
-balls_bouncing t w = do newBalls <- againstSelf collide t (w ^. balls)
-                        return $ balls .~ newBalls $ w
+balls_bouncing t w = balls %%~ againstSelf collide t $ w
+
 
 updateWorld :: Float -> World -> Events World
 updateWorld t w = return w

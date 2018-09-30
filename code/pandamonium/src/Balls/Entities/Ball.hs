@@ -38,27 +38,14 @@ instance Physics Ball where
   mass ball = ball ^. ballMass
   elasticity ball = 1
 
-instance ReduxEvent Color
-
-zag :: Event -> Ball -> Events Ball
-zag (EventKey (Char 'z') true _ _) ball = return $ pos %~ (\x -> x - (10, 0)) $ ball
-zag (EventKey (Char 'x') true _ _) ball = return $ pos %~ (+ (10, 0)) $ ball
-zag (EventKey (Char 'm') true _ _) ball = do
-  fireEvent yellow
-  return ball
-zag _ ball = return ball
-
 updateBall :: Float -> Ball -> Events Ball
 updateBall t b = return b
              <&> gravitate t
              <&> integrate t
 
-enhue :: Color -> Ball -> IOEvents Ball
-enhue c ball = return $ col .~ c $ ball
-
 ballRedux :: Redux Ball
 ballRedux = Redux
   { updater = updateBall
-  , listener = zag
-  , reducer = focusM enhue
+  , listener = noOp
+  , reducer = noOp
   }
