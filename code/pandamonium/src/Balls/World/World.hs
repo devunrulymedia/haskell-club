@@ -29,7 +29,7 @@ collide :: Float -> Ent Ball -> Ent Ball -> Events (Ent Ball, Ent Ball)
 collide t = bounce
 
 balls_bouncing :: Float -> World -> Events World
-balls_bouncing t w = balls %%~ againstSelf collide t $ w
+balls_bouncing t = balls %%~ againstSelf collide t
 
 
 updateWorld :: Float -> World -> Events World
