@@ -3,15 +3,16 @@
 module Common.Components.Position where
 
 import Common.Components.Entity
+import Graphics.Gloss (Vector)
 
-data Position = Position Float Float deriving Component
+data Position = Position Vector deriving Component
 
-data Velocity = Velocity Float Float deriving Component
+data Velocity = Velocity Vector deriving Component
 
-data Acceleration = Acceleration Float Float deriving Component
+data Acceleration = Acceleration Vector deriving Component
 
 applyVelocity :: Float -> Velocity -> Position -> Position
-applyVelocity t (Velocity dx dy) (Position x y) = Position (x + t * dx) (y + t * dy)
+applyVelocity t (Velocity (dx, dy)) (Position (x, y)) = Position (x + t * dx, y + t * dy)
 
 applyAcceleration :: Float -> Acceleration -> Velocity -> Velocity
-applyAcceleration t (Acceleration dx dy) (Velocity x y) = Velocity (x + t * dx) (y + t * dy)
+applyAcceleration t (Acceleration (dx, dy)) (Velocity (x, y)) = Velocity (x + t * dx, y + t * dy)

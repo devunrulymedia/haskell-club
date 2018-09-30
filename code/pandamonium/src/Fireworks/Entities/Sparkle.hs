@@ -14,5 +14,5 @@ sparkle pos vel col = entity
                   <-+ vel
                   <-+ col
                   <-+ circle (0, 0) 10
-                  <-+ Acceleration 0 (-300)
+                  <-+ Acceleration (0, -300)
                   <-+ Lifespan 2

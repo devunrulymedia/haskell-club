@@ -24,8 +24,8 @@ data LaunchRocket = LaunchRocket Vector Color deriving ReduxEvent
 rocket :: Entity
 rocket = entity
      <-+ circle (0, 0) 20
-     <-+ Velocity 0 0
-     <-+ Acceleration 0 200
+     <-+ Velocity (0, 0)
+     <-+ Acceleration (0, 200)
      <-+ Fuel 2
 
 burn :: Float -> Entity -> Entity
@@ -35,13 +35,13 @@ burn t e = update1 burn' t e where
 
 explode' :: Float -> Entity -> Maybe (Events Entity)
 explode' t e = do
-  (Position x y) <- from e
+  (Position p) <- from e
   colour <- from e
   (Fuel fuel) <- from e
   if fuel < 0
     then Just $ do
       destroy e
-      fireEvent (Explosion (x, y) colour)
+      fireEvent (Explosion p colour)
       return e
     else Nothing
 
@@ -54,21 +54,21 @@ updateRocket t e = return e
                >>= explode t
 
 launch :: LaunchRocket -> a -> IOEvents a
-launch (LaunchRocket (x, y) col) a = do
-  spawn (rocket <-+ Position x y <-+ col)
+launch (LaunchRocket p col) a = do
+  spawn (rocket <-+ Position p <-+ col)
   return a
 
 burst :: Explosion -> a -> IOEvents a
-burst (Explosion (x, y) color) a = do
+burst (Explosion p color) a = do
   traverse spawnSparkle (ring 15 500)
   return a where
-    spawnSparkle vel = spawn $ sparkle (Position x y) vel color
+    spawnSparkle vel = spawn $ sparkle (Position p) vel color
 
 -- number of particles, how fast they're moving, yields their radial velocities
 ring :: Float -> Float -> [ Velocity ]
 ring n v = vel <$> [1..n] where
   vel x = let angle = 2 * pi * x / n
-           in Velocity (v * cos angle) (v * sin angle)
+           in Velocity (v * cos angle, v * sin angle)
 
 reduceRocket :: DynEvent -> [ Entity ] -> IOEvents [ Entity ]
 reduceRocket d e = return e
