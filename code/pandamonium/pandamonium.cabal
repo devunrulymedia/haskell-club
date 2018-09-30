@@ -84,6 +84,7 @@ library
                      , Balls.Entities.EntityTypes
                      -- fireworks
                      , Fireworks.Entities.Rocket
+                     , Fireworks.Entities.Sparkle
                      , Fireworks.World
 
 

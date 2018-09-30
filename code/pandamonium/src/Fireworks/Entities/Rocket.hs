@@ -13,9 +13,11 @@ import Common.Components.Lifecycle
 import Common.Components.Position
 import Common.Components.Entity
 
+import Fireworks.Entities.Sparkle
+
 data Fuel = Fuel Float deriving Component
 
-data Explosion = Explosion Float Float Color deriving ReduxEvent
+data Explosion = Explosion Vector Color deriving ReduxEvent
 
 data LaunchRocket = LaunchRocket Vector Color deriving ReduxEvent
 
@@ -39,7 +41,7 @@ explode' t e = do
   if fuel < 0
     then Just $ do
       destroy e
-      fireEvent (Explosion x y colour)
+      fireEvent (Explosion (x, y) colour)
       return e
     else Nothing
 
@@ -56,9 +58,22 @@ launch (LaunchRocket (x, y) col) a = do
   spawn (rocket <-+ Position x y <-+ col)
   return a
 
+burst :: Explosion -> a -> IOEvents a
+burst (Explosion (x, y) color) a = do
+  traverse spawnSparkle (ring 15 500)
+  return a where
+    spawnSparkle vel = spawn $ sparkle (Position x y) vel color
+
+-- number of particles, how fast they're moving, yields their radial velocities
+ring :: Float -> Float -> [ Velocity ]
+ring n v = vel <$> [1..n] where
+  vel x = let angle = 2 * pi * x / n
+           in Velocity (v * cos angle) (v * sin angle)
+
 reduceRocket :: DynEvent -> [ Entity ] -> IOEvents [ Entity ]
 reduceRocket d e = return e
                >>= (focusM launch) d
+               >>= (focusM burst) d
 
 
 rocketRedux :: Redux [ Entity ]

@@ -97,14 +97,11 @@ applyM f t e = fromMaybe (return e) $ do
 applyM2 :: (Component a, Component b, Monad m)
         => (Float -> a -> b -> m ()) -> Float -> Entity -> m Entity
 applyM2 f t e = fromMaybe (return e) $ do
-  a <- from e
-  b <- from e
+  a <- from e; b <- from e
   return $ (do f t a b; return e)
 
 applyM3 :: (Component a, Component b, Component c, Monad m)
         => (Float -> a -> b -> c -> m ()) -> Float -> Entity -> m Entity
 applyM3 f t e = fromMaybe (return e) $ do
-  a <- from e
-  b <- from e
-  c <- from e
+  a <- from e; b <- from e; c <- from e
   return $ (do f t a b c; return e)
