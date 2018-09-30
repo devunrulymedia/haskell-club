@@ -13,11 +13,8 @@ import Common.Components.Entity
 import Common.Components.Lifecycle
 import Common.Components.Position
 import Common.Components.Renderer
-import Common.Components.Trigger
 
-import Fireworks.Assets
 import Fireworks.Entities.Rocket
-import Fireworks.Entities.Panda
 
 data World = World
   { _entities :: [ Entity ]

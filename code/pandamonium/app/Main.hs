@@ -19,7 +19,6 @@ import Thrust.World.CreateWorld
 import Thrust.Game.Game
 import Balls.World.World
 import Fireworks.Game
-import Fireworks.Assets
 
 window :: Display
 
@@ -61,6 +60,5 @@ ballpit = do let world = Balls.World.World.world
              playGame world ballsRedux
 
 fireworks :: IO ()
-fireworks = do assets <- Fireworks.Assets.loadAssets
-               game <- buildGame
+fireworks = do game <- buildGame
                playGame game Fireworks.Game.gameRedux
