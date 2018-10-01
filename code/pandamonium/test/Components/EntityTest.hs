@@ -8,37 +8,25 @@ module Components.EntityTest (htf_thisModulesTests) where
 import Test.Framework
 import Common.Components.Entity
 
-instance Component [ Char ] where
-  uniqueComponent a = False
+instance Component [ Char ]
 instance Component Bool
 instance Component Int
 
 test_components_can_be_retrieved = do
   let ent = entity <-+ "Hello"
-  let message = (from ent) :: Maybe String
+  let message = (extract ent) :: Maybe String
   assertEqual message (Just "Hello")
 
 test_nonexistent_components_can_be_safely_queried = do
   let ent = entity <-+ "Hello"
-  let counter = (from ent) :: Maybe Int
+  let counter = (extract ent) :: Maybe Int
   assertEqual counter Nothing
 
 test_multiple_components_can_be_retrieved_regarldess_of_order = do
   let ent1 = entity <-+ "Hello" <-+ True
-  assertEqual (from ent1) (Just "Hello")
-  assertEqual (from ent1) (Just True)
+  assertEqual (extract ent1) (Just "Hello")
+  assertEqual (extract ent1) (Just True)
 
   let ent2 = entity <-+ False <-+ "Goodbye"
-  assertEqual (from ent2) (Just "Goodbye")
-  assertEqual (from ent2) (Just False)
-
-test_multiple_components_can_exist_on_same_entity = do
-  let ent1 = entity <-+ "One" <-+ "Two" <-+ "Three"
-  assertEqual (allFrom ent1) ["Three", "Two", "One"]
-
-test_consume_components = do
-  let ent1 = entity <-+ "One" <-+ "Two"
-  let (ent1', strings) = consumeAll ent1
-  assertEqual strings ["One", "Two"]
-  let anyString :: Maybe String = from ent1'
-  assertEqual anyString Nothing
+  assertEqual (extract ent2) (Just "Goodbye")
+  assertEqual (extract ent2) (Just False)

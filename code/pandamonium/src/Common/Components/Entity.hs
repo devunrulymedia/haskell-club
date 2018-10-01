@@ -8,9 +8,7 @@ import Data.Dynamic (Typeable)
 import Data.ConstrainedDynamic
 import Data.Maybe
 
-class Typeable a => Component a where
-  uniqueComponent :: a -> Bool
-  uniqueComponent a = True
+class Typeable a => Component a
 
 type DynComp = ConstrainedDynamic Component
 
@@ -28,9 +26,7 @@ entity = Entity []
 infixl 4 <-+
 
 (<-+) :: (Component a) => Entity -> a -> Entity
-(<-+) (Entity xs) a = if uniqueComponent a
-  then Entity (replace xs a)
-  else Entity (toDyn a : xs)
+(<-+) (Entity xs) a = Entity (replace xs a)
 
 replace :: Component a => [ DynComp ] -> a -> [ DynComp ]
 replace [] a = [toDyn a]
@@ -57,13 +53,6 @@ consumeAll (Entity xs) =
       consumeAll' (x:xs) (xs', as) = case (fromDynamic x) of
         Nothing  -> consumeAll' xs (x:xs', as)
         (Just a) -> consumeAll' xs (xs', a:as)
-
-allFrom :: (Component a) => Entity -> [a]
-allFrom (Entity xs) = allFrom' xs where
-  allFrom' [] = []
-  allFrom' (x : xs) = case (fromDynamic x) of
-    (Just a) -> a : allFrom' xs
-    Nothing  -> allFrom' xs
 
 apply1 :: (Component a) => (a -> b) -> Entity -> Maybe b
 apply1 f c = pure f <*> extract c
