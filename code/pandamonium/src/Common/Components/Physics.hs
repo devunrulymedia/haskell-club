@@ -4,7 +4,7 @@
 module Common.Components.Physics where
 
 import Data.Maybe
-import Control.Lens (makeLenses, (^.), (.~))
+import Control.Lens
 import Graphics.Gloss.Data.Vector
 
 import Common.Redux
@@ -57,18 +57,18 @@ fireCollision a b v = fireEvent (Collision (a ^. ent) (b ^. ent) v)
 
 extractPhysics :: Entity -> Maybe ExtractedPhysics
 extractPhysics e = pure ExtractedPhysics
-               <*> from e
-               <*> Just (fromMaybe (Elasticity 1) (from e))
-               <*> from e
-               <*> from e
-               <*> from e
-               <*> Just e
+               <*> extract e
+               <*> pure (fromMaybe (Elasticity 1) (extract e))
+               <*> extract e
+               <*> extract e
+               <*> extract e
+               <*> pure e
 
 extractBarrier :: Entity -> Maybe ExtractedBarrier
 extractBarrier e = pure ExtractedBarrier
-               <*> from e
-               <*> from e
-               <*> Just (fromMaybe (Elasticity 1) (from e))
+               <*> extract e
+               <*> extract e
+               <*> Just (fromMaybe (Elasticity 1) (extract e))
                <*> Just e
 
 bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)

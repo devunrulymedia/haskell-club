@@ -33,9 +33,9 @@ data Zoom = Zoom Float deriving Component
 
 sprite :: Renderer
 sprite = Renderer sprite' where
-  sprite' e = do (Position (x, y)) <- from e
-                 (Sprite spr) <- from e
-                 let (Zoom s) = fromMaybe (Zoom 1) (from e)
+  sprite' e = do (Position (x, y)) <- extract e
+                 (Sprite spr) <- extract e
+                 let (Zoom s) = fromMaybe (Zoom 1) (extract e)
                  return $ translate x y $ scale s s $ spr
 
 composeRenderers :: [ Renderer ] -> Renderer

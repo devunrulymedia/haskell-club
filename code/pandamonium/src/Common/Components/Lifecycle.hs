@@ -25,20 +25,20 @@ age :: Float -> Lifespan -> Lifespan
 age t (Lifespan a) = Lifespan (a - t)
 
 dieOfOldAge :: Entity -> Events Entity
-dieOfOldAge e = case from e of
+dieOfOldAge e = case extract e of
   Nothing -> return e
   (Just (Lifespan a)) -> do
     when (a < 0) (destroy e)
     return e
 
 destroy :: Monad m => Entity -> EventsT m ()
-destroy entity = destroy' (from entity) where
+destroy entity = destroy' (extract entity) where
   destroy' :: Monad m => Maybe EntityId -> EventsT m ()
   destroy' (Just entityId) = fireEvent (Destroy entityId)
   destroy' Nothing = return ()
 
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
-doDestroy (Destroy entityId) entities = return $ filter (\e -> from e /= Just entityId) entities
+doDestroy (Destroy entityId) entities = return $ filter (\e -> extract e /= Just entityId) entities
 
 data Spawn = Spawn Entity deriving ReduxEvent
 

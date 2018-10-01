@@ -35,9 +35,9 @@ burn t e = update1 burn' t e where
 
 explode' :: Float -> Entity -> Maybe (Events Entity)
 explode' t e = do
-  (Position p) <- from e
-  colour <- from e
-  (Fuel fuel) <- from e
+  (Position p) <- extract e
+  colour <- extract e
+  (Fuel fuel) <- extract e
   if fuel < 0
     then Just $ do
       destroy e
