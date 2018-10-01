@@ -25,17 +25,17 @@ entity = Entity []
 
 infixl 4 <-+
 
-(<-+) :: (Component a) => Entity -> a -> Entity
-(<-+) (Entity xs) a = Entity (replace xs a)
+typesMatch :: Maybe a -> a -> Bool
+typesMatch (Just _) _ = True
+typesMatch Nothing  _ = False
 
-replace :: Component a => [ DynComp ] -> a -> [ DynComp ]
-replace [] a = [toDyn a]
-replace (x:xs) a = if typesMatch (fromDynamic x) a
-  then toDyn a : xs
-  else x : replace xs a where
-    typesMatch :: Maybe a -> a -> Bool
-    typesMatch (Just _) _ = True
-    typesMatch Nothing  _ = False
+(<-+) :: (Component a) => Entity -> a -> Entity
+(<-+) (Entity xs) a = Entity (replace xs a) where
+  replace :: Component a => [ DynComp ] -> a -> [ DynComp ]
+  replace [] a = [toDyn a]
+  replace (x:xs) a = if typesMatch (fromDynamic x) a
+    then toDyn a : xs
+    else x : replace xs a
 
 extract :: (Component a) => Entity -> Maybe a
 extract (Entity xs) = extract' xs where
@@ -43,16 +43,6 @@ extract (Entity xs) = extract' xs where
   extract' (x : xs) = case (fromDynamic x) of
     (Just a) -> Just a
     Nothing -> extract' xs
-
-consumeAll :: forall a . (Component a) => Entity -> (Entity, [a])
-consumeAll (Entity xs) =
-  let (xs', as) = consumeAll' xs ([], [])
-   in (Entity xs', as) where
-      consumeAll' :: [DynComp] -> ([DynComp], [a]) -> ([DynComp], [a])
-      consumeAll' [] (xs', as) = (xs', as)
-      consumeAll' (x:xs) (xs', as) = case (fromDynamic x) of
-        Nothing  -> consumeAll' xs (x:xs', as)
-        (Just a) -> consumeAll' xs (xs', a:as)
 
 apply1 :: (Component a) => (a -> b) -> Entity -> Maybe b
 apply1 f c = pure f <*> extract c
