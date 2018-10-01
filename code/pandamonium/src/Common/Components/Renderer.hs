@@ -35,7 +35,7 @@ sprite :: Renderer
 sprite = Renderer sprite' where
   sprite' e = do (Position (x, y)) <- extract e
                  (Sprite spr) <- extract e
-                 let (Zoom s) = fromMaybe (Zoom 1) (extract e)
+                 let (Zoom s) = extractOr (Zoom 1) e
                  return $ translate x y $ scale s s $ spr
 
 composeRenderers :: [ Renderer ] -> Renderer

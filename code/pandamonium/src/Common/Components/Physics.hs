@@ -58,7 +58,7 @@ fireCollision a b v = fireEvent (Collision (a ^. ent) (b ^. ent) v)
 extractPhysics :: Entity -> Maybe ExtractedPhysics
 extractPhysics e = pure ExtractedPhysics
                <*> extract e
-               <*> pure (fromMaybe (Elasticity 1) (extract e))
+               <*> pure (extractOr (Elasticity 1) e)
                <*> extract e
                <*> extract e
                <*> extract e
@@ -68,8 +68,8 @@ extractBarrier :: Entity -> Maybe ExtractedBarrier
 extractBarrier e = pure ExtractedBarrier
                <*> extract e
                <*> extract e
-               <*> Just (fromMaybe (Elasticity 1) (extract e))
-               <*> Just e
+               <*> pure (extractOr (Elasticity 1) e)
+               <*> pure e
 
 bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)
 bounce a b = case (shape b !!> shape a) of

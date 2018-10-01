@@ -44,6 +44,14 @@ extract (Entity xs) = extract' xs where
     (Just a) -> Just a
     Nothing -> extract' xs
 
+extractOr :: (Component a) => a -> Entity -> a
+extractOr a e = fromMaybe a (extract e)
+
+update :: (Component a) => (a -> a) -> Entity -> Entity
+update f e = case (extract e) of
+  (Just a) -> e <-+ f a
+  Nothing  -> e
+
 apply1 :: (Component a) => (a -> b) -> Entity -> Maybe b
 apply1 f c = pure f <*> extract c
 
