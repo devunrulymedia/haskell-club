@@ -31,8 +31,8 @@ instance Renderable World where
 
 updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world
-                         <&> update2 applyAcceleration time
-                         <&> update2 applyVelocity time
+                         <&> update2 applyAcc time
+                         <&> update2 applyVel time
 
 entityRedux :: Redux Entity
 entityRedux = noOpRedux { updater = updateFireworks }

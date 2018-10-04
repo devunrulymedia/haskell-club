@@ -8,6 +8,7 @@ import Control.Lens
 import Graphics.Gloss.Data.Vector
 
 import Common.Redux
+import Common.Relationship
 import Common.Physics.Physics (Physics, mass, elasticity)
 import Common.Components.Entity
 import Common.Components.Position
@@ -80,6 +81,12 @@ extractBarrier e = pure ExtractedBarrier
                <*> pure (extractOr (Elasticity 1) e)
                <*> pure e
 
+collide :: Float -> Entity -> Entity -> Events (Entity, Entity)
+collide t a b = do
+  (a', b') <- fromMaybe (return (a, b)) (pure bounce <*> extractPhysics a <*> extractPhysics b)
+  (b'', a'') <- fromMaybe (return (b', a')) (pure bounce_against_static <*> extractPhysics b' <*> extractBarrier a')
+  fromMaybe (return (a'', b'')) (pure bounce_against_static <*> extractPhysics a'' <*> extractBarrier b'')
+
 bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)
 bounce_against_static a b = case (shape b !!> shape a) of
  Nothing -> return (entityFrom a, entityFrom b)
@@ -126,3 +133,17 @@ bounce a b = case (shape b !!> shape a) of
 
       entA = entityFrom a <-| onPosition (+ pushoutA) <-| onVelocity (+ velChangeA)
       entB = entityFrom b <-| onPosition (+ pushoutB) <-| onVelocity (+ velChangeB)
+
+updatePhysics1 :: Float -> Entity -> Events Entity
+updatePhysics1 t e = return e <&> update2 applyVel t <&> update2 applyAcc t
+
+updatePhysics :: Float -> [ Entity ] -> Events [ Entity ]
+updatePhysics t es = return es
+                 >>= againstSelf collide t
+
+physicsRedux :: Redux [ Entity ]
+physicsRedux = Redux
+  { updater = composeHandler [ updatePhysics, onEach updatePhysics1 ]
+  , listener = noOp
+  , reducer = noOp
+  }
