@@ -57,7 +57,8 @@ pandamonium = do assets <- Pandamonium.World.Assets.loadAssets
 
 ballpit :: IO ()
 ballpit = do let world = Balls.World.World.world
-             playGame world ballsRedux
+             world' <- reduxDo ballsRedux world initialiseWorld
+             playGame world' ballsRedux
 
 fireworks :: IO ()
 fireworks = do game <- buildGame

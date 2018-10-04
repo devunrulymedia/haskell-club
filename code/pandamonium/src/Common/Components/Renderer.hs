@@ -23,9 +23,12 @@ draw :: Renderer -> Entity -> Picture
 draw (Renderer f) c = fromMaybe Blank (f c)
 
 coloredShape :: Renderer
-coloredShape = Renderer (apply3 coloredShape') where
-  coloredShape' :: Color -> Position -> Shape -> Picture
-  coloredShape' c (Position (x, y)) s = color c $ translate x y $ render s
+coloredShape = Renderer (coloredShape') where
+  coloredShape' e = do
+    let (Position (x, y)) = extractOr (Position (0, 0)) e
+    col <- extract e
+    shp <- extract e :: Maybe Shape
+    return $ color col $ translate x y $ render shp
 
 data Sprite = Sprite Picture deriving Component
 

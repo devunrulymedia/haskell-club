@@ -82,6 +82,7 @@ library
                      , Pandamonium.World.Stage
                      -- ball modules
                      , Balls.Entities.Ball
+                     , Balls.Entities.EBall
                      , Balls.Entities.EntityTypes
                      -- fireworks
                      , Fireworks.Entities.Rocket

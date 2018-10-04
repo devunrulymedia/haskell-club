@@ -7,61 +7,44 @@ import Graphics.Gloss ( Picture (Pictures), white, red, blue, yellow, green )
 import Common.Renderable
 import Common.Redux
 import Common.Relationship
-import Common.Physics.Collisions
+import Common.Components.Entity
+import Common.Components.Physics
+import Common.Components.Lifecycle
+import Common.Components.Renderer
 import Common.Shapes.Shape
-import Common.Entities.Block
-import Common.Entities.Entity
-import Balls.Entities.Ball
-import Balls.Entities.EntityTypes
+import Balls.Entities.EBall
 
 data World = World
-  { _walls :: [ Ent Block ]
-  , _balls :: [ Ent Ball ]
+  { _entities :: [ Entity ]
+  , _entityId :: EntityId
   }
 
 makeLenses ''World
 
-collisions :: Float -> World -> Events World
-collisions = relationshipM (onPairs ball_wall_bounce) balls walls where
-  ball_wall_bounce t ball wall = bounce_against_static 1 ball wall
-
-collide :: Float -> Ent Ball -> Ent Ball -> Events (Ent Ball, Ent Ball)
-collide t = bounce
-
-balls_bouncing :: Float -> World -> Events World
-balls_bouncing t = balls %%~ againstSelf collide t
-
-
-updateWorld :: Float -> World -> Events World
-updateWorld t w = return w
-              >>= collisions t
-              >>= balls_bouncing t
-
 instance Renderable World where
-  render world = Pictures $
-                 (render <$> world ^. walls) ++
-                 (render <$> world ^. balls)
+  render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
 
 ballsRedux :: Redux World
 ballsRedux = compose
-  [ connect (onAll (connect ballRedux edata)) balls
-  , noOpRedux { updater = updateWorld }
+  [ connect physicsRedux entities
+  , lifecycle entities entityId
   ]
 
+initialiseWorld :: Events ()
+initialiseWorld = do
+  spawn $ block (rectangleV (-600, 400) (1200, 20))
+  spawn $ block (rectangleV (-600, 100) (20, 300))
+  spawn $ block (rectangleV (580, 100) (20, 300))
+  spawn $ block (polygon [(-600, 100), (-580, 100), (-180, -300), (-200, -300)])
+  spawn $ block (rectangleV (-200, -600) (20, 300))
+  spawn $ block (rectangleV (-200, -600) (400, 20))
+  spawn $ block (rectangleV (180, -600) (20, 300))
+  spawn $ block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)])
+
+  spawn $ ball (0, 0) 1 30 red
+  spawn $ ball (10, 75) 2 40 blue
+  spawn $ ball (100, 25) 4 60 green
+  spawn $ ball (-200, 25) 1 25 yellow
+
 world :: World
-world = World
- { _walls = [ Entity 0 EWall $ Block (rectangleV (-600, 400) (1200, 20)) white
-            , Entity 1 EWall $ Block (rectangleV (-600, 100) (20, 300)) white
-            , Entity 2 EWall $ Block (rectangleV (580, 100) (20, 300)) white
-            , Entity 3 EWall $ Block (polygon [(-600, 100), (-580, 100), (-180, -300), (-200, -300)]) white
-            , Entity 4 EWall $ Block (rectangleV (-200, -600) (20, 300)) white
-            , Entity 5 EWall $ Block (rectangleV (-200, -600) (400, 20)) white
-            , Entity 6 EWall $ Block (rectangleV (180, -600) (20, 300)) white
-            , Entity 7 EWall $ Block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)]) white
-            ]
- , _balls = [ Entity 8 EBall $ Ball { _ballMass = 1, _pos = (0, 0), _radius = 30, _vel = (0, 0), _col = red }
-            , Entity 9 EBall $ Ball { _ballMass = 2, _pos = (10, 75), _radius = 40, _vel = (0, 600), _col = blue }
-            , Entity 10 EBall $ Ball { _ballMass = 4, _pos = (100, 25), _radius = 60, _vel = (300, 0), _col = green }
-            , Entity 11 EBall $ Ball { _ballMass = 1, _pos = (-200, 25), _radius = 25, _vel = (-400, 0), _col = yellow }
-            ]
- }
+world = World [] (EntityId 0)
