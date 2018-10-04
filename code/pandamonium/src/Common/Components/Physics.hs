@@ -35,9 +35,18 @@ data ExtractedBarrier = ExtractedBarrier Immovable Shape Elasticity Entity
 
 makeLenses ''ExtractedPhysics
 
+instance View ExtractedPhysics where
+  entityFrom ep = ep ^. ent
+
+instance View ExtractedBarrier where
+  entityFrom (ExtractedBarrier _ _ _ ent) = ent
+
 instance Shaped ExtractedPhysics where
   shape ep = let (Position p) = ep ^. pos
               in move p (ep ^. shp)
+
+instance Shaped ExtractedBarrier where
+  shape (ExtractedBarrier _ shp _ _) = shp
 
 instance Movable ExtractedPhysics where
   move vec ep = let (Position p) = ep ^. pos
@@ -52,8 +61,8 @@ instance Physics ExtractedPhysics where
   mass ep = let (Mass ms) = ep ^. m in ms
   elasticity ep = let (Elasticity e) = ep ^. el in e
 
-fireCollision :: ExtractedPhysics -> ExtractedPhysics -> Vector -> Events ()
-fireCollision a b v = fireEvent (Collision (a ^. ent) (b ^. ent) v)
+fireCollision :: (View a, View b) => a -> b -> Vector -> Events ()
+fireCollision a b v = fireEvent (Collision (entityFrom a) (entityFrom b) v)
 
 extractPhysics :: Entity -> Maybe ExtractedPhysics
 extractPhysics e = pure ExtractedPhysics
@@ -71,9 +80,27 @@ extractBarrier e = pure ExtractedBarrier
                <*> pure (extractOr (Elasticity 1) e)
                <*> pure e
 
+bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)
+bounce_against_static a b = case (shape b !!> shape a) of
+ Nothing -> return (entityFrom a, entityFrom b)
+ (Just pushout) -> do
+   fireCollision a b offset
+   fireCollision b a (0, 0)
+
+   return (entityFrom a <-| onPosition (+ offset) <-| onVelocity (+ reflected_vel), entityFrom b) where
+     vel           = velocity a
+     unit_push     = normalizeV pushout
+     elA           = elasticity a
+     (ExtractedBarrier _ _ (Elasticity elB) _) = b
+     el            = elA * elB
+     offset        = mulSV (1 + el) pushout
+     normal_proj   = (1 + el) * (vel `dotV` unit_push)
+     reflected_vel = negate $ mulSV normal_proj unit_push
+
+
 bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)
 bounce a b = case (shape b !!> shape a) of
-  Nothing -> return (a ^. ent, b ^. ent)
+  Nothing -> return (entityFrom a, entityFrom b)
   (Just pushout) -> do
     fireCollision a b pushoutA
     fireCollision b a pushoutB
@@ -97,8 +124,5 @@ bounce a b = case (shape b !!> shape a) of
       velChangeA = negate $ mulSV normal_proj_a unit_push
       velChangeB = negate $ mulSV normal_proj_b unit_push
 
-      newA = move pushoutA $ applyImpulse velChangeA $ a
-      newB = move pushoutB $ applyImpulse velChangeB $ b
-
-      entA = (a ^. ent) <-+ (a ^. pos) <-+ (a ^. vel)
-      entB = (b ^. ent) <-+ (b ^. pos) <-+ (b ^. vel)
+      entA = entityFrom a <-| onPosition (+ pushoutA) <-| onVelocity (+ velChangeA)
+      entB = entityFrom b <-| onPosition (+ pushoutB) <-| onVelocity (+ velChangeB)

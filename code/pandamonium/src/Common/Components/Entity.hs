@@ -20,10 +20,14 @@ instance Enum EntityId where
   toEnum = EntityId
   fromEnum (EntityId entityId) = entityId
 
+class View a where
+  entityFrom :: a -> Entity
+
 entity :: Entity
 entity = Entity []
 
 infixl 4 <-+
+infixl 4 <-|
 
 typesMatch :: Maybe a -> a -> Bool
 typesMatch (Just _) _ = True
@@ -36,6 +40,9 @@ typesMatch Nothing  _ = False
   replace (x:xs) a = if typesMatch (fromDynamic x) a
     then toDyn a : xs
     else x : replace xs a
+
+(<-|) :: Component a => Entity -> (a -> a) -> Entity
+(<-|) = flip update
 
 extract :: (Component a) => Entity -> Maybe a
 extract (Entity xs) = extract' xs where
