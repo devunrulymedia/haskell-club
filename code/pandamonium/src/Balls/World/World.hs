@@ -4,15 +4,19 @@ module Balls.World.World where
 
 import Control.Lens
 import Graphics.Gloss ( Picture (Pictures), white, red, blue, yellow, green )
+
 import Common.Renderable
 import Common.Redux
 import Common.Relationship
+
 import Common.Components.Entity
 import Common.Components.Physics
 import Common.Components.Lifecycle
 import Common.Components.Renderer
+
 import Common.Shapes.Shape
-import Balls.Entities.EBall
+
+import Balls.Entities.Entities
 
 data World = World
   { _entities :: [ Entity ]

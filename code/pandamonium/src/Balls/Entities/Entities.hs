@@ -1,4 +1,4 @@
-module Balls.Entities.EBall where
+module Balls.Entities.Entities where
 
 import Graphics.Gloss (Vector, Color, white)
 
