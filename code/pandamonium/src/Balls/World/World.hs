@@ -28,11 +28,8 @@ makeLenses ''World
 instance Renderable World where
   render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
 
-ballsRedux :: Redux World
-ballsRedux = compose
-  [ connect physicsRedux entities
-  , lifecycle entities entityId
-  ]
+world :: World
+world = World [] (EntityId 0)
 
 initialiseWorld :: Events ()
 initialiseWorld = do
@@ -49,6 +46,9 @@ initialiseWorld = do
   spawn $ ball (10, 75) 2 40 blue
   spawn $ ball (100, 25) 4 60 green
   spawn $ ball (-200, 25) 1 25 yellow
-
-world :: World
-world = World [] (EntityId 0)
+  
+ballsRedux :: Redux World
+ballsRedux = compose
+  [ connect physicsRedux entities
+  , lifecycle entities entityId
+  ]
