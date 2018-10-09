@@ -52,6 +52,7 @@ library
                      , Common.Components.Position
                      , Common.Components.Lifecycle
                      , Common.Components.Physics
+                     , Common.Components.Controls
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner
