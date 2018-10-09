@@ -37,6 +37,8 @@ library
                      , Balls.World.World
                      -- exposed fireworks components
                      , Fireworks.Game
+                     -- exposed bomberman components
+                     , Bomberman.Bomberman
                      -- exposed for test
                      , Common.Components.Entity
                      , Common.Shapes.Shape
@@ -53,6 +55,8 @@ library
                      , Common.Components.Lifecycle
                      , Common.Components.Physics
                      , Common.Components.Controls
+                     , Common.Components.World
+                     , Common.Components
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner

@@ -13,6 +13,7 @@ import Common.Physics.Physics (Physics, mass, elasticity)
 import Common.Components.Entity
 import Common.Components.Position
 import Common.Components.Renderer
+import Common.Components.World
 import Common.Shapes.Shape
 
 data Collision = Collision Entity Entity Vector deriving ReduxEvent
@@ -147,3 +148,6 @@ physicsRedux = Redux
   , listener = noOp
   , reducer = noOp
   }
+
+physics :: Redux World
+physics = connect physicsRedux entities

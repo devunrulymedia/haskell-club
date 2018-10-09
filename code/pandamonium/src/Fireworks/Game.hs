@@ -8,6 +8,8 @@ import Graphics.Gloss (yellow, green)
 import Common.Timer
 import Common.Redux
 import Common.Renderable
+import Common.Components.Renderer
+import Common.Components.World
 
 import Fireworks.World
 import Fireworks.Entities.Rocket
@@ -35,5 +37,5 @@ initialiseGame = do
 
 buildGame :: IO Game
 buildGame = do
-  let game = Game emptyWorld newTimer
+  let game = Game (newWorld coloredShape) newTimer
   reduxDo gameRedux game initialiseGame

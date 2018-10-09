@@ -16,6 +16,7 @@ import Control.Monad
 import Common.Redux
 import Common.Relationship
 import Common.Components.Entity
+import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
@@ -55,10 +56,8 @@ updateLifecycle t e = return e
                   <&> update1 age t
                   >>= dieOfOldAge
 
-lifecycle :: Lens w w [Entity] [Entity]
-          -> Lens w w EntityId EntityId
-          -> Redux w
-lifecycle entities entityId = Redux
+lifecycle :: Redux World
+lifecycle = Redux
   { updater  = lensing entities (onEach updateLifecycle)
   , listener = noOp
   , reducer  = composeHandler

@@ -13,23 +13,14 @@ import Common.Components.Entity
 import Common.Components.Physics
 import Common.Components.Lifecycle
 import Common.Components.Renderer
+import Common.Components.World
 
 import Common.Shapes.Shape
 
 import Balls.Entities.Entities
 
-data World = World
-  { _entities :: [ Entity ]
-  , _entityId :: EntityId
-  }
-
-makeLenses ''World
-
-instance Renderable World where
-  render world = Pictures $ draw spritesAndShapes <$> (world ^. entities)
-
 world :: World
-world = World [] (EntityId 0)
+world = newWorld coloredShape
 
 initialiseWorld :: Events ()
 initialiseWorld = do
@@ -46,9 +37,6 @@ initialiseWorld = do
   spawn $ ball (10, 75) 2 40 blue
   spawn $ ball (100, 25) 4 60 green
   spawn $ ball (-200, 25) 1 25 yellow
-  
+
 ballsRedux :: Redux World
-ballsRedux = compose
-  [ connect physicsRedux entities
-  , lifecycle entities entityId
-  ]
+ballsRedux = compose [ physics, lifecycle ]
