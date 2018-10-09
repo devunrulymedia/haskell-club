@@ -19,6 +19,7 @@ import Thrust.World.CreateWorld
 import Thrust.Game.Game
 import Balls.World.World
 import Fireworks.Game
+import Bomberman.Bomberman
 
 window :: Display
 
@@ -38,6 +39,7 @@ parseArgs ["thrust"] = thrust
 parseArgs ["panda"] = pandamonium
 parseArgs ["balls"] = ballpit
 parseArgs ["fireworks"] = fireworks
+parseArgs ["bomberman"] = bomberman
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 playGame :: (Renderable a) => a -> Redux a -> IO ()
@@ -63,3 +65,7 @@ ballpit = do let world = Balls.World.World.world
 fireworks :: IO ()
 fireworks = do game <- buildGame
                playGame game Fireworks.Game.gameRedux
+
+bomberman :: IO ()
+bomberman = do game <- buildBomberman
+               playGame game bombermanRedux
