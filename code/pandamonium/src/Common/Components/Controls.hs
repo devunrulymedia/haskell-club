@@ -18,8 +18,8 @@ data Button = Button
 
 makeLenses ''Button
 
-button :: Key -> Button
-button key = Button { _boundKey = key, _held = False, _onPress = Nothing, _onRelease = Nothing }
+button :: Char -> Button
+button key = Button { _boundKey = Char key, _held = False, _onPress = Nothing, _onRelease = Nothing }
 
 keyPress :: Event -> Button -> Events Button
 keyPress (EventKey key pressed _ _) button =
@@ -29,7 +29,7 @@ keyPress (EventKey key pressed _ _) button =
      Down -> do traverse fireDynEvent (button ^. onPress)
                 return (held .~ True $ button)
      Up   -> do traverse fireDynEvent (button ^. onRelease)
-                return (held .~ True $ button)
+                return (held .~ False $ button)
 keyPress _ button = return button
 
 data OnAxis = Min | Neutral | Max

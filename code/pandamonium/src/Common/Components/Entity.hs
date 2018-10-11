@@ -69,18 +69,23 @@ apply3 :: (Component a, Component b, Component c) => (a -> b -> c -> d) -> Entit
 apply3 f c = pure f <*> extract c <*> extract c <*> extract c
 
 update1 :: (Component a, Component b)
-        => (Float -> a -> b) -> Float -> Entity -> Entity
+        => (t -> a -> b) -> t -> Entity -> Entity
 update1 f t c = fromMaybe c $ do
   a <- extract c
   return $ c <-+ f t a
 
-
 update2 :: (Component a, Component b, Component c)
-        => (Float -> a -> b -> c) -> Float -> Entity -> Entity
+        => (t -> a -> b -> c) -> t -> Entity -> Entity
 update2 f t c = fromMaybe c $ do
   a <- extract c
   b <- extract c
   return $ c <-+ f t a b
+
+updateM1 :: (Component a, Component b, Monad m)
+         => (t -> a -> m b) -> t -> Entity -> m Entity
+updateM1 f t e = fromMaybe (return e) $ do
+  a <- extract e
+  return (do a' <- f t a; return (e <-+ a'))
 
 applyM :: (Component a, Monad m)
        => (Float -> a -> m ()) -> Float -> Entity -> m Entity
