@@ -11,6 +11,8 @@ import Bomberman.Controller
 bomberman :: Entity
 bomberman = entity
         <-+ Position (100, 100)
+        <-+ Mass 1
+        <-+ Elasticity 0
         <-+ circle (0, 0) 50
         <-+ yellow
         <-+ defaultController
