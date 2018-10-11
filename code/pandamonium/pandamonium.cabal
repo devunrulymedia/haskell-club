@@ -92,6 +92,7 @@ library
                      , Fireworks.Entities.Sparkle
                      , Fireworks.World
                      -- bomberman
+                     , Bomberman.Bomberman
                      , Bomberman.Controller
 
 
