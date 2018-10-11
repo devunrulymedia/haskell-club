@@ -1,4 +1,4 @@
-module Bomberman.Bomberman where
+module Bomberman.Game where
 
 import Control.Lens
 import Graphics.Gloss (white, yellow)
@@ -47,8 +47,8 @@ initialise = do
   spawn player
   spawn wall
 
-buildBomberman :: IO World
-buildBomberman = reduxDo bombermanRedux (newWorld coloredShape) initialise
+bombermanGame :: IO World
+bombermanGame = reduxDo bombermanRedux (newWorld coloredShape) initialise
 
 bombermanRedux :: Redux World
 bombermanRedux = compose [ customRedux, physics, lifecycle ]

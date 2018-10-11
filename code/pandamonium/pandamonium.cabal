@@ -38,7 +38,7 @@ library
                      -- exposed fireworks components
                      , Fireworks.Game
                      -- exposed bomberman components
-                     , Bomberman.Bomberman
+                     , Bomberman.Game
                      -- exposed for test
                      , Common.Components.Entity
                      , Common.Shapes.Shape
@@ -91,6 +91,8 @@ library
                      , Fireworks.Entities.Rocket
                      , Fireworks.Entities.Sparkle
                      , Fireworks.World
+                     -- bomberman
+                     , Bomberman.Controller
 
 
   build-depends:       base >= 4.7 && < 5

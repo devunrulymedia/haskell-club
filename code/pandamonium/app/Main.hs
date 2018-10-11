@@ -19,7 +19,7 @@ import Thrust.World.CreateWorld
 import Thrust.Game.Game
 import Balls.World.World
 import Fireworks.Game
-import Bomberman.Bomberman
+import Bomberman.Game
 
 window :: Display
 
@@ -67,5 +67,5 @@ fireworks = do game <- buildGame
                playGame game Fireworks.Game.gameRedux
 
 bomberman :: IO ()
-bomberman = do game <- buildBomberman
+bomberman = do game <- bombermanGame
                playGame game bombermanRedux
