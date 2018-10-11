@@ -9,17 +9,12 @@ import Common.Components
 import Common.Shapes.Shape
 
 import Bomberman.Bomberman
-
-wall :: Entity
-wall = entity
-   <-+ rectangleV (-200, -200) (400, 200)
-   <-+ white
-   <-+ Immovable
+import Bomberman.Grid
 
 initialise :: Events ()
 initialise = do
   spawn bomberman
-  spawn wall
+  grid
 
 bombermanGame :: IO World
 bombermanGame = reduxDo bombermanRedux (newWorld coloredShape) initialise

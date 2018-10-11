@@ -18,9 +18,9 @@ bomberman = entity
         <-+ defaultController
 
 speed :: OnAxis -> Float
-speed Min = -200
+speed Min = -500
 speed Neutral = 0
-speed Max = 200
+speed Max = 500
 
 move :: a -> Controller -> Velocity
 move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)

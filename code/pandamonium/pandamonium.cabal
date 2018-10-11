@@ -93,6 +93,7 @@ library
                      , Fireworks.World
                      -- bomberman
                      , Bomberman.Bomberman
+                     , Bomberman.Grid
                      , Bomberman.Controller
 
 
