@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE Strict #-}
 
 module Common.Components.Physics where
 
@@ -67,7 +68,7 @@ fireCollision :: (View a, View b) => a -> b -> Vector -> Events ()
 fireCollision a b v = fireEvent (Collision (entityFrom a) (entityFrom b) v)
 
 extractPhysics :: Entity -> Maybe ExtractedPhysics
-extractPhysics e = pure ExtractedPhysics
+extractPhysics e = id $! pure ExtractedPhysics
                <*> extract e
                <*> pure (extractOr (Elasticity 1) e)
                <*> extract e
