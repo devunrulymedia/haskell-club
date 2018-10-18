@@ -9,7 +9,6 @@ import Graphics.Gloss.Interface.IO.Game
 import Common.Renderable
 import Common.Redux
 import Common.Exit
-import Common.Framerate
 import Pandamonium.World.Assets
 import Pandamonium.World.CreateWorld
 import Pandamonium.Game.Game
@@ -44,9 +43,7 @@ parseArgs ["bomberman"] = bomberman
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 playGame :: (Renderable a) => a -> Redux a -> IO ()
-playGame game redux = let redux' = fpsRedux redux
-                          game' = withFps game
-                       in playIO window background fps game' iorender (exitable redux') (reduxUpdate redux')
+playGame game redux = playIO window background fps game iorender (exitable redux) (reduxUpdate redux)
 
 
 thrust :: IO ()
