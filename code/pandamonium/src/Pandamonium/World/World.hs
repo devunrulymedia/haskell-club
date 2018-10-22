@@ -57,8 +57,8 @@ poke :: Monad m => m b -> a -> m a
 poke m a = do m; return a
 
 handleCollisions :: Float -> World -> Events World
-handleCollisions = relationshipM (onPairs singleCollision) panda scenery where
-  singleCollision t p b = bounce_against_static 0 p b
+handleCollisions t = relationshipM' (onPairs' singleCollision) panda scenery where
+  singleCollision p b = bounce_against_static 0 p b
 
 pickupCoin :: Ent Panda -> Ent Coin -> Events ()
 pickupCoin pd coin = touch pd coin
