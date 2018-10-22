@@ -29,7 +29,7 @@ background :: Color
 background = black
 
 fps :: Int
-fps = 60
+fps = 600
 
 main :: IO ()
 main = getArgs >>= parseArgs

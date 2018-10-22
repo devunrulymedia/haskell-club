@@ -26,6 +26,24 @@ relationship f lensA lensB i c =
       (a', b') = f i a b
    in lensA .~ a' $ lensB .~ b' $ c
 
+onList' :: Monad m => (a -> b -> m (a, b)) -> a -> [b] -> m (a, [b])
+onList' f a [] = return (a, [])
+onList' f a (b:bs) = do (a', b') <- f a b
+                        (a'', bs') <- onList' f a' bs
+                        return (a'', b':bs')
+
+onPairs' :: Monad m => (a -> b -> m (a, b)) -> [a] -> [b] -> m ([a], [b])
+onPairs' f [] bs = return ([], bs)
+onPairs' f (a:as) bs = do (a', bs') <- onList' f a bs
+                          (as', bs'') <- onPairs' f as bs'
+                          return (a':as', bs'')
+
+againstSelf' :: Monad m => (a -> a -> m (a, a)) -> [a] -> m [a]
+againstSelf' f [] = return []
+againstSelf' f (a:as) = do (a', as') <- onList' f a as
+                           as'' <- againstSelf' f as'
+                           return (a':as'')
+
 onList :: Monad m => (i -> a -> b -> m (a, b)) -> i -> a -> [b] -> m (a, [b])
 onList f i a [] = return (a, [])
 onList f i a (b:bs) = do (a', b') <- f i a b
