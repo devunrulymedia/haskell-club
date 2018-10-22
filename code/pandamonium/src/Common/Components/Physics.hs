@@ -39,7 +39,7 @@ data ExtractedBarrier = ExtractedBarrier Immovable Shape Elasticity Entity
 makeLenses ''ExtractedPhysics
 
 instance View ExtractedPhysics where
-  entityFrom ep = ep ^. ent
+  entityFrom ep = (ep ^. ent) <-+ (ep ^. vel) <-+ (ep ^. pos)
 
 instance View ExtractedBarrier where
   entityFrom (ExtractedBarrier _ _ _ ent) = ent
@@ -89,14 +89,30 @@ collide t a b = do
   (b'', a'') <- fromMaybe (return (b', a')) (pure bounce_against_static <*> extractPhysics b' <*> extractBarrier a')
   fromMaybe (return (a'', b'')) (pure bounce_against_static <*> extractPhysics a'' <*> extractBarrier b'')
 
-bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)
-bounce_against_static a b = case (shape b !!> shape a) of
- Nothing -> return (entityFrom a, entityFrom b)
+collide' :: [ ExtractedPhysics ] -> [ ExtractedBarrier ] -> [ Entity ]
+collide' = undefined
+
+partitionPhysics :: [ Entity ] -> ( [ ExtractedPhysics ], [ ExtractedBarrier ], [ Entity ])
+partitionPhysics entities = partitionPhysics' entities ([], [], []) where
+  partitionPhysics' [] acc = acc
+  partitionPhysics' (x : xs) ( ps, bs, es ) = case extractPhysics x of
+    (Just p) -> partitionPhysics' xs ( p : ps, bs, es)
+    Nothing  -> case extractBarrier x of
+      (Just b) -> partitionPhysics' xs ( ps, b : bs, es)
+      Nothing  -> partitionPhysics' xs (ps, bs, x : es)
+
+mergePhysics :: [ ExtractedPhysics ] -> [ ExtractedBarrier ] -> [ Entity ] -> [ Entity ]
+mergePhysics ps bs es = (entityFrom <$> ps) ++ (entityFrom <$> bs) ++ es
+
+
+bounce_against_static' :: ExtractedPhysics -> ExtractedBarrier -> Events ExtractedPhysics
+bounce_against_static' a b = case (shape b !!> shape a) of
+ Nothing -> return a
  (Just pushout) -> do
    fireCollision a b offset
    fireCollision b a (0, 0)
 
-   return (entityFrom a <-| onPosition (+ offset) <-| onVelocity (+ reflected_vel), entityFrom b) where
+   return $ move offset $ applyImpulse reflected_vel $ a where
      vel           = velocity a
      unit_push     = normalizeV pushout
      elA           = elasticity a
@@ -107,13 +123,16 @@ bounce_against_static a b = case (shape b !!> shape a) of
      reflected_vel = negate $ mulSV normal_proj unit_push
 
 
-bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)
-bounce a b = case (shape b !!> shape a) of
-  Nothing -> return (entityFrom a, entityFrom b)
+bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)
+bounce_against_static a b = do a' <- bounce_against_static' a b; return (entityFrom a', entityFrom b)
+
+bounce' :: ExtractedPhysics -> ExtractedPhysics -> Events (ExtractedPhysics, ExtractedPhysics)
+bounce' a b = case (shape b !!> shape a) of
+  Nothing -> return (a, b)
   (Just pushout) -> do
     fireCollision a b pushoutA
     fireCollision b a pushoutB
-    return (entA, entB) where
+    return (a', b') where
       totalMass = mass a + mass b
       totalElasticity = elasticity a * elasticity b
       relMassA = mass a / totalMass
@@ -133,8 +152,12 @@ bounce a b = case (shape b !!> shape a) of
       velChangeA = negate $ mulSV normal_proj_a unit_push
       velChangeB = negate $ mulSV normal_proj_b unit_push
 
-      entA = entityFrom a <-| onPosition (+ pushoutA) <-| onVelocity (+ velChangeA)
-      entB = entityFrom b <-| onPosition (+ pushoutB) <-| onVelocity (+ velChangeB)
+      a' = move pushoutA $ applyImpulse velChangeA $ a
+      b' = move pushoutB $ applyImpulse velChangeB $ b
+
+
+bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)
+bounce a b = do (a', b') <- bounce' a b; return (entityFrom a', entityFrom b')
 
 updatePhysics1 :: Float -> Entity -> Events Entity
 updatePhysics1 t e = return e <&> update2 applyVel t <&> update2 applyAcc t
@@ -145,7 +168,7 @@ updatePhysics t es = return es
 
 physicsRedux :: Redux [ Entity ]
 physicsRedux = Redux
-  { updater = composeHandler [ updatePhysics, onEach updatePhysics1 ]
+  { updater = composeHandler [ onEach updatePhysics1, updatePhysics ]
   , listener = noOp
   , reducer = noOp
   }
