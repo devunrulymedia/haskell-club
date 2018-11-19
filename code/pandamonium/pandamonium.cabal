@@ -40,6 +40,7 @@ library
                      -- exposed bomberman components
                      , Bomberman.Game
                      -- exposed for test
+                     , Bomberman.Bomb
                      , Common.Components.Entity
                      , Common.Shapes.Shape
                      , Common.Timer
@@ -129,6 +130,7 @@ test-suite pandamonium-test
                      , Redux.ReduxTest
                      , Redux.TimerTest
                      , Components.EntityTest
+                     , Bomberman.BombTest
   build-depends:       base
                      , gloss
                      , lens
