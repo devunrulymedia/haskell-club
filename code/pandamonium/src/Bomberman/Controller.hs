@@ -10,16 +10,18 @@ import Common.Components
 import Common.Redux
 
 data Controller = Controller
-  { _vertical :: Axis
+  { _owner :: EntityId
+  , _vertical :: Axis
   , _horizontal :: Axis
   , _dropBomb :: Button
   } deriving Component
 
 makeLenses ''Controller
 
-defaultController :: Controller
-defaultController = Controller
-  { _vertical = axis (button '/') (button '\'')
+defaultController :: EntityId -> Controller
+defaultController entId = Controller
+  { _owner = entId
+  , _vertical = axis (button '/') (button '\'')
   , _horizontal = axis (button 'z') (button 'x')
   , _dropBomb = button ' '
   }

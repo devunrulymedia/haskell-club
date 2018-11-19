@@ -15,7 +15,7 @@ bomberman = entity
         <-+ Elasticity 0
         <-+ circle (0, 0) 50
         <-+ yellow
-        <-+ defaultController
+        <-+ defaultController (EntityId 0)
 
 speed :: OnAxis -> Float
 speed Min = -500

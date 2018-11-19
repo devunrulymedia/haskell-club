@@ -15,10 +15,10 @@ wall bottomLeft = entity
 wallInGridPosition :: Float -> Float -> Entity
 wallInGridPosition x y = wall (128*x, 128*y)
 
-grid :: Events ()
-grid = do traverse (\x -> spawn $ wallInGridPosition x 6) [-10 .. 10]
-          traverse (\x -> spawn $ wallInGridPosition x (-6)) [-10 .. 10]
-          traverse (\y -> spawn $ wallInGridPosition (-10) y) [-5 .. 5]
-          traverse (\y -> spawn $ wallInGridPosition 10 y) [-5 .. 5]
-          traverse (\(x, y) -> spawn $ wallInGridPosition x y) [(x, y) | x <- [-8, -6 .. 8], y <- [-4, -2 .. 4]]
-          return ()
+createGrid :: Events ()
+createGrid = do traverse (\x -> spawn $ wallInGridPosition x 6) [-10 .. 10]
+                traverse (\x -> spawn $ wallInGridPosition x (-6)) [-10 .. 10]
+                traverse (\y -> spawn $ wallInGridPosition (-10) y) [-5 .. 5]
+                traverse (\y -> spawn $ wallInGridPosition 10 y) [-5 .. 5]
+                traverse (\(x, y) -> spawn $ wallInGridPosition x y) [(x, y) | x <- [-8, -6 .. 8], y <- [-4, -2 .. 4]]
+                return ()

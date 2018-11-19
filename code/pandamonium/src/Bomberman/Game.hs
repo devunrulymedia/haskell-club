@@ -14,7 +14,7 @@ import Bomberman.Grid
 initialise :: Events ()
 initialise = do
   spawn bomberman
-  grid
+  createGrid
 
 bombermanGame :: IO World
 bombermanGame = reduxDo bombermanRedux (newWorld coloredShape) initialise
