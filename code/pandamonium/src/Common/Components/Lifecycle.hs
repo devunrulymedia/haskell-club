@@ -56,12 +56,14 @@ updateLifecycle t e = return e
                   <&> update1 age t
                   >>= dieOfOldAge
 
+reduceLifecycle :: DynEvent -> World -> IOEvents World
+reduceLifecycle e w = return w
+                  >>= (lensing entities (focusM doDestroy)) e
+                  >>= focusM (relationshipM doSpawn entities entityId) e
+
 lifecycle :: Redux World
 lifecycle = Redux
   { updater  = lensing entities (onEach updateLifecycle)
   , listener = noOp
-  , reducer  = composeHandler
-      [ lensing entities (focusM doDestroy)
-      , focusM (relationshipM doSpawn entities entityId)
-      ]
+  , reducer  = reduceLifecycle
   }

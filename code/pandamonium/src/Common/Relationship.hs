@@ -21,11 +21,7 @@ relationshipM :: Monad m
              -> Lens c c a a
              -> Lens c c b b
              -> i -> c -> m c
-relationshipM f lensA lensB i c = do
-  let a = c ^. lensA
-  let b = c ^. lensB
-  (a', b') <- f i a b
-  return $ lensA .~ a' $ lensB .~ b' $ c
+relationshipM f lensA lensB i c = relationshipM' (f i) lensA lensB c
 
 relationship :: (i -> a -> b -> (a, b))
              -> Lens c c a a
