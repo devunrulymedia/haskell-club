@@ -16,6 +16,7 @@ import Common.Components.Renderer
 import Common.Components.World
 
 import Fireworks.Entities.Rocket
+import Fireworks.Entities.Sparkle
 
 updateFireworks :: Float -> Entity -> Events Entity
 updateFireworks time world = return world
@@ -23,7 +24,10 @@ updateFireworks time world = return world
                          <&> update2 applyVel time
 
 entityRedux :: Redux Entity
-entityRedux = noOpRedux { updater = updateFireworks }
+entityRedux = Redux
+  { updater  = updateFireworks
+  , listener = noOp
+  , reducer  = focusM reduceSparkle }
 
 fireworksRedux :: Redux World
 fireworksRedux = compose

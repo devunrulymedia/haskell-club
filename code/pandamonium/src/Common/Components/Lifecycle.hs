@@ -5,7 +5,7 @@ module Common.Components.Lifecycle
   ( destroy
   , spawn
   , lifecycle
-  , Lifespan (Lifespan)
+  , Spawned (Spawned)
   , Spawn (Spawn)
   , Destroy (Destroy)
   ) where
@@ -20,17 +20,11 @@ import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
-data Lifespan = Lifespan Float deriving Component
+data Spawn = Spawn Entity deriving ReduxEvent
 
-age :: Float -> Lifespan -> Lifespan
-age t (Lifespan a) = Lifespan (a - t)
-
-dieOfOldAge :: Entity -> Events Entity
-dieOfOldAge e = case extract e of
-  Nothing -> return e
-  (Just (Lifespan a)) -> do
-    when (a < 0) (destroy e)
-    return e
+-- this event is fired after an event is spawned, as it's only now
+-- you can get access to its entityId
+data Spawned = Spawned Entity deriving ReduxEvent
 
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = destroy' (extract entity) where
@@ -41,20 +35,15 @@ destroy entity = destroy' (extract entity) where
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy (Destroy entityId) entities = return $ filter (\e -> extract e /= Just entityId) entities
 
-data Spawn = Spawn Entity deriving ReduxEvent
-
 spawn :: Monad m => Entity -> EventsT m ()
 spawn entity = fireEvent (Spawn entity)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
-doSpawn (Spawn entity) entities entityId =
-  let next = succ entityId
-   in return ((entity <-+ next) : entities, next)
-
-updateLifecycle :: Float -> Entity -> Events Entity
-updateLifecycle t e = return e
-                  <&> update1 age t
-                  >>= dieOfOldAge
+doSpawn (Spawn entity) entities entityId = do
+      let next = succ entityId
+      let spawnedEntity = entity <-+ next
+      fireEvent $ Spawned spawnedEntity
+      return (spawnedEntity : entities, next)
 
 reduceLifecycle :: DynEvent -> World -> IOEvents World
 reduceLifecycle e w = return w
@@ -63,7 +52,7 @@ reduceLifecycle e w = return w
 
 lifecycle :: Redux World
 lifecycle = Redux
-  { updater  = lensing entities (onEach updateLifecycle)
+  { updater  = noOp
   , listener = noOp
   , reducer  = reduceLifecycle
   }
