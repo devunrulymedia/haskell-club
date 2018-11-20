@@ -91,8 +91,8 @@ collide t a b = do
 
 collide' :: [ Entity ] -> Events [ Entity ]
 collide' entities = do let (ps, bs, es) = partitionPhysics entities
-                       ps' <- againstSelf' bounce' ps
-                       (ps'', bs') <- onPairs' bounce_against_static' ps' bs
+                       ps' <- againstSelf bounce' ps
+                       (ps'', bs') <- onPairs bounce_against_static' ps' bs
                        return $ mergePhysics ps'' bs' es
 
 partitionPhysics :: [ Entity ] -> ( [ ExtractedPhysics ], [ ExtractedBarrier ], [ Entity ])
