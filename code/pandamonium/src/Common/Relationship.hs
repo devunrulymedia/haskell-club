@@ -5,10 +5,12 @@ module Common.Relationship where
 
 import Control.Lens
 
+type Update a b = Lens a a b b
+
 relationshipM :: Monad m
              => (a -> b -> m (a, b))
-             -> Lens c c a a
-             -> Lens c c b b
+             -> Update c a
+             -> Update c b
              -> c -> m c
 relationshipM f lensA lensB c = do
   let a = c ^. lensA
@@ -18,16 +20,23 @@ relationshipM f lensA lensB c = do
 
 relationshipMWith :: Monad m
              => (i -> a -> b -> m (a, b))
-             -> Lens c c a a
-             -> Lens c c b b
+             -> Update c a
+             -> Update c b
              -> i -> c -> m c
 relationshipMWith f lensA lensB i = relationshipM (f i) lensA lensB
+
+relationship :: (a -> b -> (a, b))
+             -> Update c a
+             -> Update c b
+             -> c -> c
+relationship f lensA lensB c = let (a, b) = f (c ^. lensA) (c ^. lensB)
+                                in lensA .~ a $ lensB .~ b $ c
 
 relationshipWith :: (i -> a -> b -> (a, b))
                  -> Lens c c a a
                  -> Lens c c b b
                  -> i -> c -> c
-relationshipWith f lensA lensB i c = runIdentity $ relationshipM (\a b -> return $ f i a b) lensA lensB c
+relationshipWith f lensA lensB i c = relationship (f i) lensA lensB c
 
 onList :: Monad m => (a -> b -> m (a, b)) -> a -> [b] -> m (a, [b])
 onList f a [] = return (a, [])
