@@ -4,6 +4,7 @@
 module Common.Components.Lifecycle
   ( destroy
   , spawn
+  , spawnWithId
   , lifecycle
   , Spawned (Spawned)
   , Spawn (Spawn)

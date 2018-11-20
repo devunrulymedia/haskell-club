@@ -13,7 +13,7 @@ import Bomberman.Grid
 
 initialise :: Events ()
 initialise = do
-  spawn bomberman
+  spawnWithId bomberman
   createGrid
 
 bombermanGame :: IO World

@@ -8,14 +8,14 @@ import Common.Shapes.Shape (circle)
 import Common.Components
 import Bomberman.Controller
 
-bomberman :: Entity
-bomberman = entity
-        <-+ Position (100, 100)
-        <-+ Mass 1
-        <-+ Elasticity 0
-        <-+ circle (0, 0) 50
-        <-+ yellow
-        <-+ defaultController (EntityId 0)
+bomberman :: EntityId -> Entity
+bomberman entId = entity
+              <-+ Position (100, 100)
+              <-+ Mass 1
+              <-+ Elasticity 0
+              <-+ circle (0, 0) 50
+              <-+ yellow
+              <-+ defaultController entId
 
 speed :: OnAxis -> Float
 speed Min = -500
