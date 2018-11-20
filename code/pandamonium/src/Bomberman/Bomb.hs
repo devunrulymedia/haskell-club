@@ -13,7 +13,10 @@ data Owner = Owner EntityId deriving Component
 alignToGrid :: (Float, Float) -> (Float, Float) -> (Float, Float) -> (Float, Float)
 alignToGrid (cx, cy) (sx, sy) (px, py) = (align cx sx px, align cy sy py) where
   align :: Float -> Float -> Float -> Float
-  align c s p = (fromIntegral (round ((p - c) / s))) * s + c
+  align c s p = let translatedToGridFrame = p - c
+                    roundedToNearestPoint = (fromIntegral (round (translatedToGridFrame / s))) * s
+                    translatedBackToOriginalFrame = roundedToNearestPoint + c
+                 in translatedBackToOriginalFrame
 
 bomb :: EntityId -> Float -> Float -> Entity
 bomb owner x y = entity

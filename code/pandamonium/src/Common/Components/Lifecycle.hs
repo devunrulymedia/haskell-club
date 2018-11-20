@@ -20,7 +20,7 @@ import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
-data Spawn = Spawn Entity deriving ReduxEvent
+data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
 -- this event is fired after an event is spawned, as it's only now
 -- you can get access to its entityId
@@ -36,12 +36,15 @@ doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy (Destroy entityId) entities = return $ filter (\e -> extract e /= Just entityId) entities
 
 spawn :: Monad m => Entity -> EventsT m ()
-spawn entity = fireEvent (Spawn entity)
+spawn entity = spawnWithId (\entId -> entity)
+
+spawnWithId :: Monad m => (EntityId -> Entity) -> EventsT m ()
+spawnWithId entityCreator = fireEvent (Spawn entityCreator)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
-doSpawn (Spawn entity) entities entityId = do
+doSpawn (Spawn entityCreator) entities entityId = do
       let next = succ entityId
-      let spawnedEntity = entity <-+ next
+      let spawnedEntity = (entityCreator next) <-+ next
       fireEvent $ Spawned spawnedEntity
       return (spawnedEntity : entities, next)
 
