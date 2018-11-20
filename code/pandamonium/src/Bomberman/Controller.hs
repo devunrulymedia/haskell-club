@@ -16,6 +16,8 @@ data Controller = Controller
   , _dropBomb :: Button
   } deriving Component
 
+data BombButtonPressed = BombButtonPressed EntityId deriving ReduxEvent
+
 makeLenses ''Controller
 
 defaultController :: EntityId -> Controller
@@ -23,7 +25,7 @@ defaultController entId = Controller
   { _owner = entId
   , _vertical = axis (button '/') (button '\'')
   , _horizontal = axis (button 'z') (button 'x')
-  , _dropBomb = button ' '
+  , _dropBomb = onPress .~ fires (BombButtonPressed entId) $ button ' '
   }
 
 listenController :: Event -> Controller -> Events Controller

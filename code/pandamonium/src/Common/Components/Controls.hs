@@ -6,6 +6,7 @@ module Common.Components.Controls where
 import Control.Lens
 import Graphics.Gloss.Interface.IO.Game
 
+import Data.ConstrainedDynamic
 import Common.Components.Entity
 import Common.Redux
 
@@ -20,6 +21,9 @@ makeLenses ''Button
 
 button :: Char -> Button
 button key = Button { _boundKey = Char key, _held = False, _onPress = Nothing, _onRelease = Nothing }
+
+fires :: ReduxEvent a => a -> Maybe DynEvent
+fires a = Just $ toDyn a
 
 keyPress :: Event -> Button -> Events Button
 keyPress (EventKey key pressed _ _) button =
