@@ -73,7 +73,7 @@ checkForCompletion w = case w ^. coins of
   otherwise -> return w
 
 spawnEntity :: Typeable a => EntityType -> Lens World World ([Ent a]) ([Ent a]) -> Spawn -> World -> World
-spawnEntity etype field = relationship (spawn etype) field entityindex
+spawnEntity etype field = relationshipWith (spawn etype) field entityindex
 
 reduceWorld :: Spawn -> World -> IOEvents World
 reduceWorld e w = return w

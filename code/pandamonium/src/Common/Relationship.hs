@@ -16,18 +16,18 @@ relationshipM' f lensA lensB c = do
   (a', b') <- f a b
   return $ lensA .~ a' $ lensB .~ b' $ c
 
-relationshipM :: Monad m
+relationshipMWith :: Monad m
              => (i -> a -> b -> m (a, b))
              -> Lens c c a a
              -> Lens c c b b
              -> i -> c -> m c
-relationshipM f lensA lensB i = relationshipM' (f i) lensA lensB
+relationshipMWith f lensA lensB i = relationshipM' (f i) lensA lensB
 
-relationship :: (i -> a -> b -> (a, b))
-             -> Lens c c a a
-             -> Lens c c b b
-             -> i -> c -> c
-relationship f lensA lensB i c = runIdentity $ relationshipM' (\a b -> return $ f i a b) lensA lensB c
+relationshipWith :: (i -> a -> b -> (a, b))
+                 -> Lens c c a a
+                 -> Lens c c b b
+                 -> i -> c -> c
+relationshipWith f lensA lensB i c = runIdentity $ relationshipM' (\a b -> return $ f i a b) lensA lensB c
 
 onList :: Monad m => (a -> b -> m (a, b)) -> a -> [b] -> m (a, [b])
 onList f a [] = return (a, [])

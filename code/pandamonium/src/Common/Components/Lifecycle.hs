@@ -52,7 +52,7 @@ doSpawn (Spawn entityCreator) entities entityId = do
 reduceLifecycle :: DynEvent -> World -> IOEvents World
 reduceLifecycle e w = return w
                   >>= (lensing entities (focusM doDestroy)) e
-                  >>= focusM (relationshipM doSpawn entities entityId) e
+                  >>= focusM (relationshipMWith doSpawn entities entityId) e
 
 lifecycle :: Redux World
 lifecycle = Redux
