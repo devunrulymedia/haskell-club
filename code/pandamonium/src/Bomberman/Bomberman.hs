@@ -37,18 +37,19 @@ move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)
 dropBombs :: BombButtonPressed -> Entity -> IOEvents Entity
 dropBombs (BombButtonPressed owner) entity = do
   case dropsBombAt of
-    Just (x, y, ent) -> do fireEvent (DropBomb (Owner owner) x y); return ent
+    Just (x, y, ent) -> do
+      fireEvent (DropBomb (Owner owner) x y)
+      return ent
     Nothing -> return entity
   where
     dropsBombAt :: Maybe (Float, Float, Entity)
     dropsBombAt = do
       entityId <- extract entity
       (BombCount bombs) <- extract entity
-      if entityId == owner && bombs > 0
-      then do (Position (x, y)) <- extract entity
-              let newEntity = entity <-+ BombCount (bombs - 1)
-              return (x, y, newEntity)
-      else Nothing
+      ifMaybe (entityId == owner && bombs > 0) $ do
+        (Position (x, y)) <- extract entity
+        let newEntity = entity <-+ BombCount (bombs - 1)
+        return (x, y, newEntity)
 
 playerRedux :: Redux Entity
 playerRedux = Redux
