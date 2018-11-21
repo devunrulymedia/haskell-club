@@ -5,6 +5,7 @@ module Bomberman.Bomberman where
 import Control.Lens
 import Graphics.Gloss.Interface.IO.Game (yellow, Event)
 
+import Common.Monad
 import Common.Redux
 import Common.Shapes.Shape (circle)
 import Common.Components
@@ -49,13 +50,9 @@ dropBombs (BombButtonPressed owner) entity = do
               return (x, y, newEntity)
       else Nothing
 
-updateBomberman :: Float -> Entity -> Events Entity
-updateBomberman time entity = return entity
-                          <&> update1 move time
-
 playerRedux :: Redux Entity
 playerRedux = Redux
-  { updater = updateBomberman
+  { updater = purely2 (update1 move)
   , listener = updateM1 listenController
   , reducer = focusM dropBombs
   }

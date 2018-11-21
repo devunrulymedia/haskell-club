@@ -46,6 +46,7 @@ library
                      , Common.Timer
 
   other-modules:       Common.Relationship
+                     , Common.Monad
                      , Common.Shapes.Shapes
                      , Common.Shapes.Collisions
                      , Common.Shapes.Movables
