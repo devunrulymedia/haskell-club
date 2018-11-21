@@ -53,13 +53,9 @@ updateBomberman :: Float -> Entity -> Events Entity
 updateBomberman time entity = return entity
                           <&> update1 move time
 
-listenBomberman :: Event -> Entity -> Events Entity
-listenBomberman event entity = return entity
-                           >>= updateM1 listenController event
-
 playerRedux :: Redux Entity
 playerRedux = Redux
   { updater = updateBomberman
-  , listener = listenBomberman
-  , reducer = noOp
+  , listener = updateM1 listenController
+  , reducer = focusM dropBombs
   }
