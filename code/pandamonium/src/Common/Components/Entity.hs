@@ -17,6 +17,8 @@ data Entity = Entity [ DynComp ]
 
 data EntityId = EntityId Int deriving (Eq, Component)
 
+data Owner = Owner EntityId deriving Component
+
 instance Enum EntityId where
   toEnum = EntityId
   fromEnum (EntityId entityId) = entityId

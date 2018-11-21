@@ -8,8 +8,6 @@ import Common.Components
 
 data DropBomb = DropBomb Owner Float Float deriving ReduxEvent
 
-data Owner = Owner EntityId deriving Component
-
 alignToGrid :: (Float, Float) -> (Float, Float) -> (Float, Float) -> (Float, Float)
 alignToGrid (cx, cy) (sx, sy) (px, py) = (align cx sx px, align cy sy py) where
   align :: Float -> Float -> Float -> Float
