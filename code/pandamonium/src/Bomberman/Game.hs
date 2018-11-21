@@ -8,6 +8,7 @@ import Common.Redux
 import Common.Components
 import Common.Shapes.Shape
 
+import Bomberman.Bomb
 import Bomberman.Bomberman
 import Bomberman.Grid
 
@@ -20,4 +21,4 @@ bombermanGame :: IO World
 bombermanGame = reduxDo bombermanRedux (newWorld coloredShape) initialise
 
 bombermanRedux :: Redux World
-bombermanRedux = compose [ connect (onAll playerRedux) entities, physics, lifecycle ]
+bombermanRedux = compose [ connect (onAll playerRedux) entities, bombRedux, physics, lifecycle ]

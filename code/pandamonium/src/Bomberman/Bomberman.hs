@@ -2,6 +2,7 @@
 
 module Bomberman.Bomberman where
 
+import Control.Monad.Trans
 import Control.Lens
 import Graphics.Gloss.Interface.IO.Game (yellow, Event)
 
@@ -36,6 +37,7 @@ move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)
 
 dropBombs :: BombButtonPressed -> Entity -> IOEvents Entity
 dropBombs (BombButtonPressed owner) entity = do
+  liftIO $ putStrLn "Button pressed"
   case dropsBombAt of
     Just (x, y, ent) -> do
       fireEvent (DropBomb (Owner owner) x y)
