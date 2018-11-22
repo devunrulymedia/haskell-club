@@ -23,16 +23,18 @@ bomb owner x y = entity
              <-+ owner
              <-+ Position (x, y)
              <-+ circle (0, 0) 40
+             <-+ Immovable
              <-+ blue
 
-dropBomb :: DropBomb -> a -> IOEvents a
-dropBomb (DropBomb owner x y) a = do
-  spawn $ bomb owner x y
+spawnBomb :: DropBomb -> a -> IOEvents a
+spawnBomb (DropBomb owner x y) a = do
+  let (x', y') = alignToGrid (64, 64) (128, 128) (x, y)
+  spawn $ bomb owner x' y'
   return a
 
 bombRedux :: Redux World
 bombRedux = Redux
   { updater  = noOp
   , listener = noOp
-  , reducer  = focusM dropBomb
+  , reducer  = focusM spawnBomb
   }

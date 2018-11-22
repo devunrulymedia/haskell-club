@@ -76,10 +76,16 @@ extractPhysics e = id $! pure ExtractedPhysics
                <*> extract e
                <*> pure e
 
+positionBarrier :: Entity -> Maybe Shape
+positionBarrier entity = do
+  shape <- extract entity
+  let (Position (x, y)) = extractOr (Position (0, 0)) entity
+  return $ move (x, y) shape
+
 extractBarrier :: Entity -> Maybe ExtractedBarrier
 extractBarrier e = pure ExtractedBarrier
                <*> extract e
-               <*> extract e
+               <*> positionBarrier e
                <*> pure (extractOr (Elasticity 1) e)
                <*> pure e
 
