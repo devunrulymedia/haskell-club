@@ -68,4 +68,4 @@ fireworks = do game <- buildGame
 
 bomberman :: IO ()
 bomberman = do game <- bombermanGame
-               playGame game bombermanRedux
+               playGame game bgameRedux

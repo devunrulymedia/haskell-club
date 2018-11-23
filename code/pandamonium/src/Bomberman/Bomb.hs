@@ -3,11 +3,14 @@
 module Bomberman.Bomb where
 
 import Graphics.Gloss (blue)
+import Control.Monad.Trans
 
 import Common.Redux
+import Common.Timer
 import Common.Components
 import Common.Shapes.Shape
 
+data IsBomb = IsBomb deriving Component
 data DropBomb = DropBomb Owner Float Float deriving ReduxEvent
 
 alignToGrid :: (Float, Float) -> (Float, Float) -> (Float, Float) -> (Float, Float)
@@ -25,6 +28,7 @@ bomb owner x y = entity
              <-+ circle (0, 0) 40
              <-+ Immovable
              <-+ MaxPush 2
+             <-+ IsBomb
              <-+ blue
 
 spawnBomb :: DropBomb -> a -> IOEvents a
@@ -33,9 +37,17 @@ spawnBomb (DropBomb owner x y) a = do
   spawn $ bomb owner x' y'
   return a
 
+onBombSpawned :: Spawned -> a -> IOEvents a
+onBombSpawned (Spawned entity) a = case (extract entity, extract entity) of
+  (Just IsBomb, Just entityId) -> do
+    liftIO $ putStrLn "Bomb spawned"
+    awaitEvent 3 (Destroy entityId)
+    return a
+  (_, _)  -> return a
+
 bombRedux :: Redux World
 bombRedux = Redux
   { updater  = noOp
   , listener = noOp
-  , reducer  = focusM spawnBomb
+  , reducer  = composeHandler [ focusM spawnBomb, focusM onBombSpawned ]
   }
