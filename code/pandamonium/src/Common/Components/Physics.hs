@@ -25,6 +25,8 @@ data Immovable = Immovable deriving Component
 
 data Elasticity = Elasticity Float deriving Component
 
+data MaxPush = MaxPush Float deriving Component
+
 data ExtractedPhysics = ExtractedPhysics
   { _m :: Mass
   , _el :: Elasticity
@@ -117,11 +119,15 @@ mergePhysics ps bs es = (entityFrom <$> ps) ++ (entityFrom <$> bs) ++ es
 bounce_against_static' :: ExtractedPhysics -> ExtractedBarrier -> Events (ExtractedPhysics, ExtractedBarrier)
 bounce_against_static' a b = case (shape b !!> shape a) of
  Nothing -> return (a, b)
- (Just pushout) -> do
-   fireCollision a b offset
-   fireCollision b a (0, 0)
-
-   return (move offset $ applyImpulse reflected_vel $ a, b) where
+ (Just pushout) ->
+   if skipPushout
+   then
+     return (a, b)
+   else do
+     fireCollision a b offset
+     fireCollision b a (0, 0)
+     return (move offset $ applyImpulse reflected_vel $ a, b)
+   where
      vel           = velocity a
      unit_push     = normalizeV pushout
      elA           = elasticity a
@@ -130,6 +136,9 @@ bounce_against_static' a b = case (shape b !!> shape a) of
      offset        = mulSV (1 + el) pushout
      normal_proj   = (1 + el) * (vel `dotV` unit_push)
      reflected_vel = negate $ mulSV normal_proj unit_push
+     skipPushout = case extract (entityFrom b) of
+       Just (MaxPush mp) -> sqMagV pushout > mp * mp
+       Nothing -> False
 
 
 bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)

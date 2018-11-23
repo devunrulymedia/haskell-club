@@ -24,6 +24,7 @@ bomb owner x y = entity
              <-+ Position (x, y)
              <-+ circle (0, 0) 40
              <-+ Immovable
+             <-+ MaxPush 2
              <-+ blue
 
 spawnBomb :: DropBomb -> a -> IOEvents a
