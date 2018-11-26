@@ -6,8 +6,7 @@ module Common.Components.Lifecycle
   , spawn
   , spawnWithId
   , lifecycle
-  , onSpawn
-  , OnSpawn
+  , OnSpawn (OnSpawn)
   , Spawn (Spawn)
   , Destroy (Destroy)
   ) where
@@ -41,9 +40,6 @@ spawn entity = spawnWithId $ const entity
 
 spawnWithId :: Monad m => (EntityId -> Entity) -> EventsT m ()
 spawnWithId entityCreator = fireEvent (Spawn entityCreator)
-
-onSpawn :: (ReduxEvent a) => a -> OnSpawn
-onSpawn a = OnSpawn (toDyn a)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
 doSpawn (Spawn entityCreator) entities entityId = do

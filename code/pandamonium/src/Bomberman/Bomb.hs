@@ -29,7 +29,7 @@ bomb owner x y entityId = entity
                       <-+ circle (0, 0) 40
                       <-+ Immovable
                       <-+ MaxPush 2
-                      <-+ onSpawn (Await 3 (toDyn (Destroy entityId)))
+                      <-+ OnSpawn (await 3 (Destroy entityId))
                       <-+ IsBomb
                       <-+ blue
 

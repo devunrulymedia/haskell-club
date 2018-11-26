@@ -23,6 +23,9 @@ newTimer = Timer 0 []
 
 makeLenses ''Timer
 
+await :: (ReduxEvent a) => Float -> a -> DynEvent
+await delay action = toDyn (Await delay (toDyn action))
+
 awaitEvent :: (ReduxEvent a, Monad m) => Float -> a -> EventsT m ()
 awaitEvent delay event = fireEvent (Await delay (toDyn event))
 
