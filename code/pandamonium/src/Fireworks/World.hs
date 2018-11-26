@@ -27,7 +27,7 @@ entityRedux :: Redux Entity
 entityRedux = Redux
   { updater  = updateFireworks
   , listener = noOp
-  , reducer  = focusM reduceSparkle }
+  , reducer  = noOp }
 
 fireworksRedux :: Redux World
 fireworksRedux = compose

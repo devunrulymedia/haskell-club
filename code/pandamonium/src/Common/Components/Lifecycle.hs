@@ -6,13 +6,15 @@ module Common.Components.Lifecycle
   , spawn
   , spawnWithId
   , lifecycle
-  , Spawned (Spawned)
+  , onSpawn
+  , OnSpawn
   , Spawn (Spawn)
   , Destroy (Destroy)
   ) where
 
 import Control.Lens (Lens, (<&>))
 import Control.Monad
+import Data.ConstrainedDynamic
 
 import Common.Redux
 import Common.Relationship
@@ -23,9 +25,7 @@ data Destroy = Destroy EntityId deriving ReduxEvent
 
 data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
--- this event is fired after an event is spawned, as it's only now
--- you can get access to its entityId
-data Spawned = Spawned Entity deriving ReduxEvent
+data OnSpawn = OnSpawn DynEvent deriving Component
 
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = destroy' (extract entity) where
@@ -37,16 +37,21 @@ doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy (Destroy entityId) entities = return $ filter (\e -> extract e /= Just entityId) entities
 
 spawn :: Monad m => Entity -> EventsT m ()
-spawn entity = spawnWithId (\entId -> entity)
+spawn entity = spawnWithId $ const entity
 
 spawnWithId :: Monad m => (EntityId -> Entity) -> EventsT m ()
 spawnWithId entityCreator = fireEvent (Spawn entityCreator)
+
+onSpawn :: (ReduxEvent a) => a -> OnSpawn
+onSpawn a = OnSpawn (toDyn a)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
 doSpawn (Spawn entityCreator) entities entityId = do
       let next = succ entityId
       let spawnedEntity = (entityCreator next) <-+ next
-      fireEvent $ Spawned spawnedEntity
+      case extract spawnedEntity of
+        (Just (OnSpawn event)) -> fireDynEvent event
+        Nothing -> return ()
       return (spawnedEntity : entities, next)
 
 reduceLifecycle :: DynEvent -> World -> IOEvents World

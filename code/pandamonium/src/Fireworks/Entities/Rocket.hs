@@ -62,7 +62,7 @@ burst :: Explosion -> a -> IOEvents a
 burst (Explosion p color) a = do
   traverse spawnSparkle (ring 15 500)
   return a where
-    spawnSparkle vel = spawn $ sparkle (Position p) vel color
+    spawnSparkle vel = spawnWithId $ sparkle (Position p) vel color
 
 -- number of particles, how fast they're moving, yields their radial velocities
 ring :: Float -> Float -> [ Velocity ]
