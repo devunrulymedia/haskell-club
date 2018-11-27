@@ -36,7 +36,7 @@ move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)
                      in Velocity (xSpeed, ySpeed)
 
 regainBomb :: Exploded -> Entity -> IOEvents Entity
-regainBomb (Exploded (Owner ownerId)) entity = if extract entity /= Just ownerId
+regainBomb (Exploded (Owner ownerId) _ _) entity = if extract entity /= Just ownerId
   then return entity
   else return $ update addBomb entity where
     addBomb :: BombCount -> BombCount
