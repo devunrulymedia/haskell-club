@@ -35,6 +35,13 @@ move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)
                         ySpeed = speed (controller ^. vertical . onAxis)
                      in Velocity (xSpeed, ySpeed)
 
+regainBomb :: Exploded -> Entity -> IOEvents Entity
+regainBomb (Exploded (Owner ownerId)) entity = if extract entity /= Just ownerId
+  then return entity
+  else return $ update addBomb entity where
+    addBomb :: BombCount -> BombCount
+    addBomb (BombCount x) = BombCount (x + 1)
+
 dropBombs :: BombButtonPressed -> Entity -> IOEvents Entity
 dropBombs (BombButtonPressed owner) entity = do
   case dropsBombAt of
@@ -56,5 +63,5 @@ playerRedux :: Redux Entity
 playerRedux = Redux
   { updater = purely2 (update1 move)
   , listener = updateM1 listenController
-  , reducer = focusM dropBombs
+  , reducer = composeHandler [ focusM dropBombs, focusM regainBomb ]
   }

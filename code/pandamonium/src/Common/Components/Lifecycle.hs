@@ -8,6 +8,7 @@ module Common.Components.Lifecycle
   , lifecycle
   , OnSpawn (OnSpawn)
   , Spawn (Spawn)
+  , OnDestroy (OnDestroy)
   , Destroy (Destroy)
   ) where
 

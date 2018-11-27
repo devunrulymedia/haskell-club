@@ -13,6 +13,7 @@ import Common.Shapes.Shape
 
 data IsBomb = IsBomb deriving Component
 data DropBomb = DropBomb Owner Float Float deriving ReduxEvent
+data Exploded = Exploded Owner deriving ReduxEvent
 
 alignToGrid :: (Float, Float) -> (Float, Float) -> (Float, Float) -> (Float, Float)
 alignToGrid (cx, cy) (sx, sy) (px, py) = (align cx sx px, align cy sy py) where
@@ -30,6 +31,7 @@ bomb owner x y entityId = entity
                       <-+ Immovable
                       <-+ MaxPush 2
                       <-+ OnSpawn (await 3 (Destroy entityId))
+                      <-+ OnDestroy (toDyn $ Exploded owner)
                       <-+ IsBomb
                       <-+ blue
 
