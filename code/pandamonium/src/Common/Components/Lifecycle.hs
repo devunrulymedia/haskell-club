@@ -22,6 +22,8 @@ import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
+data OnDestroy = OnDestroy DynEvent deriving Component
+
 data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
 data OnSpawn = OnSpawn DynEvent deriving Component
@@ -33,7 +35,16 @@ destroy entity = destroy' (extract entity) where
   destroy' Nothing = return ()
 
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
-doDestroy (Destroy entityId) entities = return $ filter (\e -> extract e /= Just entityId) entities
+doDestroy _ [] = return []
+doDestroy d@(Destroy entityId) (e : es) = if (Just entityId) == extract e
+  then do
+    case extract e of
+      (Just (OnDestroy event)) -> fireDynEvent event
+      Nothing -> return ()
+    doDestroy d es
+  else do
+    es' <- doDestroy d es
+    return $ e : es'
 
 spawn :: Monad m => Entity -> EventsT m ()
 spawn entity = spawnWithId $ const entity
