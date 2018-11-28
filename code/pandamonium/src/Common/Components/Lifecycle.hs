@@ -6,9 +6,9 @@ module Common.Components.Lifecycle
   , spawn
   , spawnWithId
   , lifecycle
-  , OnSpawn (OnSpawn)
+  , onSpawn
+  , onDestroy
   , Spawn (Spawn)
-  , OnDestroy (OnDestroy)
   , Destroy (Destroy)
   ) where
 
@@ -22,11 +22,11 @@ import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
-data OnDestroy = OnDestroy (IOEvents ()) deriving Component
+data OnDestroy = OnDestroy (Entity -> IOEvents ()) deriving Component
 
 data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
-data OnSpawn = OnSpawn (IOEvents ()) deriving Component
+data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = destroy' (extract entity) where
@@ -39,12 +39,18 @@ doDestroy _ [] = return []
 doDestroy d@(Destroy entityId) (e : es) = if (Just entityId) == extract e
   then do
     case extract e of
-      (Just (OnDestroy event)) -> event
+      (Just (OnDestroy event)) -> event e
       Nothing -> return ()
     doDestroy d es
   else do
     es' <- doDestroy d es
     return $ e : es'
+
+onSpawn :: IOEvents () -> OnSpawn
+onSpawn = OnSpawn . const
+
+onDestroy :: IOEvents () -> OnDestroy
+onDestroy = OnDestroy . const
 
 spawn :: Monad m => Entity -> EventsT m ()
 spawn entity = spawnWithId $ const entity
@@ -57,7 +63,7 @@ doSpawn (Spawn entityCreator) entities entityId = do
       let next = succ entityId
       let spawnedEntity = (entityCreator next) <-+ next
       case extract spawnedEntity of
-        (Just (OnSpawn event)) -> event
+        (Just (OnSpawn event)) -> event spawnedEntity
         Nothing -> return ()
       return (spawnedEntity : entities, next)
 

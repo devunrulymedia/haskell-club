@@ -19,5 +19,5 @@ sparkle pos vel col entityId = entity
                            <-+ vel
                            <-+ col
                            <-+ circle (0, 0) 10
-                           <-+ OnSpawn (awaitEvent 2 $ Destroy entityId)
+                           <-+ onSpawn (awaitEvent 2 $ Destroy entityId)
                            <-+ Acceleration (0, -300)
