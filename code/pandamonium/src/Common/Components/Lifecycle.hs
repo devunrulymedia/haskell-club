@@ -14,7 +14,6 @@ module Common.Components.Lifecycle
 
 import Control.Lens (Lens, (<&>))
 import Control.Monad
-import Data.ConstrainedDynamic
 
 import Common.Redux
 import Common.Relationship
@@ -23,11 +22,11 @@ import Common.Components.World
 
 data Destroy = Destroy EntityId deriving ReduxEvent
 
-data OnDestroy = OnDestroy DynEvent deriving Component
+data OnDestroy = OnDestroy (IOEvents ()) deriving Component
 
 data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
-data OnSpawn = OnSpawn DynEvent deriving Component
+data OnSpawn = OnSpawn (IOEvents ()) deriving Component
 
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = destroy' (extract entity) where
@@ -40,7 +39,7 @@ doDestroy _ [] = return []
 doDestroy d@(Destroy entityId) (e : es) = if (Just entityId) == extract e
   then do
     case extract e of
-      (Just (OnDestroy event)) -> fireDynEvent event
+      (Just (OnDestroy event)) -> event
       Nothing -> return ()
     doDestroy d es
   else do
@@ -58,7 +57,7 @@ doSpawn (Spawn entityCreator) entities entityId = do
       let next = succ entityId
       let spawnedEntity = (entityCreator next) <-+ next
       case extract spawnedEntity of
-        (Just (OnSpawn event)) -> fireDynEvent event
+        (Just (OnSpawn event)) -> event
         Nothing -> return ()
       return (spawnedEntity : entities, next)
 

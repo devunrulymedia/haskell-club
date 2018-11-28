@@ -3,8 +3,6 @@
 module Bomberman.Bomb where
 
 import Graphics.Gloss (red, blue)
-import Control.Monad.Trans
-import Data.ConstrainedDynamic
 
 import Common.Redux
 import Common.Timer
@@ -30,8 +28,8 @@ bomb owner x y entityId = entity
                       <-+ circle (0, 0) 40
                       <-+ Immovable
                       <-+ MaxPush 2
-                      <-+ OnSpawn (await 3 (Destroy entityId))
-                      <-+ OnDestroy (toDyn $ Exploded owner x y)
+                      <-+ OnSpawn (awaitEvent 3 $ Destroy entityId)
+                      <-+ OnDestroy (fireEvent $ Exploded owner x y)
                       <-+ IsBomb
                       <-+ blue
 
@@ -39,7 +37,7 @@ explosion :: Float -> Float -> EntityId -> Entity
 explosion x y entityId = entity
                      <-+ Position (x, y)
                      <-+ circle (0, 0) 50
-                     <-+ OnSpawn (await 1 (Destroy entityId))
+                     <-+ OnSpawn (awaitEvent 3 $ Destroy entityId)
                      <-+ red
 
 explode :: Exploded -> a -> IOEvents a
