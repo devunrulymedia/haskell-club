@@ -14,6 +14,7 @@ import Pandamonium.World.CreateWorld
 import Pandamonium.Game.Game
 import Pandamonium.World.Stages.Stage1
 import Pandamonium.World.Stages.Stage2
+import Panda2.World
 import Thrust.World.Assets
 import Thrust.World.CreateWorld
 import Thrust.Game.Game
@@ -40,6 +41,7 @@ parseArgs ["panda"] = pandamonium
 parseArgs ["balls"] = ballpit
 parseArgs ["fireworks"] = fireworks
 parseArgs ["bomberman"] = bomberman
+parseArgs ["panda2"] = panda2
 parseArgs _ = putStrLn "Call with thrust for thrust, or panda for pandamonium"
 
 playGame :: (Renderable a) => a -> Redux a -> IO ()
@@ -69,3 +71,7 @@ fireworks = do game <- buildGame
 bomberman :: IO ()
 bomberman = do game <- bombermanGame
                playGame game bgameRedux
+
+panda2 :: IO ()
+panda2 = do game <- newGame
+            playGame game panda2Redux
