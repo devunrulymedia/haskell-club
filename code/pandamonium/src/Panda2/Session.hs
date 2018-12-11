@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Panda2.Session where
+module Panda2.Session (newSession, sessionRedux) where
 
 import Control.Lens
 import Graphics.Gloss (scale)
@@ -27,8 +27,8 @@ makeLenses ''Session
 instance Renderable Session where
   render session = scale 8 8 $ render (session ^. game)
 
-panda2SessionRedux :: Redux Session
-panda2SessionRedux = connect gameRedux game
+sessionRedux :: Redux Session
+sessionRedux = connect gameRedux game
 
 newSession :: IO Session
 newSession = do
@@ -36,4 +36,4 @@ newSession = do
   let game = Game (newWorld spritesAndShapes) gameAssets
   let assets = SessionAssets gameAssets
   let session = Session game assets
-  reduxDo panda2SessionRedux session (initialise game)
+  reduxDo sessionRedux session (initialise game)

@@ -74,4 +74,4 @@ bomberman = do game <- bombermanGame
 
 panda2 :: IO ()
 panda2 = do session <- newSession
-            playGame session panda2SessionRedux
+            playGame session sessionRedux
