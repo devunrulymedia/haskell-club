@@ -3,6 +3,8 @@
 module Panda2.Session where
 
 import Control.Lens
+import Graphics.Gloss (scale)
+
 import Common.Renderable
 import Common.Redux
 import Common.Components
@@ -23,7 +25,7 @@ data Session = Session
 makeLenses ''Session
 
 instance Renderable Session where
-  render session = render (session ^. game)
+  render session = scale 8 8 $ render (session ^. game)
 
 panda2SessionRedux :: Redux Session
 panda2SessionRedux = connect gameRedux game

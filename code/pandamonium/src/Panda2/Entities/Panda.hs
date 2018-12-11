@@ -6,5 +6,5 @@ import Common.Components
 
 panda :: [ Picture ] -> Entity
 panda pandas = entity
-           <-+ Position (200, 200)
+           <-+ Position (20, 20)
            <-+ Sprite (head pandas)
