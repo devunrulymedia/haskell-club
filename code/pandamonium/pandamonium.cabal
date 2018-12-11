@@ -58,9 +58,10 @@ library
                      , Common.Components.Position
                      , Common.Components.Lifecycle
                      , Common.Components.Physics
-                     , Common.Components.Controls
                      , Common.Components.World
                      , Common.Components
+                     , Common.Controls.Button
+                     , Common.Controls.Axis
                      , Common.Entities.Entity
                      , Common.Entities.Destroyer
                      , Common.Entities.Spawner

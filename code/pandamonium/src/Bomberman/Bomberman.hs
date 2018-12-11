@@ -10,6 +10,7 @@ import Common.Monad
 import Common.Redux
 import Common.Shapes.Shape (circle)
 import Common.Components
+import Common.Controls.Axis
 import Bomberman.Controller
 import Bomberman.Bomb
 

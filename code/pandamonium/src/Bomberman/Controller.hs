@@ -7,6 +7,8 @@ import Control.Lens
 import Graphics.Gloss.Interface.IO.Game
 
 import Common.Components
+import Common.Controls.Button
+import Common.Controls.Axis
 import Common.Redux
 
 data Controller = Controller

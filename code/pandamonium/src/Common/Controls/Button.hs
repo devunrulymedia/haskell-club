@@ -1,13 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE DeriveAnyClass #-}
 
-module Common.Components.Controls where
+module Common.Controls.Button where
 
+import Data.ConstrainedDynamic
 import Control.Lens
 import Graphics.Gloss.Interface.IO.Game
 
-import Data.ConstrainedDynamic
-import Common.Components.Entity
 import Common.Redux
 
 data Button = Button
@@ -15,7 +13,7 @@ data Button = Button
   , _held      :: Bool
   , _onPress   :: Maybe DynEvent
   , _onRelease :: Maybe DynEvent
-  } deriving Component
+  }
 
 makeLenses ''Button
 
@@ -35,28 +33,3 @@ keyPress (EventKey key pressed _ _) button =
      Up   -> do traverse fireDynEvent (button ^. onRelease)
                 return (held .~ False $ button)
 keyPress _ button = return button
-
-data OnAxis = Min | Neutral | Max
-
-data Axis = Axis
-  { _minButton :: Button
-  , _maxButton :: Button
-  , _onAxis    :: OnAxis
-  } deriving Component
-
-makeLenses ''Axis
-
-axis :: Button -> Button -> Axis
-axis min max = Axis min max Neutral
-
-updateAxis :: Axis -> Axis
-updateAxis axis = case (axis ^. minButton . held, axis ^. maxButton . held) of
-  (True, False) -> onAxis .~ Min     $ axis
-  (False, True) -> onAxis .~ Max     $ axis
-  (_, _)        -> onAxis .~ Neutral $ axis
-
-axisPress :: Event -> Axis -> Events Axis
-axisPress event axis = return axis
-                   >>= minButton %%~ keyPress event
-                   >>= maxButton %%~ keyPress event
-                   <&> updateAxis
