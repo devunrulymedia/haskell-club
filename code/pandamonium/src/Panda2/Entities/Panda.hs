@@ -1,10 +1,10 @@
 module Panda2.Entities.Panda where
 
 import Control.Lens
+import Graphics.Gloss (Picture)
 import Common.Components
-import Panda2.Assets
 
-panda :: Assets -> Entity
-panda assets = entity
+panda :: [ Picture ] -> Entity
+panda pandas = entity
            <-+ Position (200, 200)
-           <-+ Sprite (head $ assets ^. pandas)
+           <-+ Sprite (head pandas)

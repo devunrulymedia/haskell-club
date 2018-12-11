@@ -14,8 +14,7 @@ import Pandamonium.World.CreateWorld
 import Pandamonium.Game.Game
 import Pandamonium.World.Stages.Stage1
 import Pandamonium.World.Stages.Stage2
-import Panda2.World
-import Panda2.Assets
+import Panda2.Session
 import Thrust.World.Assets
 import Thrust.World.CreateWorld
 import Thrust.Game.Game
@@ -74,6 +73,5 @@ bomberman = do game <- bombermanGame
                playGame game bgameRedux
 
 panda2 :: IO ()
-panda2 = do assets <- Panda2.Assets.loadAssets
-            game <- newGame assets
-            playGame game panda2Redux
+panda2 = do session <- newSession
+            playGame session panda2SessionRedux

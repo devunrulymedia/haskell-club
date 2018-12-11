@@ -34,8 +34,7 @@ library
                      , Pandamonium.World.Stages.Stage1
                      , Pandamonium.World.Stages.Stage2
                      -- exposed panda2 components
-                     , Panda2.World
-                     , Panda2.Assets
+                     , Panda2.Session
                      -- exposed balls components
                      , Balls.World.World
                      -- exposed fireworks components
@@ -93,6 +92,8 @@ library
                      -- panda2 modules
                      , Panda2.Entities.Block
                      , Panda2.Entities.Panda
+                     , Panda2.Game
+                     , Panda2.Stage
                      -- ball modules
                      , Balls.Entities.Entities
                      -- fireworks
