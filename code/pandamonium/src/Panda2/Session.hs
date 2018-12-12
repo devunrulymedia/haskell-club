@@ -32,7 +32,7 @@ instance Renderable Session where
 sessionRedux :: Redux Session
 sessionRedux = compose
   [ connect gameRedux game
-  , connect (listenRedux listenController) controller
+  , connect controllerRedux controller
   ]
 
 newSession :: IO Session

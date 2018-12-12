@@ -4,6 +4,7 @@
 module Panda2.Controller where
 
 import Control.Lens
+import Control.Monad.Trans
 import Graphics.Gloss.Interface.IO.Game
 
 import Common.Redux
@@ -37,3 +38,15 @@ newController p (l, r) j = let left = button l
                                  , _horizontal = axis left right
                                  , _jump = jump
                                  }
+
+printJumps :: JumpPressed -> a -> IOEvents a
+printJumps (JumpPressed x) a = do
+  liftIO $ print ("Jump pressed on controller" ++ show x)
+  return a
+
+controllerRedux :: Redux Controller
+controllerRedux = Redux
+  { listener = listenController
+  , updater  = noOp
+  , reducer  = focusM printJumps
+  }
