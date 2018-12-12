@@ -30,7 +30,10 @@ instance Renderable Session where
   render session = scale 8 8 $ render (session ^. game)
 
 sessionRedux :: Redux Session
-sessionRedux = connect gameRedux game
+sessionRedux = compose
+  [ connect gameRedux game
+  , connect (listenRedux listenController) controller
+  ]
 
 newSession :: IO Session
 newSession = do
