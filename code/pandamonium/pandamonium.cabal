@@ -95,6 +95,7 @@ library
                      , Panda2.Entities.Panda
                      , Panda2.Game
                      , Panda2.Stage
+                     , Panda2.Controller
                      -- ball modules
                      , Balls.Entities.Entities
                      -- fireworks
