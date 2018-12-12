@@ -8,19 +8,22 @@ import Control.Monad.Trans
 import Graphics.Gloss.Interface.IO.Game
 
 import Common.Redux
+import Common.Components
 import Common.Controls.Button
 import Common.Controls.Axis
 
+data PlayerIndex = PlayerIndex Integer deriving Component
+
 data Controller = Controller
-  { _playerNumber :: Integer
+  { _playerIndex :: PlayerIndex
   , _horizontal :: Axis
   , _jump :: Button
   }
 
 makeLenses ''Controller
 
-data JumpPressed = JumpPressed Integer deriving ReduxEvent
-data JumpReleased = JumpReleased Integer deriving ReduxEvent
+data JumpPressed = JumpPressed PlayerIndex deriving ReduxEvent
+data JumpReleased = JumpReleased PlayerIndex deriving ReduxEvent
 
 listenController :: Event -> Controller -> Events Controller
 listenController event controller = return controller
@@ -30,17 +33,18 @@ listenController event controller = return controller
 newController :: Integer -> (Char, Char) -> Char -> Controller
 newController p (l, r) j = let left = button l
                                right = button r
-                               jump = onPress .~ fires (JumpPressed p)
-                                    $ onRelease .~ fires (JumpReleased p)
+                               player = PlayerIndex p
+                               jump = onPress .~ fires (JumpPressed player)
+                                    $ onRelease .~ fires (JumpReleased player)
                                     $ button j
                             in Controller
-                                 { _playerNumber = p
+                                 { _playerIndex = player
                                  , _horizontal = axis left right
                                  , _jump = jump
                                  }
 
 printJumps :: JumpPressed -> a -> IOEvents a
-printJumps (JumpPressed x) a = do
+printJumps (JumpPressed (PlayerIndex x)) a = do
   liftIO $ print ("Jump pressed on controller" ++ show x)
   return a
 
