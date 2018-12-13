@@ -12,7 +12,7 @@ import Common.Components
 import Common.Controls.Button
 import Common.Controls.Axis
 
-data PlayerIndex = PlayerIndex Integer deriving Component
+data PlayerIndex = PlayerIndex Integer deriving (Eq, Component)
 
 data Controller = Controller
   { _playerIndex :: PlayerIndex
