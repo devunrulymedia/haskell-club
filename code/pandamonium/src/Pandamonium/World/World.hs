@@ -98,8 +98,8 @@ topLevelRedux = Redux
 worldRedux :: Redux World
 worldRedux = compose
   [
-  connect (onAll pandaRedux) panda,
-  connect (onAll coinRedux) coins,
+  connect pandaRedux (panda . traverse),
+  connect coinRedux (coins . traverse),
   connect destroyer coins,
   topLevelRedux
   ]

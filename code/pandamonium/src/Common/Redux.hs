@@ -85,9 +85,6 @@ connect redux lens = Redux
   , listener = lensing lens (listener redux)
   }
 
-onAll :: Traversable t => Redux a -> Redux (t a)
-onAll redux = connect redux traverse
-
 composeHandler :: Monad m => [a -> b -> m b] -> a -> b -> m b
 composeHandler fs a b = foldM (\x f -> f a x) b fs
 

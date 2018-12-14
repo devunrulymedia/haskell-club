@@ -31,7 +31,7 @@ entityRedux = Redux
 
 fireworksRedux :: Redux World
 fireworksRedux = compose
-  [ connect (onAll entityRedux) entities
+  [ connect entityRedux (entities . traverse)
   , connect rocketRedux entities
   , lifecycle
   ]

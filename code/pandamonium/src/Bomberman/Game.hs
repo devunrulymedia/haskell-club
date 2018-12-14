@@ -41,4 +41,4 @@ bgameRedux :: Redux BombermanGame
 bgameRedux = compose [ connect bworldRedux bworld, connect timerRedux btimer ]
 
 bworldRedux :: Redux World
-bworldRedux = compose [ connect (onAll playerRedux) entities, bombRedux, physics, lifecycle ]
+bworldRedux = compose [ connect playerRedux (entities . traverse), bombRedux, physics, lifecycle ]
