@@ -1,4 +1,5 @@
 {-# LANGUAGE Strict #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Common.Shapes.Shapes where
 
@@ -16,6 +17,14 @@ class Shaped t where
 instance Movable Shape where
   move v (Polygon ps ns) = Polygon ((v +) <$> ps) ns
   move v (Circle c r) = Circle (c + v) r
+
+instance (Num a) => Num (a, a) where
+  (a, b) + (x, y) = (a + x, b + y)
+  (a, b) - (x, y) = (a - x, b - y)
+  (a, b) * (x, y) = (a * x, b * y)
+  fromInteger a = (fromInteger a, fromInteger 0)
+  abs (a, b) = (abs a, abs b)
+  signum (a, b) = (signum a, signum b)
 
 duplicateEnd :: [ Vector ] -> [ Vector ]
 duplicateEnd [] = []
