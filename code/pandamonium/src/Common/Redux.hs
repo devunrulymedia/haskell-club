@@ -75,10 +75,10 @@ reduxUpdate :: Redux w -> Float -> w -> IO w
 reduxUpdate r t w = case runWriter $ updater r t w of
   (world, events) -> handleRemainingEvents r world events
 
-lensing :: Functor f => Lens' b a -> (i -> a -> f a) -> i  -> b -> f b
+lensing :: Functor f => (forall l . Functor l => LensLike' l b a) -> (i -> a -> f a) -> i  -> b -> f b
 lensing lens f = \e -> lens %%~ (f e)
 
-connect :: Redux a -> Lens' b a -> Redux b
+connect :: Redux a -> (forall l . Functor l => LensLike' l b a) -> Redux b
 connect redux lens = Redux
   { reducer  = lensing lens (reducer redux)
   , updater  = lensing lens (updater redux)
