@@ -75,25 +75,18 @@ reduxUpdate :: Redux w -> Float -> w -> IO w
 reduxUpdate r t w = case runWriter $ updater r t w of
   (world, events) -> handleRemainingEvents r world events
 
-lensing :: Functor f => (forall l . Functor l => LensLike' l b a) -> (i -> a -> f a) -> i  -> b -> f b
-lensing lens f = \e -> lens %%~ (f e)
+lensing :: (Functor f, Applicative f) => (forall l . (Functor l, Applicative l) => LensLike' l b a) -> (i -> a -> f a) -> i  -> b -> f b
+lensing lens f e = lens %%~ (f e)
 
-connect :: Redux a -> (forall l . Functor l => LensLike' l b a) -> Redux b
+connect :: Redux a -> (forall l . (Functor l, Applicative l) => LensLike' l b a) -> Redux b
 connect redux lens = Redux
   { reducer  = lensing lens (reducer redux)
   , updater  = lensing lens (updater redux)
   , listener = lensing lens (listener redux)
   }
 
-onEach :: (Traversable t, Monad m) => (a -> b -> m b) -> a -> t b -> m (t b)
-onEach f a bs = traverse (f a) bs
-
 onAll :: Traversable t => Redux a -> Redux (t a)
-onAll redux = Redux
-  { reducer = onEach (reducer redux)
-  , updater = onEach (updater redux)
-  , listener = onEach (listener redux)
-  }
+onAll redux = connect redux traverse
 
 composeHandler :: Monad m => [a -> b -> m b] -> a -> b -> m b
 composeHandler fs a b = foldM (\x f -> f a x) b fs

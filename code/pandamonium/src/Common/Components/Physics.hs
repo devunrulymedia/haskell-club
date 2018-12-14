@@ -186,7 +186,7 @@ updatePhysics t es = return es
 
 physicsRedux :: Redux [ Entity ]
 physicsRedux = Redux
-  { updater = composeHandler [ onEach updatePhysics1, updatePhysics ]
+  { updater = composeHandler [ lensing traverse updatePhysics1, updatePhysics ]
   , listener = noOp
   , reducer = noOp
   }

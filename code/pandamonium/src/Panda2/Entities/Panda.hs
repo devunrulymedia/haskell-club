@@ -23,6 +23,9 @@ movePanda c e = fromMaybe e $ do
   (Position (x, y)) <- extract e
   ifMaybe (player == c ^. playerIndex) $ do
     case (c ^. horizontal . onAxis) of
-      Min -> return $ e <-+ Position (x - 20, y)
+      Min -> return $ e <-+ Position (x - 1, y)
       Neutral -> Nothing
-      Max -> return $ e <-+ Position (x + 20, y)
+      Max -> return $ e <-+ Position (x + 1, y)
+
+movePandas :: (Controller, [ Entity ]) -> (Controller, [ Entity ])
+movePandas (controller, entities) = (controller, movePanda controller <$> entities)

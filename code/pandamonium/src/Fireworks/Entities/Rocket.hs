@@ -78,7 +78,7 @@ reduceRocket d e = return e
 
 rocketRedux :: Redux [ Entity ]
 rocketRedux = Redux
-  { updater  = onEach updateRocket
+  { updater  = lensing traverse updateRocket
   , listener = noOp
   , reducer  = reduceRocket
   }

@@ -1,16 +1,20 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Panda2.Session (newSession, sessionRedux) where
 
 import Control.Lens
+import Control.Lens.Unsound
 import Graphics.Gloss (scale)
 
 import Common.Renderable
 import Common.Redux
+import Common.Monad
 import Common.Components
 import Common.Graphics.SpriteSheet
 import Panda2.Game
 import Panda2.Controller
+import Panda2.Entities.Panda
 
 -- A Session represents a full play session, which can include multiple games,
 -- recording high scores, initialising assets and so on. It's the top-level
@@ -29,10 +33,18 @@ makeLenses ''Session
 instance Renderable Session where
   render session = scale 8 8 $ render (session ^. game)
 
+controllerAndEntities :: forall f . Functor f => LensLike' f Session (Controller, [Entity])
+controllerAndEntities = lensProduct controller (game . currentWorld . entities)
+
+updateSession :: Float -> Session -> Events Session
+updateSession t s = return s
+                <&> controllerAndEntities %~ movePandas
+
 sessionRedux :: Redux Session
 sessionRedux = compose
   [ connect gameRedux game
   , connect controllerRedux controller
+  , updateRedux updateSession
   ]
 
 newSession :: IO Session
