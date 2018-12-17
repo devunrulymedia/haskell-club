@@ -6,8 +6,8 @@ module Common.Components.Lifecycle
   , destroyIn
   , spawn
   , lifecycle
-  , onSpawn
-  , onDestroy
+  , OnSpawn (OnSpawn)
+  , OnDestroy (OnDestroy)
   , Spawn (Spawn)
   , Destroy (Destroy)
   ) where
@@ -46,12 +46,6 @@ doDestroy d@(Destroy x) (e : es) = if x == entityId e
   else do
     es' <- doDestroy d es
     return $ e : es'
-
-onSpawn :: (Entity -> IOEvents ()) -> OnSpawn
-onSpawn = OnSpawn
-
-onDestroy :: (Entity -> IOEvents ()) -> OnDestroy
-onDestroy = OnDestroy
 
 spawn :: Monad m => (EntityId -> Entity) -> EventsT m ()
 spawn entityCreator = fireEvent (Spawn entityCreator)
