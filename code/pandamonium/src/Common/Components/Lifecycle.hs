@@ -3,7 +3,7 @@
 
 module Common.Components.Lifecycle
   ( destroy
-  , destroy'
+  , destroyIn
   , spawn
   , lifecycle
   , onSpawn
@@ -16,6 +16,7 @@ import Control.Lens (Lens, (<&>))
 import Control.Monad
 
 import Common.Redux
+import Common.Timer
 import Common.Relationship
 import Common.Components.Entity
 import Common.Components.World
@@ -31,6 +32,9 @@ data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = fireEvent (Destroy (entityId entity))
 
+destroyIn :: Monad m => Float -> Entity -> EventsT m ()
+destroyIn delay entity = awaitEvent delay $ Destroy (entityId entity)
+
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy _ [] = return []
 doDestroy d@(Destroy x) (e : es) = if x == entityId e
@@ -42,9 +46,6 @@ doDestroy d@(Destroy x) (e : es) = if x == entityId e
   else do
     es' <- doDestroy d es
     return $ e : es'
-
-destroy' :: Entity -> Destroy
-destroy' ent = Destroy (entityId ent)
 
 onSpawn :: (Entity -> IOEvents ()) -> OnSpawn
 onSpawn = OnSpawn

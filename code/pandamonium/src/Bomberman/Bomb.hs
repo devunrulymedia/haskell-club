@@ -30,7 +30,7 @@ bomb owner x y entityId = entity entityId
                       <-+ circle (0, 0) 40
                       <-+ Immovable
                       <-+ MaxPush 2
-                      <-+ onSpawn (awaitEvent 3 . destroy')
+                      <-+ onSpawn (destroyIn 3)
                       <-+ onDestroy exploded
                       <-+ IsBomb
                       <-+ blue
@@ -45,7 +45,7 @@ explosion :: Float -> Float -> EntityId -> Entity
 explosion x y entityId = entity entityId
                      <-+ Position (x, y)
                      <-+ circle (0, 0) 50
-                     <-+ onSpawn (awaitEvent 3 . destroy')
+                     <-+ onSpawn (destroyIn 1)
                      <-+ red
 
 explode :: Exploded -> a -> IOEvents a
