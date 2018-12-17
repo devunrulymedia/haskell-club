@@ -2,8 +2,10 @@
 
 module Bomberman.Bomb where
 
+import Data.Maybe
 import Graphics.Gloss (red, blue)
 
+import Common.Monad
 import Common.Redux
 import Common.Timer
 import Common.Components
@@ -29,9 +31,15 @@ bomb owner x y entityId = entity entityId
                       <-+ Immovable
                       <-+ MaxPush 2
                       <-+ onSpawn (awaitEvent 3 . destroy')
-                      <-+ onDestroy (fireEvent $ Exploded owner x y)
+                      <-+ onDestroy exploded
                       <-+ IsBomb
                       <-+ blue
+
+exploded :: Entity -> IOEvents ()
+exploded entity = whenJust $ do
+  owner <- extract entity
+  (Position (x, y)) <- extract entity
+  return $ fireEvent $ Exploded owner x y
 
 explosion :: Float -> Float -> EntityId -> Entity
 explosion x y entityId = entity entityId
