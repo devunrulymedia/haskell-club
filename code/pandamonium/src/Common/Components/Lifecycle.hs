@@ -31,14 +31,11 @@ data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 
 destroy :: Monad m => Entity -> EventsT m ()
-destroy entity = destroy' (extract entity) where
-  destroy' :: Monad m => Maybe EntityId -> EventsT m ()
-  destroy' (Just entityId) = fireEvent (Destroy entityId)
-  destroy' Nothing = return ()
+destroy entity = fireEvent (Destroy (entityId entity))
 
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy _ [] = return []
-doDestroy d@(Destroy entityId) (e : es) = if (Just entityId) == extract e
+doDestroy d@(Destroy x) (e : es) = if x == entityId e
   then do
     case extract e of
       (Just (OnDestroy event)) -> event e
@@ -69,7 +66,7 @@ spawnWithId entityCreator = fireEvent (Spawn entityCreator)
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
 doSpawn (Spawn entityCreator) entities entityId = do
       let next = succ entityId
-      let spawnedEntity = (entityCreator next) <-+ next
+      let spawnedEntity = entityCreator next
       case extract spawnedEntity of
         (Just (OnSpawn event)) -> event spawnedEntity
         Nothing -> return ()
@@ -78,7 +75,7 @@ doSpawn (Spawn entityCreator) entities entityId = do
 reduceLifecycle :: DynEvent -> World -> IOEvents World
 reduceLifecycle e w = return w
                   >>= (lensing entities (focusM doDestroy)) e
-                  >>= focusM (relationshipMWith doSpawn entities entityId) e
+                  >>= focusM (relationshipMWith doSpawn entities nextEntityId) e
 
 lifecycle :: Redux World
 lifecycle = Redux

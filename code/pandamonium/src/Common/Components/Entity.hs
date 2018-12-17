@@ -13,23 +13,23 @@ class Typeable a => Component a
 
 type DynComp = ConstrainedDynamic Component
 
-data Entity = Entity [ DynComp ]
+type EntityId = Int
 
-data EntityId = EntityId Int deriving (Eq, Component)
+data Entity = Entity EntityId [ DynComp ]
 
 data Owner = Owner EntityId deriving Component
-
-instance Enum EntityId where
-  toEnum = EntityId
-  fromEnum (EntityId entityId) = entityId
 
 class View a where
   entityFrom :: a -> Entity
 
-entity :: Entity
-entity = Entity []
+entity :: EntityId -> Entity
+entity id = Entity id []
+
+entityId :: Entity -> EntityId
+entityId (Entity x _) = x
 
 infixl 4 <-+
+infixl 4 <-:
 infixl 4 <-|
 
 typesMatch :: Maybe a -> a -> Bool
@@ -37,22 +37,25 @@ typesMatch (Just _) _ = True
 typesMatch Nothing  _ = False
 
 (<-+) :: (Component a) => Entity -> a -> Entity
-(<-+) (Entity xs) a = Entity (replace xs a) where
+(<-+) (Entity x cs) a = Entity x (replace cs a) where
   replace :: Component a => [ DynComp ] -> a -> [ DynComp ]
   replace [] a = [toDyn a]
-  replace (x:xs) a = if typesMatch (fromDynamic x) a
-    then toDyn a : xs
-    else x : replace xs a
+  replace (c:cs) a = if typesMatch (fromDynamic c) a
+    then toDyn a : cs
+    else c : replace cs a
+
+(<-:) :: Component a => (EntityId -> Entity) -> a -> (EntityId -> Entity)
+(<-:) f a = (<-+ a) . f
 
 (<-|) :: Component a => Entity -> (a -> a) -> Entity
 (<-|) = flip update
 
 extract :: (Component a) => Entity -> Maybe a
-extract (Entity xs) = extract' xs where
+extract (Entity x cs) = extract' cs where
   extract' [] = Nothing
-  extract' (x : xs) = case (fromDynamic x) of
+  extract' (c : cs) = case (fromDynamic c) of
     (Just a) -> Just a
-    Nothing -> extract' xs
+    Nothing -> extract' cs
 
 extractOr :: (Component a) => a -> Entity -> a
 extractOr a e = fromMaybe a (extract e)

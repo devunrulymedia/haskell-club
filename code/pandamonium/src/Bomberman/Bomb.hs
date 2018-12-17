@@ -22,7 +22,7 @@ alignToGrid (cx, cy) (sx, sy) (px, py) = (align cx sx px, align cy sy py) where
                  in translatedBackToOriginalFrame
 
 bomb :: Owner -> Float -> Float -> EntityId -> Entity
-bomb owner x y entityId = entity
+bomb owner x y entityId = entity entityId
                       <-+ owner
                       <-+ Position (x, y)
                       <-+ circle (0, 0) 40
@@ -34,7 +34,7 @@ bomb owner x y entityId = entity
                       <-+ blue
 
 explosion :: Float -> Float -> EntityId -> Entity
-explosion x y entityId = entity
+explosion x y entityId = entity entityId
                      <-+ Position (x, y)
                      <-+ circle (0, 0) 50
                      <-+ onSpawn (awaitEvent 3 $ Destroy entityId)

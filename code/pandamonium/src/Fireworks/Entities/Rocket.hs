@@ -21,12 +21,12 @@ data Explosion = Explosion Vector Color deriving ReduxEvent
 
 data LaunchRocket = LaunchRocket Vector Color deriving ReduxEvent
 
-rocket :: Entity
+rocket :: EntityId -> Entity
 rocket = entity
-     <-+ circle (0, 0) 20
-     <-+ Velocity (0, 0)
-     <-+ Acceleration (0, 200)
-     <-+ Fuel 2
+     <-: circle (0, 0) 20
+     <-: Velocity (0, 0)
+     <-: Acceleration (0, 200)
+     <-: Fuel 2
 
 burn :: Float -> Entity -> Entity
 burn t e = update1 burn' t e where
@@ -55,7 +55,7 @@ updateRocket t e = return e
 
 launch :: LaunchRocket -> a -> IOEvents a
 launch (LaunchRocket p col) a = do
-  spawn (rocket <-+ Position p <-+ col)
+  spawnWithId (rocket <-: Position p <-: col)
   return a
 
 burst :: Explosion -> a -> IOEvents a

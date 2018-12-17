@@ -9,17 +9,17 @@ import Common.Components.Renderer
 
 import Common.Shapes.Shape
 
-ball :: Vector -> Float -> Float -> Color -> Entity
+ball :: Vector -> Float -> Float -> Color -> EntityId -> Entity
 ball pos mass radius col = entity
-                       <-+ Position pos
-                       <-+ Velocity (0, 0)
-                       <-+ Acceleration (0, -1800)
-                       <-+ circle (0, 0) radius
-                       <-+ col
-                       <-+ Mass mass
+                       <-: Position pos
+                       <-: Velocity (0, 0)
+                       <-: Acceleration (0, -1800)
+                       <-: circle (0, 0) radius
+                       <-: col
+                       <-: Mass mass
 
-block :: Shape -> Entity
+block :: Shape -> EntityId -> Entity
 block shape = entity
-          <-+ shape
-          <-+ white
-          <-+ Immovable
+          <-: shape
+          <-: white
+          <-: Immovable

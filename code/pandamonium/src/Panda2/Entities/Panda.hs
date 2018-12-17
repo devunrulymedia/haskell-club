@@ -11,11 +11,11 @@ import Common.Controls.Axis
 
 import Panda2.Controller
 
-panda :: [ Picture ] -> Entity
+panda :: [ Picture ] -> EntityId -> Entity
 panda pandas = entity
-           <-+ Position (20, 20)
-           <-+ Sprite (head pandas)
-           <-+ PlayerIndex 1
+           <-: Position (20, 20)
+           <-: Sprite (head pandas)
+           <-: PlayerIndex 1
 
 movePanda :: Controller -> Entity -> Entity
 movePanda c e = fromMaybe e $ do

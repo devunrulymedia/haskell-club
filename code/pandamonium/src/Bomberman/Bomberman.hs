@@ -17,7 +17,7 @@ import Bomberman.Bomb
 data BombCount = BombCount Int deriving Component
 
 bomberman :: EntityId -> Entity
-bomberman entId = entity
+bomberman entId = entity entId
               <-+ Position (100, 100)
               <-+ Mass 1
               <-+ Elasticity 0
@@ -37,7 +37,7 @@ move _ controller = let xSpeed = speed (controller ^. horizontal . onAxis)
                      in Velocity (xSpeed, ySpeed)
 
 regainBomb :: Exploded -> Entity -> IOEvents Entity
-regainBomb (Exploded (Owner ownerId) _ _) entity = if extract entity /= Just ownerId
+regainBomb (Exploded (Owner ownerId) _ _) entity = if entityId entity /= ownerId
   then return entity
   else return $ update addBomb entity where
     addBomb :: BombCount -> BombCount
@@ -53,9 +53,9 @@ dropBombs (BombButtonPressed owner) entity = do
   where
     dropsBombAt :: Maybe (Float, Float, Entity)
     dropsBombAt = do
-      entityId <- extract entity
+      let entId = entityId entity
       (BombCount bombs) <- extract entity
-      ifMaybe (entityId == owner && bombs > 0) $ do
+      ifMaybe (entId == owner && bombs > 0) $ do
         (Position (x, y)) <- extract entity
         let newEntity = entity <-+ BombCount (bombs - 1)
         return (x, y, newEntity)

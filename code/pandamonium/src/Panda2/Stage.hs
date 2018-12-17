@@ -9,6 +9,6 @@ import Panda2.Entities.Panda
 
 createStage1 :: [ Picture ] -> Events ()
 createStage1 assets = do
-  spawn $ block $ rectangleV (-10, -10) (10, 10)
-  spawn $ panda assets
+  spawnWithId $ block $ rectangleV (-10, -10) (10, 10)
+  spawnWithId $ panda assets
   return ()

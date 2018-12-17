@@ -5,7 +5,7 @@ import Graphics.Gloss (white)
 import Common.Components
 import Common.Shapes.Shape
 
-block :: Shape -> Entity
+block :: Shape -> EntityId -> Entity
 block shape = entity
-          <-+ shape
-          <-+ white
+          <-: shape
+          <-: white

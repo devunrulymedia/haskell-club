@@ -14,7 +14,7 @@ import Common.Redux
 import Common.Timer
 
 sparkle :: Position -> Velocity -> Color -> EntityId -> Entity
-sparkle pos vel col entityId = entity
+sparkle pos vel col entityId = entity entityId
                            <-+ pos
                            <-+ vel
                            <-+ col
