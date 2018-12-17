@@ -18,7 +18,7 @@ import Bomberman.Grid
 
 initialise :: Events ()
 initialise = do
-  spawnWithId bomberman
+  spawn bomberman
   createGrid
 
 data BombermanGame = BombermanGame

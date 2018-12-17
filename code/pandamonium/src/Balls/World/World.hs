@@ -24,19 +24,19 @@ world = newWorld coloredShape
 
 initialiseWorld :: Events ()
 initialiseWorld = do
-  spawnWithId $ block (rectangleV (-600, 400) (1200, 20))
-  spawnWithId $ block (rectangleV (-600, 100) (20, 300))
-  spawnWithId $ block (rectangleV (580, 100) (20, 300))
-  spawnWithId $ block (polygon [(-600, 100), (-580, 100), (-180, -300), (-200, -300)])
-  spawnWithId $ block (rectangleV (-200, -600) (20, 300))
-  spawnWithId $ block (rectangleV (-200, -600) (400, 20))
-  spawnWithId $ block (rectangleV (180, -600) (20, 300))
-  spawnWithId $ block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)])
+  spawn $ block (rectangleV (-600, 400) (1200, 20))
+  spawn $ block (rectangleV (-600, 100) (20, 300))
+  spawn $ block (rectangleV (580, 100) (20, 300))
+  spawn $ block (polygon [(-600, 100), (-580, 100), (-180, -300), (-200, -300)])
+  spawn $ block (rectangleV (-200, -600) (20, 300))
+  spawn $ block (rectangleV (-200, -600) (400, 20))
+  spawn $ block (rectangleV (180, -600) (20, 300))
+  spawn $ block (polygon [(600, 100), (580, 100), (180, -300), (200, -300)])
 
-  spawnWithId $ ball (0, 0) 1 30 red
-  spawnWithId $ ball (10, 75) 2 40 blue
-  spawnWithId $ ball (100, 25) 4 60 green
-  spawnWithId $ ball (-200, 25) 1 25 yellow
+  spawn $ ball (0, 0) 1 30 red
+  spawn $ ball (10, 75) 2 40 blue
+  spawn $ ball (100, 25) 4 60 green
+  spawn $ ball (-200, 25) 1 25 yellow
 
 ballsRedux :: Redux World
 ballsRedux = compose [ physics, lifecycle ]

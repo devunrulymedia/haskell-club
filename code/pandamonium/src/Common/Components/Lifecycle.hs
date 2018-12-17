@@ -4,9 +4,9 @@
 module Common.Components.Lifecycle
   ( destroy
   , destroy'
-  , spawnWithId
+  , spawn
   , lifecycle
-  , onSpawnWith
+  , onSpawn
   , onDestroy
   , onDestroyWith
   , Spawn (Spawn)
@@ -47,8 +47,8 @@ doDestroy d@(Destroy x) (e : es) = if x == entityId e
 destroy' :: Entity -> Destroy
 destroy' ent = Destroy (entityId ent)
 
-onSpawnWith :: (Entity -> IOEvents ()) -> OnSpawn
-onSpawnWith = OnSpawn
+onSpawn :: (Entity -> IOEvents ()) -> OnSpawn
+onSpawn = OnSpawn
 
 onDestroy :: IOEvents () -> OnDestroy
 onDestroy = OnDestroy . const
@@ -56,8 +56,8 @@ onDestroy = OnDestroy . const
 onDestroyWith :: (Entity -> IOEvents ()) -> OnDestroy
 onDestroyWith = OnDestroy
 
-spawnWithId :: Monad m => (EntityId -> Entity) -> EventsT m ()
-spawnWithId entityCreator = fireEvent (Spawn entityCreator)
+spawn :: Monad m => (EntityId -> Entity) -> EventsT m ()
+spawn entityCreator = fireEvent (Spawn entityCreator)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
 doSpawn (Spawn entityCreator) entities entityId = do

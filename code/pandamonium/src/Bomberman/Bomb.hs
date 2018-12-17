@@ -28,7 +28,7 @@ bomb owner x y entityId = entity entityId
                       <-+ circle (0, 0) 40
                       <-+ Immovable
                       <-+ MaxPush 2
-                      <-+ onSpawnWith (awaitEvent 3 . destroy')
+                      <-+ onSpawn (awaitEvent 3 . destroy')
                       <-+ onDestroy (fireEvent $ Exploded owner x y)
                       <-+ IsBomb
                       <-+ blue
@@ -37,22 +37,22 @@ explosion :: Float -> Float -> EntityId -> Entity
 explosion x y entityId = entity entityId
                      <-+ Position (x, y)
                      <-+ circle (0, 0) 50
-                     <-+ onSpawnWith (awaitEvent 3 . destroy')
+                     <-+ onSpawn (awaitEvent 3 . destroy')
                      <-+ red
 
 explode :: Exploded -> a -> IOEvents a
 explode (Exploded _ x y) a = do
-  spawnWithId $ explosion x y
-  spawnWithId $ explosion (x + 128) y
-  spawnWithId $ explosion (x - 128) y
-  spawnWithId $ explosion x (y + 128)
-  spawnWithId $ explosion x (y - 128)
+  spawn $ explosion x y
+  spawn $ explosion (x + 128) y
+  spawn $ explosion (x - 128) y
+  spawn $ explosion x (y + 128)
+  spawn $ explosion x (y - 128)
   return a
 
 spawnBomb :: DropBomb -> a -> IOEvents a
 spawnBomb (DropBomb owner x y) a = do
   let (x', y') = alignToGrid (64, 64) (128, 128) (x, y)
-  spawnWithId $ bomb owner x' y'
+  spawn $ bomb owner x' y'
   return a
 
 bombRedux :: Redux World
