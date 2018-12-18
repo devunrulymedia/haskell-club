@@ -1,5 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Common.Physics.Collisions where
 

@@ -1,6 +1,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE Strict #-}
+{-# LANGUAGE RankNTypes #-}
+
 
 module Common.Components.Physics where
 

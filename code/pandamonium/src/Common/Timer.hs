@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Common.Timer where
 

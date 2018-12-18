@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Fireworks.Entities.Rocket where
 
@@ -33,7 +34,7 @@ burn t e = update1 burn' t e where
   burn' :: Float -> Fuel -> Fuel
   burn' t (Fuel f) = Fuel (f - t)
 
-explode' :: Float -> Entity -> Maybe (Events Entity)
+explode' :: Monad m => Float -> Entity -> Maybe (EventsT m Entity)
 explode' t e = do
   (Position p) <- extract e
   colour <- extract e
@@ -45,7 +46,7 @@ explode' t e = do
       return e
     else Nothing
 
-explode :: Float -> Entity -> Events Entity
+explode :: Monad m => Float -> Entity -> EventsT m Entity
 explode t e = fromMaybe (return e) (explode' t e)
 
 updateRocket :: Float -> Entity -> Events Entity

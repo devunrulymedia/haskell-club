@@ -1,3 +1,5 @@
+{-# LANGUAGE RankNTypes #-}
+
 module Panda2.Stage where
 
 import Graphics.Gloss (Picture)

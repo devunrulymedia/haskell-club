@@ -1,11 +1,12 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Common.Controls.Axis where
 
 import Control.Lens
 import Graphics.Gloss.Interface.IO.Game
 
-import Common.Redux 
+import Common.Redux
 import Common.Controls.Button
 
 data OnAxis = Min | Neutral | Max

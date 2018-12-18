@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Panda2.Controller where
 

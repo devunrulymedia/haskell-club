@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Pandamonium.Entities.Panda (Panda, mkPanda, pandaRedux) where
 

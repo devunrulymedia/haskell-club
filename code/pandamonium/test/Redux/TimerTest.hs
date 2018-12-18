@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -F -pgmF htfpp #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Redux.TimerTest (htf_thisModulesTests) where
 

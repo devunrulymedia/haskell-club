@@ -1,5 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
-
+{-# LANGUAGE RankNTypes #-}
 
 module Thrust.Entities.Thruster where
 

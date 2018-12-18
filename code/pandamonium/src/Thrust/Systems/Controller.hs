@@ -1,3 +1,5 @@
+{-# LANGUAGE RankNTypes #-}
+
 module Thrust.Systems.Controller where
 
 import Graphics.Gloss.Interface.IO.Game
