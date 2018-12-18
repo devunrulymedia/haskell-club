@@ -23,17 +23,17 @@ alignToGrid (cx, cy) (sx, sy) (px, py) = (align cx sx px, align cy sy py) where
                     translatedBackToOriginalFrame = roundedToNearestPoint + c
                  in translatedBackToOriginalFrame
 
-bomb :: Owner -> Float -> Float -> EntityId -> Entity
-bomb owner x y entityId = entity entityId
-                      <-+ owner
-                      <-+ Position (x, y)
-                      <-+ circle (0, 0) 40
-                      <-+ Immovable
-                      <-+ MaxPush 2
-                      <-+ OnSpawn (destroyIn 3)
-                      <-+ OnDestroy exploded
-                      <-+ IsBomb
-                      <-+ blue
+bomb :: Owner -> Float -> Float -> MkEntity
+bomb owner x y = entity
+             <-: owner
+             <-: Position (x, y)
+             <-: circle (0, 0) 40
+             <-: Immovable
+             <-: MaxPush 2
+             <-: OnSpawn (destroyIn 3)
+             <-: OnDestroy exploded
+             <-: IsBomb
+             <-: blue
 
 exploded :: Entity -> IOEvents ()
 exploded entity = whenJust $ do

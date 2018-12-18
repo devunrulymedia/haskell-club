@@ -25,7 +25,7 @@ data Destroy = Destroy EntityId deriving ReduxEvent
 
 data OnDestroy = OnDestroy (Entity -> IOEvents ()) deriving Component
 
-data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
+data Spawn = Spawn MkEntity deriving ReduxEvent
 
 data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 
@@ -47,7 +47,7 @@ doDestroy d@(Destroy x) (e : es) = if x == entityId e
     es' <- doDestroy d es
     return $ e : es'
 
-spawn :: (EntityId -> Entity) -> Events ()
+spawn :: MkEntity -> Events ()
 spawn entityCreator = fireEvent (Spawn entityCreator)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
