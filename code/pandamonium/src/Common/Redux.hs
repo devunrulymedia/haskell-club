@@ -51,10 +51,10 @@ focus f = \e w -> case (fromDynamic e) of
   Just x -> f x w
   Nothing -> w
 
-fireEvent :: (ReduxEvent a, Monad m) => a -> EventsT m ()
+fireEvent :: ReduxEvent a => a -> Events ()
 fireEvent event = fireDynEvent (toDyn event)
 
-fireDynEvent :: (Monad m) => DynEvent -> EventsT m ()
+fireDynEvent :: DynEvent -> Events ()
 fireDynEvent event = tell $ singleton event
 
 handleRemainingEvents :: Redux w -> w -> DList DynEvent -> IO w
