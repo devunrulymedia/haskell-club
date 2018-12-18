@@ -165,16 +165,12 @@ bounce a b = case (shape b !!> shape a) of
       a' = move pushoutA $ applyImpulse velChangeA $ a
       b' = move pushoutB $ applyImpulse velChangeB $ b
 
-updatePhysics1 :: Float -> Entity -> Events Entity
-updatePhysics1 t e = return e <&> update2 applyVel t <&> update2 applyAcc t
-
-updatePhysics :: Float -> [ Entity ] -> Events [ Entity ]
-updatePhysics t es = return es
-                 >>= collide
+integrate :: Float -> Entity -> Events Entity
+integrate t e = return e <&> update2 applyVel t <&> update2 applyAcc t
 
 physicsRedux :: Redux [ Entity ]
 physicsRedux = Redux
-  { updater = composeHandler [ lensing traverse updatePhysics1, updatePhysics ]
+  { updater = composeHandler [ lensing traverse integrate, const collide ]
   , listener = noOp
   , reducer = noOp
   }
