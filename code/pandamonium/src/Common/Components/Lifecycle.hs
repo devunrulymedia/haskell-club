@@ -29,6 +29,12 @@ data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
 data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 
+foo :: UberEvents () -> Events ()
+foo action = do action
+
+bar :: UberEvents () -> IOEvents ()
+bar action = do action
+
 destroy :: Monad m => Entity -> EventsT m ()
 destroy entity = fireEvent (Destroy (entityId entity))
 
