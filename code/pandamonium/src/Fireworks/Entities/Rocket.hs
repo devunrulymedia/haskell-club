@@ -22,7 +22,7 @@ data Explosion = Explosion Vector Color deriving ReduxEvent
 
 data LaunchRocket = LaunchRocket Vector Color deriving ReduxEvent
 
-rocket :: EntityId -> Entity
+rocket :: MkEntity
 rocket = entity
      <-: circle (0, 0) 20
      <-: Velocity (0, 0)

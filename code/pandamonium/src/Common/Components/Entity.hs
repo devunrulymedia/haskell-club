@@ -15,6 +15,8 @@ type DynComp = ConstrainedDynamic Component
 
 type EntityId = Int
 
+type MkEntity = EntityId -> Entity
+
 data Entity = Entity EntityId [ DynComp ]
 
 data Owner = Owner EntityId deriving Component
@@ -22,7 +24,7 @@ data Owner = Owner EntityId deriving Component
 class View a where
   entityFrom :: a -> Entity
 
-entity :: EntityId -> Entity
+entity :: MkEntity
 entity id = Entity id []
 
 entityId :: Entity -> EntityId
@@ -44,7 +46,7 @@ typesMatch Nothing  _ = False
     then toDyn a : cs
     else c : replace cs a
 
-(<-:) :: Component a => (EntityId -> Entity) -> a -> (EntityId -> Entity)
+(<-:) :: Component a => MkEntity -> a -> MkEntity
 (<-:) f a = (<-+ a) . f
 
 (<-|) :: Component a => Entity -> (a -> a) -> Entity

@@ -13,11 +13,11 @@ import Common.Shapes.Shape
 import Common.Redux
 import Common.Timer
 
-sparkle :: Position -> Velocity -> Color -> EntityId -> Entity
-sparkle pos vel col entityId = entity entityId
-                           <-+ pos
-                           <-+ vel
-                           <-+ col
-                           <-+ circle (0, 0) 10
-                           <-+ OnSpawn (destroyIn 2)
-                           <-+ Acceleration (0, -300)
+sparkle :: Position -> Velocity -> Color -> MkEntity
+sparkle pos vel col = entity
+                  <-: pos
+                  <-: vel
+                  <-: col
+                  <-: circle (0, 0) 10
+                  <-: OnSpawn (destroyIn 2)
+                  <-: Acceleration (0, -300)
