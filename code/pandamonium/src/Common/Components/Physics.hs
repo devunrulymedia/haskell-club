@@ -72,7 +72,7 @@ fireCollision :: (View a, View b) => a -> b -> Vector -> Events ()
 fireCollision a b v = fireEvent (Collision (entityFrom a) (entityFrom b) v)
 
 extractPhysics :: Entity -> Maybe ExtractedPhysics
-extractPhysics e = id $! pure ExtractedPhysics
+extractPhysics e = pure ExtractedPhysics
                <*> extract e
                <*> pure (extractOr (Elasticity 1) e)
                <*> extract e
@@ -99,6 +99,9 @@ collide entities = do let (ps, bs, es) = partitionPhysics entities
                       (ps'', bs') <- onPairs bounce_against_static ps' bs
                       return $ mergePhysics ps'' bs' es
 
+-- this saves the costs of extracting the components from each object on each
+-- call, by pulling them into a view object and partitioning by type up-front
+-- Then we merge back into a single list of entities later.
 partitionPhysics :: [ Entity ] -> ( [ ExtractedPhysics ], [ ExtractedBarrier ], [ Entity ])
 partitionPhysics entities = partitionPhysics' entities ([], [], []) where
   partitionPhysics' [] acc = acc
