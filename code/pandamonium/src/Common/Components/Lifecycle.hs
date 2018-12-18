@@ -29,10 +29,10 @@ data Spawn = Spawn (EntityId -> Entity) deriving ReduxEvent
 
 data OnSpawn = OnSpawn (Entity -> IOEvents ()) deriving Component
 
-destroy :: Monad m => Entity -> EventsT m ()
+destroy :: Entity -> Events ()
 destroy entity = fireEvent (Destroy (entityId entity))
 
-destroyIn :: Monad m => Float -> Entity -> EventsT m ()
+destroyIn :: Float -> Entity -> Events ()
 destroyIn delay entity = awaitEvent delay $ Destroy (entityId entity)
 
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
@@ -47,7 +47,7 @@ doDestroy d@(Destroy x) (e : es) = if x == entityId e
     es' <- doDestroy d es
     return $ e : es'
 
-spawn :: Monad m => (EntityId -> Entity) -> EventsT m ()
+spawn :: (EntityId -> Entity) -> Events ()
 spawn entityCreator = fireEvent (Spawn entityCreator)
 
 doSpawn :: Spawn -> [ Entity ] -> EntityId -> IOEvents ([Entity], EntityId)
