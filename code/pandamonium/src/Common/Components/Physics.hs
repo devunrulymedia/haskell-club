@@ -93,17 +93,11 @@ extractBarrier e = pure ExtractedBarrier
                <*> pure (extractOr (Elasticity 1) e)
                <*> pure e
 
-collide :: Float -> Entity -> Entity -> Events (Entity, Entity)
-collide t a b = do
-  (a', b') <- fromMaybe (return (a, b)) (pure bounce <*> extractPhysics a <*> extractPhysics b)
-  (b'', a'') <- fromMaybe (return (b', a')) (pure bounce_against_static <*> extractPhysics b' <*> extractBarrier a')
-  fromMaybe (return (a'', b'')) (pure bounce_against_static <*> extractPhysics a'' <*> extractBarrier b'')
-
-collide' :: [ Entity ] -> Events [ Entity ]
-collide' entities = do let (ps, bs, es) = partitionPhysics entities
-                       ps' <- againstSelf bounce' ps
-                       (ps'', bs') <- onPairs bounce_against_static' ps' bs
-                       return $ mergePhysics ps'' bs' es
+collide :: [ Entity ] -> Events [ Entity ]
+collide entities = do let (ps, bs, es) = partitionPhysics entities
+                      ps' <- againstSelf bounce ps
+                      (ps'', bs') <- onPairs bounce_against_static ps' bs
+                      return $ mergePhysics ps'' bs' es
 
 partitionPhysics :: [ Entity ] -> ( [ ExtractedPhysics ], [ ExtractedBarrier ], [ Entity ])
 partitionPhysics entities = partitionPhysics' entities ([], [], []) where
@@ -118,8 +112,8 @@ mergePhysics :: [ ExtractedPhysics ] -> [ ExtractedBarrier ] -> [ Entity ] -> [ 
 mergePhysics ps bs es = (entityFrom <$> ps) ++ (entityFrom <$> bs) ++ es
 
 
-bounce_against_static' :: ExtractedPhysics -> ExtractedBarrier -> Events (ExtractedPhysics, ExtractedBarrier)
-bounce_against_static' a b = case (shape b !!> shape a) of
+bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (ExtractedPhysics, ExtractedBarrier)
+bounce_against_static a b = case (shape b !!> shape a) of
  Nothing -> return (a, b)
  (Just pushout) ->
    if skipPushout
@@ -142,12 +136,8 @@ bounce_against_static' a b = case (shape b !!> shape a) of
        Just (MaxPush mp) -> sqMagV pushout > mp * mp
        Nothing -> False
 
-
-bounce_against_static :: ExtractedPhysics -> ExtractedBarrier -> Events (Entity, Entity)
-bounce_against_static a b = do (a', b') <- bounce_against_static' a b; return (entityFrom a', entityFrom b')
-
-bounce' :: ExtractedPhysics -> ExtractedPhysics -> Events (ExtractedPhysics, ExtractedPhysics)
-bounce' a b = case (shape b !!> shape a) of
+bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (ExtractedPhysics, ExtractedPhysics)
+bounce a b = case (shape b !!> shape a) of
   Nothing -> return (a, b)
   (Just pushout) -> do
     fireCollision a b pushoutA
@@ -175,16 +165,12 @@ bounce' a b = case (shape b !!> shape a) of
       a' = move pushoutA $ applyImpulse velChangeA $ a
       b' = move pushoutB $ applyImpulse velChangeB $ b
 
-
-bounce :: ExtractedPhysics -> ExtractedPhysics -> Events (Entity, Entity)
-bounce a b = do (a', b') <- bounce' a b; return (entityFrom a', entityFrom b')
-
 updatePhysics1 :: Float -> Entity -> Events Entity
 updatePhysics1 t e = return e <&> update2 applyVel t <&> update2 applyAcc t
 
 updatePhysics :: Float -> [ Entity ] -> Events [ Entity ]
 updatePhysics t es = return es
-                 >>= collide'
+                 >>= collide
 
 physicsRedux :: Redux [ Entity ]
 physicsRedux = Redux
