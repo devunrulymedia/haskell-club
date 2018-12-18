@@ -14,7 +14,6 @@ class (Typeable a) => ReduxEvent a
 type DynEvent = ConstrainedDynamic ReduxEvent
 type EventsT m w = WriterT (DList DynEvent) m w
 type IOEvents w = EventsT IO w
-type PureEvents w = EventsT Identity w
 type Events w = forall m . Monad m => EventsT m w
 
 data Redux w = Redux
