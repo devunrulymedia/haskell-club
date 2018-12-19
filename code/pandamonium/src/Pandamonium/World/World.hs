@@ -40,10 +40,6 @@ data World = World
 
 makeLenses ''World
 
-type Listener = Event -> World -> Events World
-type Updater  = Float -> World -> Events World
-type Reducer  = GameEvent -> World -> IOEvents World
-
 instance Renderable World where
   render world = Pictures $
                    (render <$> world ^. scenery) ++
@@ -81,7 +77,7 @@ reduceWorld e w = return w
               <&> spawnEntity EBlock scenery e
               <&> spawnEntity EPanda panda e
 
-updateWorld :: Updater
+updateWorld :: Float -> World -> Events World
 updateWorld t w = return w
               >>= poke (fireEvent ResetCollisions)
               >>= checkForPickups

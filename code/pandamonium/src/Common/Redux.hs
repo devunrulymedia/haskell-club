@@ -15,6 +15,7 @@ type DynEvent = ConstrainedDynamic ReduxEvent
 type EventsT m w = WriterT (DList DynEvent) m w
 type IOEvents w = EventsT IO w
 type Events w = forall m . Monad m => EventsT m w
+type Updater a b = forall l . (Functor l, Applicative l) => LensLike' l b a
 
 data Redux w = Redux
   { reducer :: DynEvent -> w -> IOEvents w
@@ -72,10 +73,10 @@ reduxUpdate :: Redux w -> Float -> w -> IO w
 reduxUpdate r t w = case runWriter $ updater r t w of
   (world, events) -> handleRemainingEvents r world events
 
-lensing :: (Functor f, Applicative f) => (forall l . (Functor l, Applicative l) => LensLike' l b a) -> (i -> a -> f a) -> i  -> b -> f b
+lensing :: (Functor f, Applicative f) => Updater a b -> (i -> a -> f a) -> i -> (b -> f b)
 lensing lens f e = lens %%~ (f e)
 
-connect :: Redux a -> (forall l . (Functor l, Applicative l) => LensLike' l b a) -> Redux b
+connect :: Redux a -> Updater a b -> Redux b
 connect redux lens = Redux
   { reducer  = lensing lens (reducer redux)
   , updater  = lensing lens (updater redux)

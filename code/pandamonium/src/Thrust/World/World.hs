@@ -29,10 +29,6 @@ data World = World
 
 makeLenses ''World
 
-type Listener = Event -> World -> Events World
-type Updater  = Float -> World -> Events World
-type Reducer  = GameEvent -> World -> IOEvents World
-
 instance Renderable World where
   render world = Pictures $
                    (render <$> world ^. scenery) ++
@@ -65,7 +61,7 @@ bounce el a b = case (shape b !!> shape a) of
 handleCollisions :: World -> Events World
 handleCollisions w = thruster %%~ (flip $ foldM $ bounce 0) (w ^. scenery) $ w
 
-updateWorld :: Updater
+updateWorld :: Float -> World -> Events World
 updateWorld t w = return w
               <&> thruster %~ update t
               <&> integrate t
