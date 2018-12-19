@@ -24,11 +24,8 @@ newTimer = Timer 0 []
 
 makeLenses ''Timer
 
-await :: (ReduxEvent a) => Float -> a -> DynEvent
-await delay action = toDyn (Await delay (fireEvent action))
-
-awaitAction :: Float -> Events () -> Events ()
-awaitAction delay action = fireEvent (Await delay action)
+await :: Float -> Events () -> Events ()
+await delay action = fireEvent (Await delay action)
 
 reduceTimer :: Await -> Timer -> IOEvents Timer
 reduceTimer (Await delay action) timer = return $ (pending %~ (Pending (delay + (timer ^. elapsed)) action :) $ timer)

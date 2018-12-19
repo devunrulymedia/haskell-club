@@ -18,7 +18,7 @@ spawnNow :: Typeable a => a -> Events ()
 spawnNow a = fireEvent (Spawn (toDyn a))
 
 spawnIn :: Typeable a => Float -> a -> Events ()
-spawnIn t a = awaitAction t (spawnNow a)
+spawnIn t a = await t (spawnNow a)
 
 spawn :: (Enum i, Typeable d) => t -> Spawn -> [ Entity t i d ] -> i -> ([ Entity t i d ], i)
 spawn typ (Spawn e) entities index = case (fromDynamic e) of

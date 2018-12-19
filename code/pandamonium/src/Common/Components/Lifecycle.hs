@@ -33,7 +33,7 @@ destroy :: Entity -> Events ()
 destroy entity = fireEvent (Destroy (entityId entity))
 
 destroyIn :: Float -> Entity -> Events ()
-destroyIn delay entity = awaitAction delay $ destroy entity
+destroyIn delay entity = await delay $ destroy entity
 
 doDestroy :: Destroy -> [ Entity ] -> IOEvents [ Entity ]
 doDestroy _ [] = return []
