@@ -35,9 +35,10 @@ newController :: Integer -> (Char, Char) -> Char -> Controller
 newController p (l, r) j = let left = button l
                                right = button r
                                player = PlayerIndex p
-                               jump = onPress .~ fires (JumpPressed player)
-                                    $ onRelease .~ fires (JumpReleased player)
-                                    $ button j
+                               jump = (button 'j')
+                                 { onPress = fireEvent (JumpPressed player)
+                                 , onRelease = fireEvent (JumpReleased player)
+                                 } 
                             in Controller
                                  { _playerIndex = player
                                  , _horizontal = axis left right

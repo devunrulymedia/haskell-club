@@ -23,7 +23,7 @@ axis :: Button -> Button -> Axis
 axis min max = Axis min max Neutral
 
 updateAxis :: Axis -> Axis
-updateAxis axis = case (axis ^. minButton . held, axis ^. maxButton . held) of
+updateAxis axis = case (held $ axis ^. minButton, held $ axis ^. maxButton) of
   (True, False) -> onAxis .~ Min     $ axis
   (False, True) -> onAxis .~ Max     $ axis
   (_, _)        -> onAxis .~ Neutral $ axis

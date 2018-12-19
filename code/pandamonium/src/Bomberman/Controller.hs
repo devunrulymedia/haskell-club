@@ -28,7 +28,7 @@ defaultController entId = Controller
   { _owner = entId
   , _vertical = axis (button '/') (button '\'')
   , _horizontal = axis (button 'z') (button 'x')
-  , _dropBomb = onPress .~ fires (BombButtonPressed entId) $ button 'p'
+  , _dropBomb = (button 'p') { onPress = fireEvent (BombButtonPressed entId) }
   }
 
 listenController :: Event -> Controller -> Events Controller
