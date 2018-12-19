@@ -24,7 +24,7 @@ data Redux w = Redux
   }
 
 noOp :: Monad m => a -> b -> m b
-noOp a b = return b
+noOp = const return
 
 noOpRedux :: Redux w
 noOpRedux = Redux
@@ -32,15 +32,6 @@ noOpRedux = Redux
   , updater  = noOp
   , listener = noOp
   }
-
-listenRedux :: (Event -> w -> Events w) -> Redux w
-listenRedux l = noOpRedux { listener = l }
-
-updateRedux :: (Float -> w -> Events w) -> Redux w
-updateRedux u = noOpRedux { updater = u }
-
-reduceRedux :: (DynEvent -> w -> IOEvents w) -> Redux w
-reduceRedux r = noOpRedux { reducer = r }
 
 focusM :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> DynEvent -> b -> m b
 focusM f = \e w -> case (fromDynamic e) of

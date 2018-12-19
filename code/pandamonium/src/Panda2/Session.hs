@@ -44,7 +44,7 @@ sessionRedux :: Redux Session
 sessionRedux = compose
   [ connect gameRedux game
   , connect controllerRedux controller
-  , updateRedux updateSession
+  , noOpRedux { updater = updateSession }
   ]
 
 newSession :: IO Session
