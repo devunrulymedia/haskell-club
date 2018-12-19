@@ -34,7 +34,7 @@ adjustZoom _ = return
 gameRedux :: Redux Game
 gameRedux = compose
   [ connect worldRedux world
-  , noOpRedux { listener = adjustZoom }
+  , mempty { listener = adjustZoom }
   ]
 
 instance Renderable Game where

@@ -1,4 +1,5 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Common.Redux where
 
@@ -26,12 +27,24 @@ data Redux w = Redux
 noOp :: Monad m => a -> b -> m b
 noOp = const return
 
-noOpRedux :: Redux w
-noOpRedux = Redux
-  { reducer  = noOp
-  , updater  = noOp
-  , listener = noOp
-  }
+infixl 4 \->
+
+(\->) :: Monad m => (a -> b -> m b) -> (a -> b -> m b) -> (a -> b -> m b)
+(\->) f g i w = do w' <- f i w; g i w'
+
+instance Semigroup (Redux w) where
+  (<>) a b = Redux
+    { reducer = reducer a \-> reducer b
+    , updater = updater a \-> updater b
+    , listener = listener a \-> listener b
+    }
+
+instance Monoid (Redux w) where
+  mempty = Redux
+    { reducer  = noOp
+    , updater  = noOp
+    , listener = noOp
+    }
 
 focusM :: (ReduxEvent a, Monad m) => (a -> b -> m b) -> DynEvent -> b -> m b
 focusM f = \e w -> case (fromDynamic e) of
@@ -78,8 +91,4 @@ composeHandler :: Monad m => [a -> b -> m b] -> a -> b -> m b
 composeHandler fs a b = foldM (\x f -> f a x) b fs
 
 compose :: [ Redux w ] -> Redux w
-compose redii = Redux
-  { reducer  = composeHandler (reducer <$> redii)
-  , updater  = composeHandler (updater <$> redii)
-  , listener = composeHandler (listener <$> redii)
-  }
+compose = mconcat
