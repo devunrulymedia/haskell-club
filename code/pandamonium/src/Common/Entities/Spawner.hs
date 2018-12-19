@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Common.Entities.Spawner where
 
@@ -13,11 +14,11 @@ import Common.Entities.Entity
 
 data Spawn = Spawn Dynamic deriving (ReduxEvent)
 
-spawnNow :: (Typeable a, Monad m) => a -> EventsT m ()
+spawnNow :: Typeable a => a -> Events ()
 spawnNow a = fireEvent (Spawn (toDyn a))
 
-spawnIn :: (Typeable a, Monad m) => Float -> a -> EventsT m ()
-spawnIn t a = awaitEvent t (Spawn (toDyn a))
+spawnIn :: Typeable a => Float -> a -> Events ()
+spawnIn t a = awaitAction t (spawnNow a)
 
 spawn :: (Enum i, Typeable d) => t -> Spawn -> [ Entity t i d ] -> i -> ([ Entity t i d ], i)
 spawn typ (Spawn e) entities index = case (fromDynamic e) of

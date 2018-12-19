@@ -33,7 +33,7 @@ instance Renderable Game where
 initialiseGame :: Events ()
 initialiseGame = do
   fireEvent (LaunchRocket (0, -500) yellow)
-  awaitEvent 1 (LaunchRocket (-300, -300) green)
+  awaitAction 1 (fireEvent $ LaunchRocket (-300, -300) green)
 
 buildGame :: IO Game
 buildGame = do
